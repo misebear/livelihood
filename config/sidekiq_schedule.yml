@@ -1,0 +1,6 @@
+# Sidekiq Cron Schedule
+# 주 1회 월요일 새벽 3시에 공공 API 동기화
+benefit_api_sync:
+  cron: "0 3 * * 1"
+  class: "BenefitApiSyncWorker"
+  description: "공공 API(행안부/사회보장정보원) 혜택 데이터 주간 동기화"

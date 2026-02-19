@@ -1,0 +1,71 @@
+<%# ── 내 프로필 보기 ── %>
+<% content_for(:title) { "내 정보 — 수급생활" } %>
+
+<div class="flex items-center justify-between mb-6">
+  <h2 class="text-xl font-extrabold text-slate-800">내 정보</h2>
+  <%= link_to edit_user_profile_path,
+      class: "text-sm bg-indigo-100 text-indigo-700 font-bold px-4 py-2 rounded-xl hover:bg-indigo-200 transition" do %>
+    ✏️ 수정
+  <% end %>
+</div>
+
+<section class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 mb-4">
+  <h3 class="text-sm font-bold text-slate-700 mb-4">가구 정보</h3>
+  <div class="space-y-3">
+    <div class="flex justify-between items-center py-2 border-b border-slate-50">
+      <span class="text-sm text-slate-500">가구원 수</span>
+      <span class="text-sm font-bold text-slate-800"><%= @profile.household_size || "미입력" %>인</span>
+    </div>
+    <div class="flex justify-between items-center py-2 border-b border-slate-50">
+      <span class="text-sm text-slate-500">거주 지역</span>
+      <span class="text-sm font-bold text-slate-800">
+        <%= case @profile.region_type
+            when "metropolitan" then "서울/대도시"
+            when "city" then "중소도시"
+            when "rural" then "농어촌"
+            else "미입력"
+            end %>
+      </span>
+    </div>
+    <div class="flex justify-between items-center py-2">
+      <span class="text-sm text-slate-500">주거 형태</span>
+      <span class="text-sm font-bold text-slate-800">
+        <%= case @profile.housing_type
+            when "owned" then "자가"
+            when "jeonse" then "전세"
+            when "monthly_rent" then "월세"
+            when "public_rental" then "공공임대"
+            else "미입력"
+            end %>
+      </span>
+    </div>
+  </div>
+</section>
+
+<section class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 mb-4">
+  <h3 class="text-sm font-bold text-slate-700 mb-4">소득 · 재산</h3>
+  <div class="space-y-3">
+    <div class="flex justify-between items-center py-2 border-b border-slate-50">
+      <span class="text-sm text-slate-500">월 소득</span>
+      <span class="text-sm font-bold text-slate-800">
+        <%= @profile.declared_monthly_income.present? ? number_to_currency(@profile.monthly_income_amount, unit: "₩", precision: 0, delimiter: ",") : "미입력" %>
+      </span>
+    </div>
+    <div class="flex justify-between items-center py-2 border-b border-slate-50">
+      <span class="text-sm text-slate-500">총 재산</span>
+      <span class="text-sm font-bold text-slate-800">
+        <%= @profile.declared_assets.present? ? number_to_currency(@profile.assets_amount, unit: "₩", precision: 0, delimiter: ",") : "미입력" %>
+      </span>
+    </div>
+    <div class="flex justify-between items-center py-2">
+      <span class="text-sm text-slate-500">차량 가액</span>
+      <span class="text-sm font-bold text-slate-800">
+        <%= @profile.vehicle_value.present? ? number_to_currency(@profile.vehicle_amount, unit: "₩", precision: 0, delimiter: ",") : "미입력" %>
+      </span>
+    </div>
+  </div>
+</section>
+
+<%= link_to root_path, class: "block text-center text-sm text-slate-500 hover:text-indigo-600 transition mt-4" do %>
+  ← 대시보드로 돌아가기
+<% end %>

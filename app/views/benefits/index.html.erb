@@ -1,0 +1,67 @@
+<%# ── 혜택 목록 ── %>
+<% content_for(:title) { "혜택 안내 — 수급생활" } %>
+
+<div class="mb-6">
+  <h2 class="text-xl font-extrabold text-slate-800 mb-1">혜택 안내</h2>
+  <p class="text-sm text-slate-500">받을 수 있는 복지 혜택을 확인하세요.</p>
+</div>
+
+<%# ── 정부매칭 저축통장 ── %>
+<% if @safe_savings.any? %>
+  <section class="mb-6">
+    <h3 class="text-sm font-bold text-slate-700 mb-3 flex items-center gap-2">
+      <span class="w-6 h-6 bg-indigo-100 rounded-lg flex items-center justify-center text-xs">💰</span>
+      정부매칭 저축통장
+    </h3>
+    <div class="space-y-2">
+      <% @safe_savings.each do |benefit| %>
+        <%= link_to benefit_path(benefit),
+            class: "block bg-gradient-to-r from-indigo-50 to-blue-50 rounded-2xl p-4 border border-indigo-100 hover:shadow-sm transition" do %>
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-sm font-bold text-slate-800"><%= benefit.title %></p>
+              <p class="text-xs text-slate-500 mt-1 line-clamp-2"><%= benefit.summary %></p>
+            </div>
+            <svg class="w-5 h-5 text-indigo-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+            </svg>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+  </section>
+<% end %>
+
+<%# ── 일반 복지 혜택 ── %>
+<section>
+  <h3 class="text-sm font-bold text-slate-700 mb-3 flex items-center gap-2">
+    <span class="w-6 h-6 bg-emerald-100 rounded-lg flex items-center justify-center text-xs">📋</span>
+    복지 혜택 목록
+  </h3>
+
+  <% if @general.any? %>
+    <div class="space-y-2">
+      <% @general.each do |benefit| %>
+        <%= link_to benefit_path(benefit),
+            class: "block bg-white rounded-2xl p-4 shadow-sm border border-slate-100 hover:shadow-md transition" do %>
+          <div class="flex items-center justify-between">
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-bold text-slate-800 truncate"><%= benefit.title %></p>
+              <p class="text-xs text-slate-500 mt-1 line-clamp-2"><%= benefit.summary %></p>
+            </div>
+            <svg class="w-5 h-5 text-slate-300 flex-shrink-0 ml-3" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+            </svg>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="text-center py-8">
+      <p class="text-sm text-slate-400">등록된 혜택이 없습니다.</p>
+      <p class="text-xs text-slate-400 mt-1">공공 API 동기화 후 표시됩니다.</p>
+    </div>
+  <% end %>
+</section>
+
+<%= render_disclaimer(type: :benefit) %>

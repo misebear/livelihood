@@ -1,0 +1,269 @@
+<%# ── 대시보드 홈 (현금흐름 & D-Day) ── %>
+<% content_for(:title) { "홈 — 수급생활" } %>
+
+<%# ══════════════════════════════════════════════════════════════
+     SECTION 1: D-Day 카운트다운
+     ══════════════════════════════════════════════════════════════ %>
+<%= turbo_frame_tag "payment_dday" do %>
+  <section class="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-2xl p-5 text-white shadow-xl mb-4 relative overflow-hidden">
+    <%# 배경 장식 %>
+    <div class="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2"></div>
+    <div class="absolute bottom-0 left-0 w-24 h-24 bg-white/5 rounded-full translate-y-1/2 -translate-x-1/2"></div>
+
+    <div class="relative z-10">
+      <div class="flex items-center justify-between mb-3">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
+            </svg>
+          </div>
+          <h2 class="text-sm font-semibold text-blue-100">다음 입금일</h2>
+        </div>
+
+        <% if @next_payment %>
+          <span class="text-3xl font-black tracking-tight">
+            <%= @next_payment[:label] %>
+          </span>
+        <% end %>
+      </div>
+
+      <% if @next_payment %>
+        <div class="bg-white/10 backdrop-blur-sm rounded-xl p-4">
+          <div class="flex items-baseline justify-between">
+            <div>
+              <p class="text-lg font-bold"><%= @next_payment[:month_label] %></p>
+              <p class="text-sm text-blue-200">
+                <%= @next_payment[:date].strftime("%Y년 %m월 %d일 (%a)") %>
+              </p>
+            </div>
+            <div class="text-right">
+              <p class="text-2xl font-black">
+                <%= number_to_currency(@monthly_income, unit: "₩", precision: 0, delimiter: ",") %>
+              </p>
+              <p class="text-xs text-blue-200">이번 달 예정 입금</p>
+            </div>
+          </div>
+
+          <% if @next_payment[:early_reason] %>
+            <div class="mt-2 flex items-center gap-1.5">
+              <span class="inline-block w-2 h-2 bg-amber-400 rounded-full animate-pulse"></span>
+              <span class="text-xs text-amber-200"><%= @next_payment[:early_reason] %></span>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <p class="text-sm text-blue-200">입금 일정 정보가 없습니다.</p>
+      <% end %>
+    </div>
+  </section>
+<% end %>
+
+<%# ══════════════════════════════════════════════════════════════
+     SECTION 2: 안전 저축 게이지 바
+     ══════════════════════════════════════════════════════════════ %>
+<%= turbo_frame_tag "safe_gauge" do %>
+  <section class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 mb-4"
+           data-controller="gauge"
+           data-gauge-percentage-value="<%= @safe_asset_result ? @safe_asset_result[:risk_percentage] : 0 %>">
+
+    <div class="flex items-center justify-between mb-4">
+      <div class="flex items-center gap-2">
+        <div class="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center">
+          <svg class="w-5 h-5 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" />
+          </svg>
+        </div>
+        <h2 class="text-sm font-bold text-slate-700">수급 안전선</h2>
+      </div>
+
+      <% if @safe_asset_result %>
+        <% level = @safe_asset_result[:risk_level] %>
+        <span class="text-xs font-bold px-2.5 py-1 rounded-full
+          <%= case level
+              when :safe    then 'bg-emerald-100 text-emerald-700'
+              when :warning then 'bg-amber-100 text-amber-700'
+              when :danger  then 'bg-red-100 text-red-700'
+              end %>">
+          <%= case level
+              when :safe    then '✅ 안전'
+              when :warning then '⚠️ 주의'
+              when :danger  then '🚨 위험'
+              end %>
+        </span>
+      <% end %>
+    </div>
+
+    <% if @safe_asset_result %>
+      <%# 게이지 바 %>
+      <div class="relative mb-3">
+        <div class="w-full bg-slate-100 rounded-full h-5 overflow-hidden">
+          <div data-gauge-target="bar"
+               class="h-5 rounded-full transition-all duration-1000 ease-out
+                 <%= case @safe_asset_result[:risk_level]
+                     when :safe    then 'bg-gradient-to-r from-emerald-400 to-emerald-500'
+                     when :warning then 'bg-gradient-to-r from-amber-400 to-amber-500'
+                     when :danger  then 'bg-gradient-to-r from-red-400 to-red-500'
+                     end %>"
+               style="width: 0%;">
+            <span class="text-xs font-bold text-white flex items-center justify-center h-full">
+              <%= @safe_asset_result[:risk_percentage] %>%
+            </span>
+          </div>
+        </div>
+        <%# 기준선 마커 %>
+        <div class="absolute top-0 h-5 border-r-2 border-dashed border-slate-400" style="left: 85%;">
+          <span class="absolute -top-5 -translate-x-1/2 text-[10px] text-slate-400 whitespace-nowrap">탈락선</span>
+        </div>
+      </div>
+
+      <%# 저축 가능 한도 %>
+      <div class="bg-slate-50 rounded-xl p-3 mb-3">
+        <div class="flex items-center justify-between">
+          <span class="text-sm text-slate-500">추가 저축 가능 금액</span>
+          <span class="text-lg font-black text-emerald-600">
+            <%= number_to_currency(@safe_asset_result[:safe_savings_amount], unit: "₩", precision: 0, delimiter: ",") %>
+          </span>
+        </div>
+      </div>
+
+      <%# 정부매칭 통장 추천 %>
+      <% if @safe_asset_result[:recommend_safe_savings] && @safe_savings.any? %>
+        <div class="border border-indigo-100 bg-indigo-50/50 rounded-xl p-3">
+          <p class="text-xs font-bold text-indigo-700 mb-2">💰 정부매칭 저축통장 추천</p>
+          <% @safe_savings.each do |product| %>
+            <div class="flex items-center justify-between py-1.5">
+              <span class="text-sm text-slate-700"><%= product.title %></span>
+              <% if product.apply_url.present? %>
+                <%= link_to "바로가기 →", product.apply_url, target: "_blank", rel: "noopener",
+                    class: "text-xs text-indigo-600 font-semibold hover:underline" %>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+
+      <%# 면책 조항 %>
+      <%= render_disclaimer(type: :calculator) %>
+    <% else %>
+      <%# 프로필 미설정 시 CTA %>
+      <div class="text-center py-6">
+        <div class="w-14 h-14 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-3">
+          <svg class="w-7 h-7 text-slate-400" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+          </svg>
+        </div>
+        <p class="text-sm text-slate-500 mb-1">내 정보를 입력하면</p>
+        <p class="text-sm font-bold text-slate-700 mb-3">안전 저축 한도를 계산해 드려요!</p>
+        <button class="bg-indigo-600 text-white text-sm font-bold px-5 py-2.5 rounded-xl hover:bg-indigo-700 transition shadow-sm">
+          내 상황 입력하기
+        </button>
+      </div>
+    <% end %>
+  </section>
+<% end %>
+
+<%# ══════════════════════════════════════════════════════════════
+     SECTION 3: 이번 달 현금흐름 일정
+     ══════════════════════════════════════════════════════════════ %>
+<section class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 mb-4">
+  <div class="flex items-center gap-2 mb-4">
+    <div class="w-8 h-8 bg-sky-100 rounded-lg flex items-center justify-center">
+      <svg class="w-5 h-5 text-sky-600" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z" />
+      </svg>
+    </div>
+    <h2 class="text-sm font-bold text-slate-700">이번 달 현금흐름</h2>
+  </div>
+
+  <%# 수입/지출 요약 %>
+  <div class="grid grid-cols-2 gap-3 mb-4">
+    <div class="bg-emerald-50 rounded-xl p-3 text-center">
+      <p class="text-xs text-emerald-600 mb-1">예상 수입</p>
+      <p class="text-lg font-black text-emerald-700">
+        +<%= number_to_currency(@monthly_income, unit: "", precision: 0, delimiter: ",") %>
+      </p>
+    </div>
+    <div class="bg-rose-50 rounded-xl p-3 text-center">
+      <p class="text-xs text-rose-600 mb-1">예상 지출</p>
+      <p class="text-lg font-black text-rose-700">
+        -<%= number_to_currency(@monthly_expense, unit: "", precision: 0, delimiter: ",") %>
+      </p>
+    </div>
+  </div>
+
+  <%# 다가오는 일정 %>
+  <% if @upcoming_events.any? %>
+    <div class="space-y-2">
+      <% @upcoming_events.each do |event| %>
+        <div class="flex items-center justify-between py-2 border-b border-slate-50 last:border-0">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl flex items-center justify-center text-xs font-bold
+              <%= event.payment? ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-rose-700' %>">
+              <%= event.event_date.day %>일
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-slate-700"><%= event.title %></p>
+              <p class="text-xs text-slate-400"><%= event.d_day_label %></p>
+            </div>
+          </div>
+          <span class="text-sm font-bold <%= event.payment? ? 'text-emerald-600' : 'text-rose-600' %>">
+            <%= event.payment? ? '+' : '-' %><%= number_to_currency(event.expected_amount, unit: "", precision: 0, delimiter: ",") %>원
+          </span>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="text-center py-4">
+      <p class="text-sm text-slate-400">등록된 일정이 없습니다.</p>
+    </div>
+  <% end %>
+</section>
+
+<%# ══════════════════════════════════════════════════════════════
+     SECTION 4: 관심 혜택 현황
+     ══════════════════════════════════════════════════════════════ %>
+<% if @user_benefits.any? %>
+  <section class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 mb-4">
+    <div class="flex items-center gap-2 mb-4">
+      <div class="w-8 h-8 bg-violet-100 rounded-lg flex items-center justify-center">
+        <svg class="w-5 h-5 text-violet-600" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 0 0 2.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 0 0-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75 2.25 2.25 0 0 0-.1-.664m-5.8 0A2.251 2.251 0 0 1 13.5 2.25H15a2.25 2.25 0 0 1 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25ZM6.75 12h.008v.008H6.75V12Zm0 3h.008v.008H6.75V15Zm0 3h.008v.008H6.75V18Z" />
+        </svg>
+      </div>
+      <h2 class="text-sm font-bold text-slate-700">진행 중인 혜택</h2>
+    </div>
+
+    <div class="space-y-2">
+      <% @user_benefits.each do |ub| %>
+        <div class="flex items-center justify-between py-2.5 px-3 bg-slate-50 rounded-xl">
+          <div>
+            <p class="text-sm font-semibold text-slate-700"><%= ub.benefit.title %></p>
+            <span class="text-xs px-2 py-0.5 rounded-full mt-1 inline-block
+              <%= case ub.status
+                  when 'interested'           then 'bg-blue-100 text-blue-600'
+                  when 'preparing_documents'   then 'bg-amber-100 text-amber-600'
+                  when 'applied'              then 'bg-emerald-100 text-emerald-600'
+                  end %>">
+              <%= case ub.status
+                  when 'interested'           then '관심'
+                  when 'preparing_documents'   then '서류 준비 중'
+                  when 'applied'              then '신청 완료'
+                  end %>
+            </span>
+          </div>
+          <% if ub.benefit.apply_url.present? %>
+            <%= link_to ub.benefit.apply_url, target: "_blank", rel: "noopener",
+                class: "w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center hover:bg-indigo-200 transition" do %>
+              <svg class="w-4 h-4 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+              </svg>
+            <% end %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+
+    <%= render_disclaimer(type: :benefit) %>
+  </section>
+<% end %>

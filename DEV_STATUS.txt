@@ -1,0 +1,126 @@
+================================================================================
+  Livelihood MVP — 개발 현황 (DEV_STATUS)
+  최종 업데이트: 2026-02-19
+================================================================================
+
+■ 프로젝트 개요
+  - 수급생활: 기초생활수급자를 위한 현금흐름 & 안전 자산 관리 웹앱
+  - 기술 스택: Rails 8.1.2 / PostgreSQL / Hotwire (Turbo + Stimulus) / Tailwind CSS
+  - 인증: Devise / 백그라운드: Sidekiq + sidekiq-cron / 공휴일: holidays gem
+
+■ 서버 실행 방법
+  ruby bin/rails server -p 3100 -b 127.0.0.1
+  (포트 3000은 다른 앱이 점유 중이므로 3100 사용)
+
+■ 테스트 로그인
+  수급자: recipient@example.com / password123
+  보호자: caregiver@example.com / password123
+  관리자: admin@example.com / password123
+
+================================================================================
+  완료된 구현 단계 (Steps 1~8)
+================================================================================
+
+[✅] Step 1: 프로젝트 초기화 & DB 스키마
+  - 6개 테이블: users, user_profiles, care_relations, benefits, user_benefits, cashflow_events
+  - Model 클래스: Relations, Enums, Validations, encrypts 적용
+  - PostgreSQL 16 + Devise 인증 설정 완료
+
+[✅] Step 2: 비즈니스 로직 서비스
+  - PaymentDateCalculatorService: 입금일 계산 (20일 기준, 공휴일/주말 롤백)
+  - SafeAssetCalculatorService: 안전 자산 게이지 (2024 중위소득 기준)
+  - DisclaimerHelper: 면책 조항 배너
+
+[✅] Step 3: 공공 API 동기화 Worker
+  - BenefitApiSyncWorker: Sidekiq 주간 동기화 (월요일 03:00 KST)
+  - 방어 로직: API 파싱 에러 → rescue + Slack 알림
+  - sidekiq-cron 스케줄 설정 완료
+
+[✅] Step 4: 대시보드 Controller/View
+  - DashboardController: D-Day, 게이지, 현금흐름, 혜택 데이터 집계
+  - dashboard/index.html.erb: 4섹션 대시보드 홈 화면
+  - gauge_controller.js: Stimulus 게이지 바 애니메이션 (easeOutQuart)
+  - Pretendard 폰트, gradient 네비, 모바일 레이아웃
+  - Devise 한국어 번역 (devise.ko.yml)
+  - Puma Windows 호환성 수정 (tmp_restart 비활성화)
+
+[✅] Step 5: UserProfile CRUD
+  - UserProfilesController: show / edit / update
+  - 프로필 입력 폼: 가구원 수, 지역, 주거형태, 소득/재산/차량
+  - 암호화 저장 (ActiveRecord Encryption)
+
+[✅] Step 6: 혜택 목록/상세
+  - BenefitsController: index / show
+  - UserBenefitsController: 관심등록 / 상태변경 / 삭제
+  - 정부매칭 저축통장 4종 + 일반 복지혜택 4종
+  - 혜택 상태: 관심 → 서류준비 → 신청완료
+
+[✅] Step 7: 보호자 모드 (CareRelation)
+  - CareRelationsController: 이메일 초대 / 수락 / 해제
+  - 양방향 UI: 내가 돌보는 분 + 나의 보호자
+
+[✅] Step 8: 시드 데이터 & 네비게이션
+  - db/seeds.rb: 3 사용자, 8 혜택, 프로필, 보호관계, 7 현금흐름 이벤트
+  - 하단 4-탭 네비게이션: 홈 / 혜택 / 보호자 / 내정보
+  - ActiveRecord Encryption 개발용 키 설정
+
+================================================================================
+  주요 파일 목록
+================================================================================
+
+Controllers:
+  app/controllers/dashboard_controller.rb
+  app/controllers/user_profiles_controller.rb
+  app/controllers/benefits_controller.rb
+  app/controllers/user_benefits_controller.rb
+  app/controllers/care_relations_controller.rb
+
+Services:
+  app/services/payment_date_calculator_service.rb
+  app/services/safe_asset_calculator_service.rb
+
+Workers:
+  app/workers/benefit_api_sync_worker.rb
+
+Views:
+  app/views/layouts/application.html.erb
+  app/views/dashboard/index.html.erb
+  app/views/user_profiles/edit.html.erb
+  app/views/user_profiles/show.html.erb
+  app/views/benefits/index.html.erb
+  app/views/benefits/show.html.erb
+  app/views/care_relations/index.html.erb
+
+JavaScript:
+  app/javascript/controllers/gauge_controller.js
+
+Config:
+  config/routes.rb
+  config/puma.rb
+  config/initializers/sidekiq.rb
+  config/initializers/active_record_encryption.rb
+  config/locales/devise.ko.yml
+  config/sidekiq_schedule.yml
+  db/seeds.rb
+
+================================================================================
+  알려진 이슈 & 참고사항
+================================================================================
+
+1. 포트 충돌: localhost:3000은 HiTEL 앱이 점유 → 3100 사용
+2. Ruby 버전: 시스템에 3.2/3.3/3.4 설치됨, 현재 Ruby 3.4.8로 bundle install 완료
+3. Puma tmp_restart: Windows에서 exec bin/rails 실패 → 비활성화 처리
+4. Redis 필요: Sidekiq 사용 시 Redis 서버 실행 필요 (기본 localhost:6379)
+5. 프로덕션 배포 시: ActiveRecord Encryption 키를 Rails credentials로 이전 필요
+
+================================================================================
+  향후 작업 (미구현)
+================================================================================
+
+[ ] UI 개선: 대시보드 SVG 아이콘 사이즈 조정, 반응형 세부 튜닝
+[ ] 테스트: RSpec/Minitest 유닛 테스트 작성
+[ ] 배포: Docker / Fly.io / Render 설정
+[ ] PWA: manifest.json, service worker 설정
+[ ] 알림: 입금일 전날 푸시 알림 / 이메일 알림
+[ ] 공공 API 실연동: 실제 API 키 + 엔드포인트 설정
+[ ] 관리자 기능: 혜택 수동 등록/수정 관리 화면
