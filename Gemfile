@@ -44,7 +44,7 @@ gem "image_processing", "~> 1.2"
 gem "devise"
 
 # Background Jobs
-gem "sidekiq", "~> 7.0"
+gem "sidekiq", "~> 8.1"
 gem "sidekiq-cron"
 
 # Redis (Sidekiq broker & cache)
