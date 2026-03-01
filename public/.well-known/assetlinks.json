@@ -1,0 +1,14 @@
+[
+    {
+        "relation": [
+            "delegate_permission/common.handle_all_urls"
+        ],
+        "target": {
+            "namespace": "android_app",
+            "package_name": "me.bodeum.app",
+            "sha256_cert_fingerprints": [
+                "68:61:E3:E1:5F:F7:F6:EA:7A:E0:E6:FF:C0:ED:B6:3A:BA:92:9B:01:DC:3F:2B:03:DA:45:20:E0:92:F4:15:7A"
+            ]
+        }
+    }
+]
