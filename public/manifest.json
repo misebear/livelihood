@@ -1,0 +1,29 @@
+{
+    "name": "보듬 — 복지 혜택 관리",
+    "short_name": "보듬",
+    "icons": [
+        {
+            "src": "/icon.png",
+            "type": "image/png",
+            "sizes": "512x512"
+        },
+        {
+            "src": "/icon.png",
+            "type": "image/png",
+            "sizes": "512x512",
+            "purpose": "maskable"
+        }
+    ],
+    "start_url": "/",
+    "display": "standalone",
+    "scope": "/",
+    "description": "기초생활수급자·차상위계층을 위한 현금흐름 관리, 수급 탈락 방지, 복지 혜택 안내 서비스",
+    "theme_color": "#0D9488",
+    "background_color": "#F0FDFA",
+    "orientation": "portrait",
+    "lang": "ko",
+    "categories": [
+        "finance",
+        "lifestyle"
+    ]
+}
