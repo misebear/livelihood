@@ -1,0 +1,5 @@
+/* Tailwind CSS 기본 입력 파일 — 보듬(Bodeum) */
+/* 대부분의 스타일은 app/assets/stylesheets/application.css에서 관리 */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
