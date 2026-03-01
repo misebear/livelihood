@@ -1,0 +1,86 @@
+📋 보듬 (Bodeum) — 복지 혜택 관리 앱
+=========================================
+
+## 🟢 현재 진행 상태: 핵심 기능 구현 완료 + UI 리디자인 완료
+
+## ✅ 완료된 작업
+
+### 리브랜딩 (v2.0)
+- 앱 이름: 수급생활 → **보듬** (14곳 일괄 치환)
+- 컬러 팔레트: 인디고 → **딥 틸(#0D9488) + 코랄(#F97316) + 크림(#FEFCE8)**
+- 6곳 그래디언트 교체, 다크모드 따뜻한 스톤 톤 적용
+- Stitch MCP 활용 2025 모던 디자인 레퍼런스 생성
+
+### 혜택 목록 UI 개선
+- **카테고리 탭**: flex-wrap 줄바꿈 — 12개 탭 전체 노출 (스크롤 불필요)
+- **중요도순 정렬**: 기초급여 → 자산형성 → 감면·할인 → ... → 지역특화
+- **📅 신청기간 배지**: 제목 옆 초록 배지로 한눈에 확인
+  - 24건 주요 혜택에 신청기간 데이터 삽입 완료
+- **카테고리 내 정렬**: last_synced_at DESC (최신 데이터 우선)
+
+### 복지 혜택 자동 수집 시스템
+- DB 마이그레이션: benefits 테이블 10개 컬럼 추가
+- Benefit 모델: 11개 카테고리(CATEGORIES 상수) + scope + 헬퍼
+- **시드 데이터 55건** (11개 카테고리)
+- **PublicDataSyncService**: 공공데이터포털 4개 API 멀티 연동
+  - 중앙부처복지서비스, 지자체복지서비스, 사회서비스 제공기관, 장애인편의시설
+- **WelfarePortalScraperService**: 6개 복지 포털 크롤링
+- **BenefitDeduplicationService**: 중복 제거 + 데이터 정제
+- **Rake 태스크**: sync:benefits, sync:api, sync:scrape, sync:dedup, sync:status
+- **Windows 작업 스케줄러**: LiveliBenefitSync — 매일 새벽 4시 자동 실행
+
+### 기존 완료 기능
+- Google OAuth 로그인
+- 대시보드 (수급 안전선 게이지, D-Day 카드, 현금흐름)
+- 혜택 목록 + 상세 + 유저 혜택 연동
+- 보호자 관리 (대리 조회 포함)
+- 현금흐름 이벤트 관리
+- 소득인정액 자동 계산 + 추가 저축 가능 금액
+
+## 🔜 다음에 할 작업
+1. 공공데이터포털 API 키 발급 후 .env 설정 → 실제 API 동기화
+2. 혜택 상세 페이지 UI 개선
+3. 알림 시스템 (마감일 D-Day 푸시)
+4. PWA manifest 보듬 이름으로 업데이트
+5. 나머지 31건 혜택 신청기간 데이터 보충
+6. 앱스토어 배포 준비
+
+## ⚠️ 주의사항
+- DATA_GO_KR_API_KEY 미설정 시 API 동기화 건너뜀 (시드 55건으로 정상 동작)
+- sidekiq-cron 제거됨 (Windows unicode gem 이슈) → Rake + OS 스케줄러 대체
+- .env에 GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET 필요
+
+## 📂 프로젝트 구조
+```
+c:\development\livelihood\
+├── app/
+│   ├── controllers/
+│   │   ├── benefits_controller.rb        # 중요도순 카테고리 정렬
+│   │   ├── dashboard_controller.rb       # 대시보드
+│   │   ├── care_relations_controller.rb  # 보호자
+│   │   └── cashflow_events_controller.rb # 현금흐름
+│   ├── models/
+│   │   └── benefit.rb          # 11개 카테고리 + prioritized scope
+│   ├── services/
+│   │   ├── public_data_sync_service.rb       # 4개 API 멀티 연동
+│   │   ├── welfare_portal_scraper_service.rb # 6개 포털 크롤링
+│   │   ├── benefit_deduplication_service.rb  # 중복 제거
+│   │   └── safe_asset_calculator_service.rb  # 소득인정액 계산
+│   └── views/
+│       ├── benefits/index.html.erb   # 신청기간 배지 + 카테고리 탭
+│       ├── dashboard/index.html.erb  # 메인 대시보드
+│       └── layouts/application.html.erb
+├── bin/sync_benefits.bat    # 매일 자동 실행용 배치
+├── lib/tasks/sync_benefits.rake  # 동기화 Rake 태스크
+├── db/seeds.rb              # 55건 시드 데이터
+└── .env                     # API 키 설정
+```
+
+## 🚀 실행 방법
+```powershell
+cd c:\development\livelihood
+# .env 파일에 GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET 설정 필요
+bundle exec rails s -p 3100
+```
+
+## 🕐 마지막 업데이트: 2026-03-01 17:10

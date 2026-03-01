@@ -1,0 +1,14 @@
+# 관심 혜택 fixture
+interested_benefit:
+  user: recipient
+  benefit: savings_account
+  status: 0
+  created_at: "<%= Time.current %>"
+  updated_at: "<%= Time.current %>"
+
+applied_benefit:
+  user: recipient
+  benefit: housing_benefit
+  status: 2
+  created_at: "<%= Time.current %>"
+  updated_at: "<%= Time.current %>"

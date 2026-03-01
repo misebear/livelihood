@@ -1,0 +1,9 @@
+# 프로필 fixture
+# 주의: encrypts 컬럼(declared_monthly_income, declared_assets, vehicle_value)은
+# fixture에서 직접 설정하면 DecryptionError가 발생합니다.
+# 테스트에서 setup 블록에서 직접 생성/업데이트합니다.
+recipient_profile:
+  user: recipient
+  household_size: 4
+  region_type: "metropolitan"
+  housing_type: "monthly_rent"

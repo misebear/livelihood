@@ -1,0 +1,373 @@
+<%# ── 대시보드 홈 (현금흐름 & D-Day) ── %>
+<% content_for(:title) { @viewing_as_caregiver ? "#{@user.name || @user.email}님의 대시보드 — 보듬" : "홈 — 보듬" } %>
+
+<% if @viewing_as_caregiver %>
+  <div class="care-view-banner">
+    <div class="flex items-center gap-2">
+      <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="color:#b45309;">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+      </svg>
+      <span><strong><%= @user.name || @user.email %></strong>님의 대시보드를 조회 중입니다</span>
+    </div>
+    <%= link_to care_relations_path, class: "btn btn-sm", style: "background:#fef3c7;color:#92400e;border:1px solid #fde68a;font-size:0.75rem;" do %>
+      ← 보호자 관리로 돌아가기
+    <% end %>
+  </div>
+<% end %>
+
+<%# ══════════════════════════════════════════════════════════
+     SECTION 1: D-Day 카운트다운
+     ══════════════════════════════════════════════════════════ %>
+<%= turbo_frame_tag "payment_dday" do %>
+  <section class="dday-card animate-fade-in" aria-label="다음 입금일 정보">
+    <div class="dday-header">
+      <div class="dday-header-left">
+        <div class="icon-box icon-box-white">
+          <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
+          </svg>
+        </div>
+        <h2 class="dday-label">다음 입금일</h2>
+      </div>
+
+      <% if @next_payment %>
+        <span class="dday-count"><%= @next_payment[:label] %></span>
+      <% end %>
+    </div>
+
+    <% if @next_payment %>
+      <div class="dday-detail">
+        <div class="dday-detail-left">
+          <p class="dday-month"><%= @next_payment[:month_label] %></p>
+          <p class="dday-date"><%= @next_payment[:date].strftime("%Y년 %m월 %d일 (%a)") %></p>
+        </div>
+        <div class="dday-detail-right">
+          <p class="dday-amount"><%= number_to_currency(@monthly_income, unit: "₩", precision: 0, delimiter: ",") %></p>
+          <p class="dday-amount-label">이번 달 예정 입금</p>
+        </div>
+      </div>
+
+      <% if @next_payment[:early_reason] %>
+        <div class="dday-notice">
+          <span class="dday-notice-dot"></span>
+          <span><%= @next_payment[:early_reason] %></span>
+        </div>
+      <% end %>
+    <% else %>
+      <div class="text-center text-sm" style="padding:1rem;color:rgba(191,219,254,0.9);">
+        입금 일정 정보가 없습니다.
+      </div>
+    <% end %>
+  </section>
+<% end %>
+
+<%# ══════════════════════════════════════════════════════════
+     SECTION 2: 안전 저축 게이지 바
+     ══════════════════════════════════════════════════════════ %>
+<%= turbo_frame_tag "safe_gauge" do %>
+  <section class="card animate-fade-in"
+           data-controller="gauge"
+           data-gauge-percentage-value="<%= @safe_asset_result ? @safe_asset_result[:risk_percentage] : 0 %>"
+           aria-label="수급 안전선 정보">
+
+    <div class="card-header">
+      <div class="flex items-center gap-2">
+        <div class="icon-box icon-box-green">
+          <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="color:#059669;">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" />
+          </svg>
+        </div>
+        <div>
+          <h2 class="card-title" style="margin-bottom:0;">수급 안전선</h2>
+          <p class="text-xs text-secondary" style="margin-top:2px;line-height:1.3;">내 소득·재산이 기준선에 얼마나 가까운지 확인</p>
+        </div>
+      </div>
+
+      <% if @safe_asset_result %>
+        <% level = @safe_asset_result[:risk_level] %>
+        <% bd = @safe_asset_result[:breakdown] %>
+        <div class="tooltip-wrapper">
+          <span class="badge <%= case level
+              when :safe    then 'badge-success'
+              when :warning then 'badge-warning'
+              when :danger  then 'badge-danger'
+              end %>" style="cursor:help;">
+            <%= case level
+                when :safe    then '✅ 안전'
+                when :warning then '⚠️ 주의'
+                when :danger  then '🚨 위험'
+                end %>
+          </span>
+          <div class="tooltip-popup">
+            <p class="tooltip-popup-title">
+              <%= case level
+                  when :safe    then '💚 수급 자격 유지에 여유가 있습니다'
+                  when :warning then '⚠️ 기준선에 가까워지고 있습니다'
+                  when :danger  then '🚨 기준선을 초과했거나 매우 가깝습니다'
+                  end %>
+            </p>
+            <div class="tooltip-popup-divider"></div>
+            <div class="tooltip-popup-row">
+              <span>소득평가액</span>
+              <span><%= number_to_currency(bd[:income_evaluation], unit: "", precision: 0, delimiter: ",") %>원/월</span>
+            </div>
+            <div class="tooltip-popup-row">
+              <span>재산 환산액</span>
+              <span><%= number_to_currency(bd[:asset_income_conversion], unit: "", precision: 0, delimiter: ",") %>원/월</span>
+            </div>
+            <div class="tooltip-popup-divider"></div>
+            <div class="tooltip-popup-row highlight">
+              <span>소득인정액 합계</span>
+              <span><%= number_to_currency(bd[:total_recognized_income], unit: "", precision: 0, delimiter: ",") %>원</span>
+            </div>
+            <div class="tooltip-popup-row">
+              <span>생계급여 기준선 (<%= bd[:household_size] %>인)</span>
+              <span><%= number_to_currency(bd[:cutoff_line], unit: "", precision: 0, delimiter: ",") %>원</span>
+            </div>
+            <% gap = bd[:total_recognized_income] - bd[:cutoff_line] %>
+            <% if gap > 0 %>
+              <div class="tooltip-popup-row danger">
+                <span>초과 금액</span>
+                <span>+<%= number_to_currency(gap, unit: "", precision: 0, delimiter: ",") %>원</span>
+              </div>
+            <% else %>
+              <div class="tooltip-popup-row safe">
+                <span>기준선까지 여유</span>
+                <span><%= number_to_currency(gap.abs, unit: "", precision: 0, delimiter: ",") %>원</span>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <%# 안전선 설명 멘트 %>
+    <% if @safe_asset_result %>
+      <% bd = @safe_asset_result[:breakdown] unless local_assigns.key?(:bd) %>
+      <div class="info-banner mb-2">
+        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="color:var(--color-primary);flex-shrink:0;">
+          <path stroke-linecap="round" stroke-linejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
+        </svg>
+        <p>중위소득 <strong><%= number_to_currency(bd[:median_income], unit: "₩", precision: 0, delimiter: ",") %></strong>의 32% = <strong><%= number_to_currency(bd[:cutoff_line], unit: "₩", precision: 0, delimiter: ",") %></strong>이 생계급여 기준선입니다. 이를 넘으면 수급 자격을 잃을 수 있습니다.</p>
+      </div>
+    <% else %>
+      <div class="info-banner mb-2">
+        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="color:var(--color-primary);flex-shrink:0;">
+          <path stroke-linecap="round" stroke-linejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
+        </svg>
+        <p>소득인정액(소득+재산 환산)이 <strong>중위소득 32% 기준선</strong>을 넘으면 생계급여 수급 자격을 잃을 수 있습니다.</p>
+      </div>
+    <% end %>
+
+    <% if @safe_asset_result %>
+      <%# 게이지 바 %>
+      <% pct = @safe_asset_result[:risk_percentage] %>
+      <% cutoff = bd[:cutoff_line] %>
+      <% my_income = bd[:total_recognized_income] %>
+      <div style="position:relative;margin-bottom:2.5rem;margin-top:0.5rem;" role="progressbar" aria-valuenow="<%= pct %>" aria-valuemin="0" aria-valuemax="100" aria-label="소득인정액 비율">
+        <div class="gauge-container" style="height:28px;">
+          <div data-gauge-target="bar"
+               class="gauge-bar <%= @safe_asset_result[:risk_level] == :danger || @safe_asset_result[:risk_level] == :warning ? 'warning' : '' %>"
+               style="width:0%;height:28px;display:flex;align-items:center;justify-content:center;">
+            <span style="font-size:0.75rem;font-weight:700;color:white;">
+              <%= pct %>%
+            </span>
+          </div>
+        </div>
+        <%# 기준선(탈락선) 마커 %>
+        <div class="gauge-marker" style="left:85%;">
+          <span class="gauge-marker-label-top">탈락선</span>
+          <div class="gauge-marker-line"></div>
+          <span class="gauge-marker-label-bottom"><%= number_to_currency(cutoff, unit: "₩", precision: 0, delimiter: ",") %></span>
+        </div>
+        <%# 내 소득인정액 마커 (게이지 끝 위치) %>
+        <% bar_pct = [pct, 100].min %>
+        <div class="gauge-my-income" style="left:<%= bar_pct %>%;">
+          <span class="gauge-my-income-label">내 소득<br><%= number_to_currency(my_income, unit: "₩", precision: 0, delimiter: ",") %></span>
+        </div>
+      </div>
+
+      <%# 저축 가능 한도 %>
+      <div class="savings-box">
+        <span class="text-secondary text-sm">추가 저축 가능 금액</span>
+        <span class="savings-amount">
+          <%= number_to_currency(@safe_asset_result[:safe_savings_amount], unit: "₩", precision: 0, delimiter: ",") %>
+        </span>
+      </div>
+      <div class="info-note">
+        <p>기준선(<%= number_to_currency(bd[:cutoff_line], unit: "₩", precision: 0, delimiter: ",") %>) − 내 소득인정액(<%= number_to_currency(bd[:total_recognized_income], unit: "₩", precision: 0, delimiter: ",") %>) = 여유 <strong><%= number_to_currency([bd[:cutoff_line] - bd[:total_recognized_income], 0].max, unit: "₩", precision: 0, delimiter: ",") %></strong>을 금융재산 환산율(6.26%)로 역산한 금액입니다.</p>
+        <p style="margin-top:4px;">👉 <strong>내정보</strong>에서 소득·재산·가구원수를 수정하면 자동으로 재계산됩니다.</p>
+      </div>
+
+      <%# 정부매칭 통장 추천 %>
+      <% if @safe_asset_result[:recommend_safe_savings] && @safe_savings.any? %>
+        <div class="recommend-box">
+          <p class="recommend-title">💰 정부매칭 저축통장 추천</p>
+          <% @safe_savings.each do |product| %>
+            <div class="recommend-item">
+              <span><%= product.title %></span>
+              <% if product.apply_url.present? %>
+                <%= link_to "바로가기 →", product.apply_url, target: "_blank", rel: "noopener", style: "font-size:0.8125rem;font-weight:700;" %>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+
+      <%# 면책 조항 %>
+      <%= render_disclaimer(type: :calculator) %>
+    <% else %>
+      <%# 프로필 미설정 시 CTA %>
+      <div class="empty-state">
+        <div class="empty-state-icon">
+          <svg width="28" height="28" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="color:#94a3b8;">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+          </svg>
+        </div>
+        <p class="empty-state-title">내 정보를 입력하면</p>
+        <p class="empty-state-desc">안전 저축 한도를 계산해 드려요!</p>
+        <%= link_to edit_user_profile_path, class: "btn btn-primary" do %>
+          내 상황 입력하기
+        <% end %>
+      </div>
+    <% end %>
+  </section>
+<% end %>
+
+<%# ══════════════════════════════════════════════════════════
+     SECTION 3: 이번 달 현금흐름 일정
+     ══════════════════════════════════════════════════════════ %>
+<section class="card animate-fade-in" aria-label="이번 달 현금흐름">
+  <div class="card-header" style="margin-bottom:1rem;">
+    <div class="flex items-center gap-2">
+      <div class="icon-box icon-box-blue">
+        <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="color:#0284c7;">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z" />
+        </svg>
+      </div>
+      <h2 class="card-title">이번 달 현금흐름</h2>
+    </div>
+    <%= link_to new_cashflow_event_path, class: "btn btn-primary btn-sm" do %>
+      <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+      </svg>
+      추가
+    <% end %>
+  </div>
+
+  <div class="info-note" style="margin-bottom:0.75rem;">
+    <p>📅 이번 달 예상되는 <strong>수입</strong>(급여, 수당)과 <strong>지출</strong>(월세, 보험료)을 등록하여 현금 흐름을 한눈에 관리하세요.</p>
+    <p style="margin-top:4px;color:var(--color-text-muted);font-size:0.75rem;">※ 현금흐름은 일정 관리용이며, 수급 안전선 계산에는 반영되지 않습니다. 안전선은 <strong>내정보</strong>의 소득·재산 데이터로 계산됩니다.</p>
+  </div>
+
+  <%# 수입/지출 요약 %>
+  <div class="grid-2 mb-2">
+    <div class="summary-box summary-income">
+      <p class="summary-label">예상 수입</p>
+      <p class="summary-value income">+<%= number_to_currency(@monthly_income, unit: "", precision: 0, delimiter: ",") %></p>
+    </div>
+    <div class="summary-box summary-expense">
+      <p class="summary-label">예상 지출</p>
+      <p class="summary-value expense">-<%= number_to_currency(@monthly_expense, unit: "", precision: 0, delimiter: ",") %></p>
+    </div>
+  </div>
+
+  <%# 다가오는 일정 %>
+  <% if @upcoming_events.any? %>
+    <div class="event-list">
+      <% @upcoming_events.each do |event| %>
+        <div class="event-item">
+          <div class="flex items-center gap-2">
+            <div class="event-date-box <%= event.payment? ? 'income' : 'expense' %>">
+              <%= event.event_date.day %>일
+            </div>
+            <div>
+              <p class="event-title"><%= event.title %></p>
+              <p class="event-dday"><%= event.d_day_label %></p>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="event-amount <%= event.payment? ? 'income' : 'expense' %>">
+              <%= event.payment? ? '+' : '-' %><%= number_to_currency(event.expected_amount, unit: "", precision: 0, delimiter: ",") %>원
+            </span>
+            <div class="event-actions">
+              <%= link_to edit_cashflow_event_path(event), class: "event-action-btn", title: "수정" do %>
+                <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125" />
+                </svg>
+              <% end %>
+              <%= button_to cashflow_event_path(event), method: :delete, class: "event-action-btn danger", title: "삭제",
+                  data: { turbo_confirm: "이 이벤트를 삭제할까요?" } do %>
+                <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                </svg>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="empty-state">
+      <div class="empty-state-icon">
+        <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="color:#94a3b8;">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
+        </svg>
+      </div>
+      <p class="empty-state-title">등록된 일정이 없습니다</p>
+      <p class="empty-state-desc mb-2">수입·지출 일정을 추가해보세요!</p>
+      <%= link_to new_cashflow_event_path, class: "btn btn-primary btn-sm" do %>
+        이벤트 추가하기
+      <% end %>
+    </div>
+  <% end %>
+</section>
+
+<%# ══════════════════════════════════════════════════════════
+     SECTION 4: 관심 혜택 현황
+     ══════════════════════════════════════════════════════════ %>
+<% if @user_benefits.any? %>
+  <section class="card animate-fade-in" aria-label="진행 중인 혜택">
+    <div class="card-header" style="margin-bottom:1rem;">
+      <div class="flex items-center gap-2">
+        <div class="icon-box icon-box-purple">
+          <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="color:#7c3aed;">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 0 0 2.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 0 0-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75 2.25 2.25 0 0 0-.1-.664m-5.8 0A2.251 2.251 0 0 1 13.5 2.25H15a2.25 2.25 0 0 1 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25ZM6.75 12h.008v.008H6.75V12Zm0 3h.008v.008H6.75V15Zm0 3h.008v.008H6.75V18Z" />
+          </svg>
+        </div>
+        <h2 class="card-title">진행 중인 혜택</h2>
+      </div>
+    </div>
+
+    <div class="benefit-list">
+      <% @user_benefits.each do |ub| %>
+        <div class="benefit-item">
+          <div>
+            <p class="benefit-title"><%= ub.benefit.title %></p>
+            <span class="badge mt-1 <%= case ub.status
+                when 'interested'           then 'badge-primary'
+                when 'preparing_documents'   then 'badge-warning'
+                when 'applied'              then 'badge-success'
+                end %>">
+              <%= case ub.status
+                  when 'interested'           then '👀 관심'
+                  when 'preparing_documents'   then '📄 서류 준비 중'
+                  when 'applied'              then '✅ 신청 완료'
+                  end %>
+            </span>
+          </div>
+          <% if ub.benefit.apply_url.present? %>
+            <%= link_to ub.benefit.apply_url, target: "_blank", rel: "noopener", class: "benefit-link" do %>
+              <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+              </svg>
+            <% end %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+
+    <%= render_disclaimer(type: :benefit) %>
+  </section>
+<% end %>

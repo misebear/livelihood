@@ -1,0 +1,25 @@
+# 테스트 사용자 fixture
+# 암호화 속성이 있으므로 encrypted_password는 Devise가 처리
+recipient:
+  email: "recipient@example.com"
+  encrypted_password: "$2a$12$LK.oG15VLBpKyUH/GB3AIuxm0niJCTkP7/SoFWiw9vu.3CmbNxT.2"
+  name: "김수급"
+  role: 0
+  created_at: "<%= Time.current %>"
+  updated_at: "<%= Time.current %>"
+
+caregiver:
+  email: "caregiver@example.com"
+  encrypted_password: "$2a$12$LK.oG15VLBpKyUH/GB3AIuxm0niJCTkP7/SoFWiw9vu.3CmbNxT.2"
+  name: "이보호"
+  role: 1
+  created_at: "<%= Time.current %>"
+  updated_at: "<%= Time.current %>"
+
+admin:
+  email: "admin@example.com"
+  encrypted_password: "$2a$12$LK.oG15VLBpKyUH/GB3AIuxm0niJCTkP7/SoFWiw9vu.3CmbNxT.2"
+  name: "관리자"
+  role: 2
+  created_at: "<%= Time.current %>"
+  updated_at: "<%= Time.current %>"

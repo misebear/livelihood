@@ -1,0 +1,27 @@
+# 혜택 fixture
+savings_account:
+  external_id: "SS001"
+  title: "희망저축계좌 I"
+  summary: "기초생활수급자의 자활 지원 저축 프로그램"
+  is_safe_savings: true
+  apply_url: "https://example.com/apply1"
+  created_at: "<%= Time.current %>"
+  updated_at: "<%= Time.current %>"
+
+housing_benefit:
+  external_id: "GN001"
+  title: "주거급여"
+  summary: "주거 안정 지원 급여"
+  is_safe_savings: false
+  apply_url: "https://example.com/housing"
+  created_at: "<%= Time.current %>"
+  updated_at: "<%= Time.current %>"
+
+education_benefit:
+  external_id: "GN002"
+  title: "교육급여"
+  summary: "교육비 지원"
+  is_safe_savings: false
+  apply_url: ""
+  created_at: "<%= Time.current %>"
+  updated_at: "<%= Time.current %>"

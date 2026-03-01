@@ -1,0 +1,7 @@
+{
+  "rubyLsp.enable": false,
+  "ruby.format": false,
+  "[ruby]": {
+    "editor.formatOnSave": false
+  }
+}

@@ -1,0 +1,27 @@
+# 현금흐름 이벤트 fixture
+welfare_payment:
+  user: recipient
+  title: "생계급여"
+  event_type: 0
+  expected_amount: 712514
+  event_date: "<%= Date.current.end_of_month %>"
+  created_at: "<%= Time.current %>"
+  updated_at: "<%= Time.current %>"
+
+phone_bill:
+  user: recipient
+  title: "통신비"
+  event_type: 1
+  expected_amount: 35000
+  event_date: "<%= Date.current + 3.days %>"
+  created_at: "<%= Time.current %>"
+  updated_at: "<%= Time.current %>"
+
+past_payment:
+  user: recipient
+  title: "지난달 급여"
+  event_type: 0
+  expected_amount: 700000
+  event_date: "<%= Date.current - 15.days %>"
+  created_at: "<%= Time.current %>"
+  updated_at: "<%= Time.current %>"
