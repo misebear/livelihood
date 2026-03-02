@@ -1,9 +1,9 @@
 ========================================
   보듬 (Bodeum) — DEV_STATUS
-  마지막 업데이트: 2026-03-02 06:00
+  마지막 업데이트: 2026-03-02 09:22
 ========================================
 
-📌 현재 진행 상태: 🟡 Play Store 등록 진행 중
+📌 현재 진행 상태: ✅ Play Store 검토 전송 완료 (심사 대기 중)
 
 ========================================
 ✅ 완료된 작업
@@ -19,105 +19,78 @@
    - 프로젝트: giving-possibility
    - 도메인: bodeum.me (커스텀) + livelihood-production.up.railway.app
    - PostgreSQL DB 연결
-   - Dockerfile: Thruster 제거, rails server -b 0.0.0.0
-   - tailwindcss-rails gem 제거 (커스텀 CSS 사용)
-   - 포트: Railway 자동 할당 (8080)
+   - RAILS_SERVE_STATIC_FILES=true (정적 파일 서빙 활성화)
+   - 포트: Railway 자동 할당
 
-3. ✅ PWA 설정 완료
-   - public/manifest.json (보듬 브랜딩)
-   - public/service-worker.js (오프라인 캐싱)
-   - layout에 manifest 링크 + SW 등록 스크립트
-   - 앱 아이콘 (512x512) 생성
+3. ✅ PWA + TWA Android 앱 빌드 완료
+   - manifest.json, service-worker.js
+   - Bubblewrap TWA: me.bodeum.app
+   - app-release-bundle.aab (3.09 MB)
+   - android.keystore (비밀번호: bodeum2026!)
 
-4. ✅ TWA Android 앱 빌드 완료
-   - Bubblewrap CLI v1.24.1
-   - 패키지: me.bodeum.app
-   - 빌드 결과: c:\development\bodeum-twa\
-     - app-release-bundle.aab (3.09 MB)
-     - app-release-signed.apk (2.96 MB)
-     - android.keystore (비밀번호: bodeum2026!)
-     - store_icon.png (247 KB)
-
-5. ✅ Google Play Console 앱 설정 (9/11 완료)
-   - 개인정보처리방침, 앱 액세스, 광고, 콘텐츠 등급
-   - 타겟층(18+), 정부앱, 건강앱, 데이터 보안, 금융 기능
+4. ✅ Play Store 검토 전송 완료 (2026-03-02)
+   - 앱 아이콘 512x512 업로드
+   - Feature Graphic 1024x500 업로드
+   - 스크린샷 4장 1080x1920 업로드 (로그인/대시보드/혜택/프로필)
+   - 프로덕션 v1.0 AAB 업로드
+   - 176개국 배포 설정
+   - 콘텐츠 등급, 타겟층, 광고 선언 완료
    - 개인정보처리방침: bodeum.me/privacy.html
-   - assetlinks.json: public/.well-known/assetlinks.json
+   - 계정 삭제 안내: bodeum.me/delete-account.html
+   - 10개 변경사항 검토 전송 → Google 심사 대기 (1~7일)
 
-6. ✅ Play Store 등록 자료 준비
-   - Feature Graphic (1024x500)
-   - 스크린샷 4장 (로그인, 대시보드, 혜택, 프로필)
-   - 스토어 설명 (간단/자세한 설명)
+5. ✅ 보듬 리브랜딩
+   - 수급생활 → 보듬
+   - 컬러: 딥 틸(#0D9488) + 코랄(#F97316) + 크림(#FEFCE8)
 
-7. ✅ 보듬 리브랜딩 (2026-03-01)
-   - 앱 이름: 수급생활 → 보듬
-   - 컬러 팔레트: 인디고 → 딥 틸(#0D9488) + 코랄(#F97316) + 크림(#FEFCE8)
-   - 14곳 앱 이름 치환 + 6곳 그래디언트 교체
-   - 다크모드 따뜻한 스톤 톤 적용
-
-8. ✅ 복지 혜택 자동 수집 시스템 (2026-03-01)
+6. ✅ 복지 혜택 자동 수집 시스템
    - 55건 시드 데이터 (11개 카테고리)
-   - 공공데이터포털 4개 API 멀티 연동 (중앙부처복지, 지자체복지, 사회서비스, 장애인편의시설)
-   - 6개 포털 크롤링 (복지로, 에너지바우처, 문화누리 등)
-   - 중복 제거 서비스
-   - 매일 새벽 4시 자동 갱신 (Windows 작업 스케줄러)
-   - `rails sync:benefits` (수동) / `rails sync:status` (현황 확인)
+   - 공공데이터포털 4개 API 멀티 연동
+   - 6개 포털 크롤링
+   - 매일 새벽 4시 자동 갱신
 
 ========================================
-⚠️ 다음에 할 작업 (Play Store 등록 마무리)
+⚠️ 다음에 할 작업
 ========================================
-1. [ ] Play Console → 스토어 등록정보 → 이미지 업로드
-   - 앱 아이콘: c:\development\bodeum-twa\store_icon.png
-   - Feature Graphic: brain 폴더 내 feature_graphic_*.png
-   - 스크린샷: brain 폴더 내 bodeum_*.png (4장)
-2. [ ] 내부 테스트 → AAB 업로드 (app-release-bundle.aab)
-3. [ ] 테스터 선택 → 이메일 추가
-4. [ ] 버전 미리보기 및 확인 → 출시
-5. [ ] DATA_GO_KR_API_KEY 발급 (data.go.kr 가입 → .env에 설정)
+1. [ ] Google Play 심사 결과 대기 (1~7일)
+2. [ ] 심사 통과 후 스토어 출시 확인
+3. [ ] data.go.kr API 키 발급 → .env에 설정
+4. [ ] 실제 공공데이터 연동 테스트
 
 ========================================
 ⚠️ 주의사항
 ========================================
 - 키스토어 절대 분실 금지: c:\development\bodeum-twa\android.keystore
-- Railway 무료 Tier: 30일 또는 $5 사용량 제한
+- Railway Trial: 30 days or $4.93 남음
 - Google Play Developer 계정: JejuBucketList
-- Gabia DNS 중복 레코드 정리 필요
 
 ========================================
 🏗️ 프로젝트 구조
 ========================================
 c:\development\livelihood\          — Rails 웹앱 (메인)
   ├── app/services/
-  │   ├── public_data_sync_service.rb     — 4개 API 멀티 연동
-  │   ├── welfare_portal_scraper_service.rb — 6개 포털 크롤링
-  │   ├── benefit_deduplication_service.rb  — 중복 제거
-  │   └── safe_asset_calculator_service.rb  — 저축 안전선 계산
-  ├── lib/tasks/sync_benefits.rake         — 수동 동기화 명령
-  └── bin/sync_benefits.bat                — 자동 동기화 배치
+  │   ├── public_data_sync_service.rb
+  │   ├── welfare_portal_scraper_service.rb
+  │   ├── benefit_deduplication_service.rb
+  │   └── safe_asset_calculator_service.rb
+  ├── public/privacy.html           — 개인정보처리방침
+  ├── public/delete-account.html    — 계정 삭제 안내
+  └── Dockerfile                    — RAILS_SERVE_STATIC_FILES=true
 
 c:\development\bodeum-twa\          — TWA Android 래퍼
-  ├── app-release-bundle.aab        — Play Store 업로드용
-  ├── app-release-signed.apk        — 직접 설치용
-  ├── android.keystore              — 서명 키
-  ├── store_icon.png                — 스토어 아이콘
-  └── twa-manifest.json             — TWA 설정
+  ├── app-release-bundle.aab
+  ├── app-release-signed.apk
+  ├── android.keystore
+  └── store_icon.png
 
 ========================================
 🚀 실행 방법
 ========================================
-[로컬 개발]
-  cd c:\development\livelihood
-  GOOGLE_CLIENT_ID=... GOOGLE_CLIENT_SECRET=... bundle exec rails server -p 3100
+[로컬] bundle exec rails server -p 3100 -b 127.0.0.1
+[프로덕션] GitHub push → Railway 자동 배포 → bodeum.me
 
-[프로덕션]
-  GitHub push → Railway 자동 배포
-  도메인: https://bodeum.me
-
-[복지 데이터 동기화]
-  rails sync:benefits    — 전체 동기화
-  rails sync:status      — 현황 확인
-
-[TWA 재빌드]
-  cd c:\development\bodeum-twa
-  bubblewrap build
-  키스토어 비밀번호: bodeum2026!
+========================================
+🖥️ 현재 실행 중인 터미널
+========================================
+1. Bybit 웹훅 서버: cd c:\bybit; python webhook_server.py (3시간+ 실행 중)
+2. Rails 서버: bundle exec rails server -p 3100 (3시간+ 실행 중)
