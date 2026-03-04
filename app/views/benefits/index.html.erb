@@ -30,7 +30,7 @@
 
       <div class="space-y-2">
         <% benefits.each do |benefit| %>
-          <%= link_to benefit_path(benefit), class: "benefit-card" do %>
+          <%= link_to benefit_path(benefit), class: "benefit-card", style: "--cat-color: #{meta[:color]}" do %>
             <div class="benefit-card-left">
               <div class="benefit-card-header">
                 <p class="benefit-card-title"><%= benefit.title %></p>

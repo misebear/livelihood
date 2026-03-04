@@ -10,8 +10,9 @@
   --color-primary-dark: #0F766E;
   --color-accent: #F97316;
   --color-accent-light: #FDBA74;
-  --color-bg: #F8FAFB;
+  --color-bg: #FFFFFF;
   --color-surface: #ffffff;
+  --color-card-bg: #F8FAFB;
   --color-text: #111827;
   --color-text-secondary: #4B5563;
   --color-text-muted: #9CA3AF;
@@ -1596,15 +1597,29 @@ svg:not(.google-icon) {
 .gauge-container {
   background: #e2e8f0;
   border-radius: 999px;
-  height: 10px;
+  height: 28px;
   overflow: hidden;
 }
 
 .gauge-bar {
-  height: 100%;
+  height: 28px;
   border-radius: 999px;
   transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1);
   background: linear-gradient(90deg, #10b981, #3b82f6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gauge-bar-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: white;
+}
+
+.dday-empty {
+  padding: 1rem;
+  color: var(--color-text-muted);
 }
 
 .gauge-bar.warning {
@@ -2025,11 +2040,11 @@ select:focus-visible {
   background: #eef2ff;
 }
 
-/* ── D-Day 카드 (v5 미니멀) ──────────────────────────────── */
+/* ── D-Day 카드 (v6 미니멀 + 좌측 틸 바) ─────────────────── */
 .dday-card {
   background: #ffffff;
   border-radius: var(--radius-lg);
-  padding: 1.5rem;
+  padding: 1.5rem 1.5rem 1.5rem 1.75rem;
   color: var(--color-text);
   border: 1px solid var(--color-border);
   margin-bottom: 0.75rem;
@@ -2038,7 +2053,14 @@ select:focus-visible {
 }
 
 .dday-card::before {
-  display: none;
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--color-primary);
+  border-radius: 0 2px 2px 0;
 }
 
 .dday-header {
@@ -2634,39 +2656,47 @@ select:focus-visible {
   border-radius: 4px;
 }
 
-/* ── 혜택 카테고리 탭 ─────────────────────────────────────── */
+/* ── 혜택 카테고리 탭 (수평 스크롤) ────────────────────────── */
 .benefit-category-tabs {
   display: flex;
-  flex-wrap: wrap;
   gap: 0.375rem;
-  padding-bottom: 0.5rem;
+  padding-bottom: 0.75rem;
   margin-bottom: 1rem;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.benefit-category-tabs::-webkit-scrollbar {
+  display: none;
 }
 
 .category-tab {
   flex-shrink: 0;
-  padding: 0.375rem 0.75rem;
+  padding: 0.4375rem 0.875rem;
   border-radius: 999px;
-  font-size: 0.75rem;
+  font-size: 0.8125rem;
   font-weight: 600;
   color: var(--color-text-secondary);
   background: var(--color-surface);
-  border: 1px solid var(--color-border-light);
+  border: 1px solid var(--color-border);
   white-space: nowrap;
-  transition: all 0.15s ease;
+  transition: all 0.2s ease;
   text-decoration: none;
 }
 
 .category-tab:hover {
-  background: var(--color-primary);
-  color: #fff;
-  border-color: var(--color-primary);
+  background: rgba(13, 148, 136, 0.08);
+  color: var(--color-primary);
+  border-color: var(--color-primary-light);
+  text-decoration: none;
 }
 
 .category-tab.active {
   background: var(--color-primary);
   color: #fff;
   border-color: var(--color-primary);
+  box-shadow: 0 2px 4px rgba(13, 148, 136, 0.2);
 }
 
 /* ── 혜택 카테고리 헤더 ───────────────────────────────────── */
@@ -2697,19 +2727,32 @@ select:focus-visible {
   font-weight: 500;
 }
 
-/* ── 혜택 카드 ────────────────────────────────────────────── */
+/* ── 혜택 카드 (좌측 카테고리 컬러바) ──────────────────────── */
 .benefit-card {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   gap: 0.75rem;
-  padding: 0.875rem 1rem;
+  padding: 0.875rem 1rem 0.875rem 1.125rem;
   background: var(--color-surface);
   border: 1px solid var(--color-border-light);
   border-radius: var(--radius-md);
   text-decoration: none;
   color: inherit;
   transition: all 0.15s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.benefit-card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--cat-color, var(--color-primary));
+  border-radius: 0 2px 2px 0;
 }
 
 .benefit-card:hover {
@@ -2793,11 +2836,221 @@ select:focus-visible {
   white-space: nowrap;
 }
 
+/* ── 보호자 페이지 시맨틱 클래스 ──────────────────────────── */
+.care-section {
+  background: white;
+  border-radius: var(--radius-lg);
+  padding: 1.25rem;
+  border: 1px solid var(--color-border-light);
+  margin-bottom: 1rem;
+}
+
+.care-section-header {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  margin-bottom: 1rem;
+}
+
+.care-section-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.care-section-icon.violet {
+  background: #ede9fe;
+}
+
+.care-section-icon.sky {
+  background: #e0f2fe;
+}
+
+.care-section-title {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.care-person-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem;
+  background: var(--color-card-bg);
+  border-radius: var(--radius-md);
+  transition: background 0.15s ease;
+}
+
+.care-person-row:hover {
+  background: #f1f5f9;
+}
+
+.care-person-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.care-person-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: white;
+  flex-shrink: 0;
+}
+
+.care-person-avatar.violet {
+  background: linear-gradient(135deg, #c4b5fd, #a78bfa);
+}
+
+.care-person-avatar.sky {
+  background: linear-gradient(135deg, #7dd3fc, #38bdf8);
+}
+
+.care-person-name {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.care-person-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.care-btn-view {
+  font-size: 0.75rem;
+  background: #eef2ff;
+  color: #4338ca;
+  font-weight: 700;
+  padding: 0.375rem 0.75rem;
+  border-radius: var(--radius-sm);
+  transition: background 0.15s ease;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+}
+
+.care-btn-view:hover {
+  background: #e0e7ff;
+  text-decoration: none;
+}
+
+.care-btn-remove {
+  font-size: 0.75rem;
+  color: #ef4444;
+  font-weight: 500;
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--radius-sm);
+  transition: all 0.15s ease;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.care-btn-remove:hover {
+  background: #fef2f2;
+  color: #b91c1c;
+  text-decoration: none;
+}
+
+.care-btn-accept {
+  font-size: 0.75rem;
+  background: #ecfdf5;
+  color: #047857;
+  font-weight: 700;
+  padding: 0.375rem 0.875rem;
+  border-radius: var(--radius-sm);
+  transition: background 0.15s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.care-btn-accept:hover {
+  background: #d1fae5;
+}
+
+.care-invite-section {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-border-light);
+}
+
+.care-invite-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--color-text-secondary);
+  margin-bottom: 0.625rem;
+}
+
+.care-invite-form {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.care-invite-input {
+  flex: 1;
+  padding: 0.625rem 0.875rem;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  font-family: var(--font-family);
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  background: white;
+  color: var(--color-text);
+}
+
+.care-invite-input:focus {
+  border-color: var(--color-primary-light);
+  box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.1);
+}
+
+.care-invite-submit {
+  background: var(--color-primary);
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 700;
+  padding: 0.625rem 1.25rem;
+  border-radius: var(--radius-md);
+  border: none;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  font-family: var(--font-family);
+}
+
+.care-invite-submit:hover {
+  background: var(--color-primary-dark);
+}
+
+/* ── status-badge (보호자/혜택 상태 뱃지) ─────────────────── */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  padding: 0.125rem 0.5rem;
+  border-radius: 999px;
+  margin-top: 0.125rem;
+}
+
 /* ── 다크모드 ────────────────────────────────────────────── */
 @media (prefers-color-scheme: dark) {
   :root {
     --color-bg: #111827;
     --color-surface: #1F2937;
+    --color-card-bg: #1a2332;
     --color-text: #F9FAFB;
     --color-text-secondary: #D1D5DB;
     --color-text-muted: #6B7280;
@@ -2811,6 +3064,11 @@ select:focus-visible {
   }
 
   .dday-card {
+    background: #1F2937;
+    border-color: #374151;
+  }
+
+  .care-section {
     background: #1F2937;
     border-color: #374151;
   }
