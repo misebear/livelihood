@@ -3,11 +3,7 @@ Rails.application.routes.draw do
     omniauth_callbacks: "users/omniauth_callbacks"
   }
 
-  # ── Dashboard (홈) ──────────────────────────────────────────
-  authenticated :user do
-    root "dashboard#index", as: :authenticated_root
-  end
-
+  # ── Dashboard (홈) — 로그인 없이도 접근 가능 ────────────────
   root "dashboard#index"
 
   # ── 보호자 대리 조회 ─────────────────────────────────────

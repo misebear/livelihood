@@ -1,5 +1,5 @@
 <%# ── 대시보드 홈 (현금흐름 & D-Day) ── %>
-<% content_for(:title) { @viewing_as_caregiver ? "#{@user.name || @user.email}님의 대시보드 — 보듬" : "홈 — 보듬" } %>
+<% content_for(:title) { @viewing_as_caregiver && @user ? "#{@user.name || @user.email}님의 대시보드 — 보듬" : "홈 — 보듬" } %>
 
 <% if @viewing_as_caregiver %>
   <div class="care-view-banner">
@@ -227,8 +227,14 @@
         </div>
         <p class="empty-state-title">내 정보를 입력하면</p>
         <p class="empty-state-desc">안전 저축 한도를 계산해 드려요!</p>
-        <%= link_to edit_user_profile_path, class: "btn btn-primary" do %>
-          내 상황 입력하기
+        <% if user_signed_in? %>
+          <%= link_to edit_user_profile_path, class: "btn btn-primary" do %>
+            내 상황 입력하기
+          <% end %>
+        <% else %>
+          <%= link_to new_user_session_path, class: "btn btn-primary" do %>
+            로그인하고 시작하기
+          <% end %>
         <% end %>
       </div>
     <% end %>
@@ -248,11 +254,13 @@
       </div>
       <h2 class="card-title">이번 달 현금흐름</h2>
     </div>
-    <%= link_to new_cashflow_event_path, class: "btn btn-primary btn-sm" do %>
-      <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-      </svg>
-      추가
+    <% if user_signed_in? %>
+      <%= link_to new_cashflow_event_path, class: "btn btn-primary btn-sm" do %>
+        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+        </svg>
+        추가
+      <% end %>
     <% end %>
   </div>
 
@@ -317,8 +325,14 @@
       </div>
       <p class="empty-state-title">등록된 일정이 없습니다</p>
       <p class="empty-state-desc mb-2">수입·지출 일정을 추가해보세요!</p>
-      <%= link_to new_cashflow_event_path, class: "btn btn-primary btn-sm" do %>
-        이벤트 추가하기
+      <% if user_signed_in? %>
+        <%= link_to new_cashflow_event_path, class: "btn btn-primary btn-sm" do %>
+          이벤트 추가하기
+        <% end %>
+      <% else %>
+        <%= link_to new_user_session_path, class: "btn btn-primary btn-sm" do %>
+          로그인하고 추가하기
+        <% end %>
       <% end %>
     </div>
   <% end %>

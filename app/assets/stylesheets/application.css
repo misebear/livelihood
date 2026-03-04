@@ -1155,6 +1155,22 @@ svg:not(.google-icon) {
   text-decoration: none;
 }
 
+.top-nav-login {
+  font-size: 0.8125rem;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 0.375rem 1rem;
+  border-radius: 999px;
+  transition: background 0.15s ease;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.top-nav-login:hover {
+  background: rgba(255, 255, 255, 0.35);
+  text-decoration: none;
+}
+
 /* ── Flash 메시지 ────────────────────────────────────────── */
 .flash-container {
   max-width: var(--container-max);

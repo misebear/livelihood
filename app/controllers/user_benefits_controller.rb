@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# 관심 혜택 관리 — 개인 데이터이므로 로그인 필요
 class UserBenefitsController < ApplicationController
   before_action :authenticate_user!
 
