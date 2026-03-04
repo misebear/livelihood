@@ -1,9 +1,9 @@
 ========================================
   보듬 (Bodeum) — DEV_STATUS
-  마지막 업데이트: 2026-03-02 09:22
+  마지막 업데이트: 2026-03-04 16:56
 ========================================
 
-📌 현재 진행 상태: ✅ Play Store 검토 전송 완료 (심사 대기 중)
+📌 현재 진행 상태: ✅ 로그인 없이 서비스 이용 가능 배포 완료 + Play Store 심사 대기 중
 
 ========================================
 ✅ 완료된 작업
@@ -20,7 +20,8 @@
    - 도메인: bodeum.me (커스텀) + livelihood-production.up.railway.app
    - PostgreSQL DB 연결
    - RAILS_SERVE_STATIC_FILES=true (정적 파일 서빙 활성화)
-   - 포트: Railway 자동 할당
+   - 배포 브랜치: master (production → master 변경 완료 2026-03-04)
+   - GitHub App 권한: All repositories (2026-03-04 수정)
 
 3. ✅ PWA + TWA Android 앱 빌드 완료
    - manifest.json, service-worker.js
@@ -45,25 +46,43 @@
    - 6개 포털 크롤링
    - 매일 새벽 4시 자동 갱신
 
+7. ✅ 로그인 없이 서비스 이용 가능 (2026-03-04)
+   - 대시보드/혜택/보호자 목록 → 로그인 없이 조회 가능
+   - 현금흐름 CRUD, 프로필 수정 → 로그인 필요 유지
+   - 하단 네비 항상 표시 (홈/혜택/보호자/로그인)
+   - 상단에 게스트용 로그인 버튼 추가
+   - 게스트 사용자에게 "로그인하고 시작하기" CTA 표시
+   - Google OAuth invalid_client 에러 원인 분석 완료 (Railway 환경변수 불일치)
+
 ========================================
 ⚠️ 다음에 할 작업
 ========================================
 1. [ ] Google Play 심사 결과 대기 (1~7일)
 2. [ ] 심사 통과 후 스토어 출시 확인
-3. [ ] data.go.kr API 키 발급 → .env에 설정
-4. [ ] 실제 공공데이터 연동 테스트
+3. [ ] Google OAuth invalid_client 에러 수정 (GOOGLE_CLIENT_SECRET Railway 환경변수 동기화)
+4. [ ] data.go.kr API 키 발급 → .env에 설정
+5. [ ] 실제 공공데이터 연동 테스트
 
 ========================================
 ⚠️ 주의사항
 ========================================
 - 키스토어 절대 분실 금지: c:\development\bodeum-twa\android.keystore
-- Railway Trial: 30 days or $4.93 남음
+- Railway Trial: 27 days or $4.64 남음
 - Google Play Developer 계정: JejuBucketList
+- Railway 배포 브랜치: master (production 아님!)
+- Google OAuth: invalid_client 에러 미해결 (로그인 없이 이용 가능으로 우회)
 
 ========================================
 🏗️ 프로젝트 구조
 ========================================
 c:\development\livelihood\          — Rails 웹앱 (메인)
+  ├── app/controllers/
+  │   ├── dashboard_controller.rb      — 게스트 접근 가능, care_view만 로그인
+  │   ├── benefits_controller.rb       — 전체 공개
+  │   ├── care_relations_controller.rb — 목록 공개, 생성/수락/삭제 로그인
+  │   ├── cashflow_events_controller.rb — 전체 로그인 필수
+  │   ├── user_benefits_controller.rb  — 전체 로그인 필수
+  │   └── user_profiles_controller.rb  — show 게스트 리디렉트, edit/update 로그인
   ├── app/services/
   │   ├── public_data_sync_service.rb
   │   ├── welfare_portal_scraper_service.rb
@@ -83,10 +102,9 @@ c:\development\bodeum-twa\          — TWA Android 래퍼
 🚀 실행 방법
 ========================================
 [로컬] bundle exec rails server -p 3100 -b 127.0.0.1
-[프로덕션] GitHub push → Railway 자동 배포 → bodeum.me
+[프로덕션] GitHub push (master) → Railway 자동 배포 → bodeum.me
 
 ========================================
 🖥️ 현재 실행 중인 터미널
 ========================================
-1. Bybit 웹훅 서버: cd c:\bybit; python webhook_server.py (3시간+ 실행 중)
-2. Rails 서버: bundle exec rails server -p 3100 (3시간+ 실행 중)
+없음 (새 세션)
