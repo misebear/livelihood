@@ -1,58 +1,66 @@
 ========================================
   보듬 (Bodeum) — DEV_STATUS
-  마지막 업데이트: 2026-03-05 09:10
+  마지막 업데이트: 2026-03-05 09:23
 ========================================
 
-📌 현재 진행 상태: ✅ 4대 핵심 기능 업그레이드 완료 + Play Store 심사 대기 중
+📌 현재 진행 상태: ✅ 5대 핵심 기능 업그레이드 + Railway 배포 완료
 
 ========================================
 ✅ 완료된 작업
 ========================================
 1. ✅ Rails 8 웹앱 (대시보드, 혜택, 보호자, 프로필, Devise+OAuth)
-2. ✅ Railway 배포 (bodeum.me, master 브랜치)
-3. ✅ TWA Android (me.bodeum.app, app-release-bundle.aab)
+2. ✅ Railway 배포 (bodeum.me, master 브랜치) — 최신 push 완료
+3. ✅ TWA Android (me.bodeum.app, v1 AAB 업로드 완료)
 4. ✅ Play Store 심사 전송 (테스트 계정 등록, OAuth 수정)
 5. ✅ 복지 혜택 55건 시드 + 공공데이터 자동 수집
 6. ✅ 로그인 없이 서비스 이용 가능
 7. ✅ UI v6 미니멀 리디자인 (순백배경, D-Day 틸바, 카테고리 수평스크롤)
-
-8. ✅ 4대 핵심 기능 업그레이드 (2026-03-05)
-   (a) 🎛️ 안전선 시뮬레이터
-       - 3개 슬라이더: 추가 근로소득(30%공제), 저축(6.26%환산), 기타소득
-       - JS 실시간 계산 → 안전/주의/위험 3단계 결과
-       - 프로필 설정 시 게이지 바 아래 토글로 사용 가능
-   (b) 💰 잔액 카드 + 일일 예산
-       - 이번 달 잔액 = 수입 - 지출, 양수→녹색/음수→빨간색
-       - 일일 사용 가능 금액 = 잔액 / 남은 일수
-       - 수입/지출 비율 바 (초록 vs 빨강)
+8. ✅ 5대 핵심 기능 업그레이드 (2026-03-05)
+   (a) 🎛️ 안전선 시뮬레이터 — 3개 슬라이더 JS 실시간 계산
+   (b) 💰 잔액 카드 + 일일 예산 + 수입/지출 비율 바
    (c) 👨‍⚕️ 보호자 요약 리포트
-       - 보호자 모드 대시보드 최상단에 4항목 요약 카드
-       - 안전선, 잔액, 일정 수, D-Day
-   (d) 🏛️ 신뢰 강화 UI
-       - "2024 보건복지부 기준" 뱃지
-       - ⚖️ 면책 고지 강화 (노란 배경, 행정복지센터 안내)
+   (d) 🏛️ 신뢰 뱃지 + 면책 고지 강화
+   (e) 📅 일정 허브 — DB migration(schedule_type/is_critical/memo), 4종 분류
 
 ========================================
 ⚠️ 다음에 할 작업
 ========================================
-1. [ ] git push origin master → Railway 배포
-2. [ ] 일정 허브 DB 마이그레이션 (schedule_type, is_critical, memo)
+1. [ ] TWA v2 AAB 리빌드 (bubblewrap npm 패키지 E404 — gradlew 직접 빌드 필요)
+2. [ ] Play Store v2 업로드
 3. [ ] Google OAuth invalid_client 에러 수정
 4. [ ] Play Store 심사 결과 대기
 
 ========================================
+🚧 현재 디버깅 중인 이슈
+========================================
+- ❌ bubblewrap npm 패키지(@nicolo-ribaudo/bubblewrap) E404 — 패키지 삭제/비공개 전환 추정
+  - 시도: npx -y @nicolo-ribaudo/bubblewrap@latest build → npm error 404
+  - 대안: gradlew.bat 직접 빌드 (c:\development\bodeum-twa\gradlew.bat bundleRelease)
+  - 상태: ❌ 미해결
+
+========================================
 🏗️ 프로젝트 구조
 ========================================
-c:\development\livelihood\
-  ├── app/controllers/dashboard_controller.rb  — 잔액/일일예산/중요일정 추가
-  ├── app/assets/stylesheets/application.css   — v6 + 4대 기능 CSS (~3450줄)
-  ├── app/views/dashboard/index.html.erb       — 시뮬레이터·잔액·리포트·뱃지 (~550줄)
-  ├── app/views/benefits/index.html.erb        — 수평스크롤탭·좌측컬러바
-  ├── app/views/care_relations/index.html.erb  — 시맨틱 CSS
-  └── app/services/safe_asset_calculator_service.rb — 소득인정액 계산
+c:\development\livelihood\  — Rails 웹앱 (메인)
+  ├── app/controllers/dashboard_controller.rb  — 잔액/일일예산/중요일정
+  ├── app/assets/stylesheets/application.css   — v6 + 5대 기능 CSS (~3450줄)
+  ├── app/views/dashboard/index.html.erb       — 시뮬레이터·잔액·리포트·뱃지·일정허브
+  ├── app/models/cashflow_event.rb             — schedule_type enum + scope
+  └── db/migrate/*schedule*                    — schedule_type/is_critical/memo
+
+c:\development\bodeum-twa\  — TWA Android 래퍼
+  ├── twa-manifest.json (v2로 업그레이드됨)
+  ├── gradlew.bat (직접 빌드용)
+  └── android.keystore (비밀번호: bodeum2026!)
 
 ========================================
 🚀 실행 방법
 ========================================
 [로컬] bundle exec rails server -p 3100 -b 127.0.0.1
 [배포] git push origin master → Railway 자동 배포 → bodeum.me
+[TWA] cd bodeum-twa && .\gradlew.bat bundleRelease
+
+========================================
+🖥️ 현재 실행 중인 터미널
+========================================
+Rails 서버: http://127.0.0.1:3100 (실행 중)
