@@ -52,6 +52,7 @@ care = CareRelation.find_or_create_by!(caregiver: caregiver, recipient: recipien
 end
 care.update!(status: :accepted)
 puts "  ✅ 보호 관계: 이보호 → 김수급 (수락됨)"
+end # unless Rails.env.production? — 테스트 사용자/프로필/보호관계 끝
 
 # ── 4. 복지 혜택 데이터 (80건+) ──────────────────────────────
 benefits_data = [
@@ -534,7 +535,8 @@ benefits_data.each do |data|
 end
 puts "  ✅ 혜택 #{benefits_data.size}건 (신규 #{created}, 갱신 #{updated})"
 
-# ── 5. 관심 혜택 등록 ────────────────────────────────────────
+# ── 5. 관심 혜택 등록 (프로덕션에서는 건너뜀 — User 의존) ──────
+unless Rails.env.production?
 livelihood = Benefit.find_by(external_id: "LIV001")
 savings = Benefit.find_by(external_id: "SAV001")
 
@@ -552,7 +554,6 @@ end
 puts "  ✅ 관심 혜택 등록 (생계급여: 신청완료, 희망저축 I: 서류준비중)"
 
 # ── 6. 현금흐름 이벤트 ───────────────────────────────────────
-# frozen_string_literal: false
 today = Date.current
 this_month = today.beginning_of_month
 
@@ -577,7 +578,7 @@ events_data.each do |data|
   end
 end
 puts "  ✅ 현금흐름 이벤트 #{events_data.size}건"
-end # unless Rails.env.production?
+end # unless Rails.env.production? — 관심 혜택/현금흐름 끝
 
 puts ""
 puts "🎉 시드 데이터 생성 완료! (혜택 #{benefits_data.size}건)"
