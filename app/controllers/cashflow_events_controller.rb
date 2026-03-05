@@ -41,6 +41,6 @@ class CashflowEventsController < ApplicationController
   end
 
   def event_params
-    params.require(:cashflow_event).permit(:title, :event_type, :event_date, :expected_amount)
+    params.require(:cashflow_event).permit(:title, :event_type, :event_date, :expected_amount, :schedule_type, :is_critical, :memo)
   end
 end

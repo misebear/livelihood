@@ -6,6 +6,12 @@ class CashflowEvent < ApplicationRecord
 
   # ── Enums ───────────────────────────────────────────────────
   enum :event_type, { payment: 0, deduction: 1 }
+  enum :schedule_type, {
+    cashflow: 0,      # 💰 일반 현금흐름 (수입/지출)
+    renewal: 1,       # 📋 자격 갱신일
+    document: 2,      # 📄 서류 제출 마감
+    appointment: 3    # 📅 상담/방문 예약
+  }, prefix: true
 
   # ── Validations ─────────────────────────────────────────────
   validates :event_date, presence: true
@@ -17,6 +23,8 @@ class CashflowEvent < ApplicationRecord
   scope :this_month,  -> { where(event_date: Date.current.beginning_of_month..Date.current.end_of_month) }
   scope :payments,    -> { where(event_type: :payment) }
   scope :deductions,  -> { where(event_type: :deduction) }
+  scope :critical,    -> { where(is_critical: true).upcoming }
+  scope :schedules,   -> { where.not(schedule_type: :cashflow).upcoming }
 
   # ── Instance Methods ────────────────────────────────────────
   # D-Day 계산 (오늘 기준 남은 일수)

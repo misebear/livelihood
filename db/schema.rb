@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_01_045800) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_05_001022) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -53,6 +53,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_01_045800) do
     t.date "event_date", null: false
     t.integer "event_type", default: 0, null: false
     t.decimal "expected_amount", precision: 12, default: "0"
+    t.boolean "is_critical", default: false, null: false
+    t.text "memo"
+    t.integer "schedule_type", default: 0, null: false
     t.string "title", null: false
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false

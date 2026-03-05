@@ -103,6 +103,45 @@
 <% end %>
 
 <%# ══════════════════════════════════════════════════════════
+     SECTION 1.5: 중요 일정 허브
+     ══════════════════════════════════════════════════════════ %>
+<% if @user && @critical_events.any? %>
+  <section class="card animate-fade-in" aria-label="중요 일정">
+    <div class="card-header" style="margin-bottom:0.5rem;">
+      <div class="flex items-center gap-2">
+        <div class="icon-box" style="background:#fef3c7;">
+          <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="color:#d97706;">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
+          </svg>
+        </div>
+        <h2 class="card-title">중요 일정</h2>
+      </div>
+    </div>
+
+    <div class="schedule-hub">
+      <% @critical_events.each do |event| %>
+        <% days = event.days_until %>
+        <% urgency = days <= 3 ? 'urgent' : (days <= 7 ? 'soon' : 'normal') %>
+        <% type_icon = if event.schedule_type_renewal? then '📋'
+             elsif event.schedule_type_document? then '📄'
+             elsif event.schedule_type_appointment? then '📅'
+             elsif event.payment? then '💰'
+             else '💸'
+           end %>
+        <div class="schedule-item">
+          <div class="schedule-dot <%= urgency %>"></div>
+          <div class="schedule-info">
+            <p class="schedule-title"><%= type_icon %> <%= event.title %></p>
+            <p class="schedule-date"><%= event.event_date.strftime("%m/%d (%a)") %><%= event.memo.present? ? " · #{event.memo.truncate(20)}" : '' %></p>
+          </div>
+          <span class="schedule-dday <%= urgency %>"><%= event.d_day_label %></span>
+        </div>
+      <% end %>
+    </div>
+  </section>
+<% end %>
+
+<%# ══════════════════════════════════════════════════════════
      SECTION 2: 안전 저축 게이지 바
      ══════════════════════════════════════════════════════════ %>
 <%= turbo_frame_tag "safe_gauge" do %>
