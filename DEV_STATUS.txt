@@ -1,9 +1,9 @@
 ========================================
   보듬 (Bodeum) — DEV_STATUS
-  마지막 업데이트: 2026-03-05 12:43
+  마지막 업데이트: 2026-03-05 13:48
 ========================================
 
-📌 현재 진행 상태: ✅ 웹앱 + 시드 + OAuth + TWA v3 빌드 + Play Store 스크린샷 제출 완료
+📌 현재 진행 상태: ✅ 검색 기능 + 복지로 API 자동 동기화 배포 완료
 
 ========================================
 ✅ 완료된 작업
@@ -14,54 +14,65 @@
 4. ✅ UI v6 미니멀 리디자인 (순백배경, D-Day, 카테고리탭, 하단네비)
 5. ✅ 5대 핵심 기능 (시뮬레이터, 잔액카드, 보호자리포트, 신뢰뱃지, 일정허브)
 6. ✅ Google OAuth invalid_client 해결 + 500에러 해결
-7. ✅ docker-entrypoint db:prepare/db:seed 조건 수정
-8. ✅ seeds.rb AR Encryption 에러 해결 (unless Rails.env.production? 범위 수정)
-9. ✅ GitHub GH013 시크릿 감지 → DEV_STATUS 마스킹 해결
-10. ✅ TWA v3 AAB 빌드 + jarsigner 서명 (versionCode 3, alias: android)
-11. ✅ Play Store 스크린샷 갱신 (휴대전화4+7인치4+10인치4) + 검토 전송
-12. ✅ Play Store 스크린샷 6종 캡처 (대시보드/현금흐름/혜택/상세/보호자/내정보)
+7. ✅ TWA v3 AAB 빌드 + jarsigner 서명 + Play Store 스크린샷 갱신
+8. ✅ 혜택 검색 기능 추가 (제목, 요약, 대상, 지원금액 LIKE 검색)
+9. ✅ 복지로 API 연동 (BenefitSyncService + rake benefits:sync)
+10. ✅ docker-entrypoint에 배포 시 자동 API 동기화 추가
+
+========================================
+🆕 검색 기능 (2026-03-05)
+========================================
+- Benefit 모델: search scope (title, summary, target_group, support_amount LIKE)
+- BenefitsController: params[:q] 검색 + 카테고리 필터 체이닝
+- benefits/index.html.erb: 검색 바 UI (돋보기 아이콘 + X 초기화)
+- application.css: benefit-search-* 스타일 추가
+
+========================================
+🆕 복지로 API 연동 (2026-03-05)
+========================================
+- API: 공공데이터포털 한국사회보장정보원_중앙부처복지서비스 (365건)
+- 엔드포인트: apis.data.go.kr/B554287/NationalWelfareInformationsV001
+- 서비스파일: app/services/benefit_sync_service.rb
+- Rake: lib/tasks/benefits.rake (bundle exec rake benefits:sync)
+- Railway 환경변수: BOKJIRO_API_KEY 설정 완료
+- docker-entrypoint: BOKJIRO_API_KEY 존재 시 자동 동기화
 
 ========================================
 ⚠️ 다음에 할 작업
 ========================================
-1. [ ] Play Store v3 AAB 업로드 (수동: C:\Users\db019\Desktop\bodeum_playstore\app-release-bundle.aab)
-2. [ ] Play Store 검토 결과 대기
-3. [ ] 검토 통과 후 프로덕션 출시
-
-========================================
-🚧 해결된 이슈
-========================================
-- ✅ bubblewrap E404 → gradlew.bat 직접 빌드
-- ✅ Google OAuth invalid_client → 새 Client Secret
-- ✅ 프로덕션 500 에러 → docker-entrypoint + 마이그레이션
-- ✅ 시드 AR Encryption → unless 블록 범위 수정
-- ✅ GitHub GH013 → DEV_STATUS 시크릿 마스킹
-- ✅ Play Store 거부 → 태블릿 스크린샷 누락 해결
+1. [ ] Railway 배포 로그 확인 — API 동기화가 정상 실행되었는지 확인
+2. [ ] bodeum.me/benefits에서 365건 데이터 표시 확인
+3. [ ] Play Store v3 AAB 업로드 (수동)
+4. [ ] 검토 통과 후 프로덕션 출시
 
 ========================================
 🏗️ 프로젝트 구조
 ========================================
 c:\development\livelihood\  — Rails 웹앱 (메인)
-  ├── app/ — MVC (controllers, models, views)
-  ├── bin/docker-entrypoint — db:prepare + SEED_ON_DEPLOY
-  ├── db/seeds.rb — 55건 혜택 데이터 (프로덕션 안전)
+  ├── app/
+  │   ├── controllers/benefits_controller.rb (★ 검색 로직)
+  │   ├── models/benefit.rb (★ search scope)
+  │   ├── services/benefit_sync_service.rb (★ 복지로 API 동기화)
+  │   └── views/benefits/index.html.erb (★ 검색 바 UI)
+  ├── bin/docker-entrypoint (★ 자동 동기화)
+  ├── lib/tasks/benefits.rake (★ sync rake task)
+  ├── db/seeds.rb — 55건 기본 혜택 데이터
   └── config/ — Devise+OAuth, routes
 
 c:\development\bodeum-twa\  — TWA Android 래퍼
   ├── app/build.gradle (versionCode 3)
-  ├── app-release-bundle.aab (v3, 서명 완료)
-  └── android.keystore (비밀번호: bodeum2026!, alias: android)
+  └── app-release-bundle.aab (v3, 서명 완료)
 
 ========================================
-🔑 OAuth 설정
+🔑 API 키
 ========================================
-Client ID: 741471711558-jv4q97s9h9s4egmmgj6c9uv0n2o1krvm.apps.googleusercontent.com
-Client Secret: ******* (Railway 환경변수)
-Redirect: https://bodeum.me/users/auth/google_oauth2/callback
+복지로 API: BOKJIRO_API_KEY (Railway 환경변수)
+OAuth Client ID: 741471711558-jv4q97s9h9s4egmmgj6c9uv0n2o1krvm.apps.googleusercontent.com
 
 ========================================
 🚀 실행 방법
 ========================================
 [로컬] bundle exec rails server -p 3100 -b 127.0.0.1
 [배포] git push origin master → Railway → bodeum.me
+[동기화] bundle exec rake benefits:sync
 [TWA] cd bodeum-twa && .\gradlew.bat bundleRelease
