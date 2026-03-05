@@ -1,75 +1,67 @@
 ========================================
   보듬 (Bodeum) — DEV_STATUS
-  마지막 업데이트: 2026-03-05 11:49
+  마지막 업데이트: 2026-03-05 12:43
 ========================================
 
-📌 현재 진행 상태: ✅ 모든 핵심 기능 + OAuth + 시드 데이터 + Railway 배포 완료
+📌 현재 진행 상태: ✅ 웹앱 + 시드 + OAuth + TWA v3 빌드 + Play Store 스크린샷 제출 완료
 
 ========================================
 ✅ 완료된 작업
 ========================================
 1. ✅ Rails 8 웹앱 (대시보드, 혜택, 보호자, 프로필, Devise+OAuth)
 2. ✅ Railway 배포 (bodeum.me, master 브랜치) — 최신 push + 마이그레이션 완료
-3. ✅ TWA Android (me.bodeum.app, v2 AAB 빌드+서명 완료)
-4. ✅ Play Store 심사 전송 (테스트 계정 등록, OAuth 수정)
-5. ✅ 복지 혜택 55건 시드 데이터 프로덕션 적용 완료 (SEED_ON_DEPLOY)
-6. ✅ 로그인 없이 서비스 이용 가능
-7. ✅ UI v6 미니멀 리디자인 (순백배경, D-Day 틸바, 카테고리 수평스크롤)
-8. ✅ 5대 핵심 기능 업그레이드 (시뮬레이터, 잔액카드, 보호자리포트, 신뢰뱃지, 일정허브)
-9. ✅ Google OAuth invalid_client 해결 (새 Client Secret + Railway 환경변수)
-10. ✅ docker-entrypoint db:prepare/db:seed 조건 수정
-11. ✅ 프로덕션 DB 마이그레이션 (schedule_type, is_critical, memo)
-12. ✅ seeds.rb AR Encryption 에러 해결 (unless Rails.env.production? 범위 수정)
+3. ✅ 복지 혜택 55건 시드 데이터 프로덕션 적용 (SEED_ON_DEPLOY)
+4. ✅ UI v6 미니멀 리디자인 (순백배경, D-Day, 카테고리탭, 하단네비)
+5. ✅ 5대 핵심 기능 (시뮬레이터, 잔액카드, 보호자리포트, 신뢰뱃지, 일정허브)
+6. ✅ Google OAuth invalid_client 해결 + 500에러 해결
+7. ✅ docker-entrypoint db:prepare/db:seed 조건 수정
+8. ✅ seeds.rb AR Encryption 에러 해결 (unless Rails.env.production? 범위 수정)
+9. ✅ GitHub GH013 시크릿 감지 → DEV_STATUS 마스킹 해결
+10. ✅ TWA v3 AAB 빌드 + jarsigner 서명 (versionCode 3, alias: android)
+11. ✅ Play Store 스크린샷 갱신 (휴대전화4+7인치4+10인치4) + 검토 전송
+12. ✅ Play Store 스크린샷 6종 캡처 (대시보드/현금흐름/혜택/상세/보호자/내정보)
 
 ========================================
 ⚠️ 다음에 할 작업
 ========================================
-1. [/] TWA v3 빌드 + Play Store 업로드
-2. [ ] Play Store 스크린샷 갱신
-3. [ ] Play Store 심사 결과 대기
+1. [ ] Play Store v3 AAB 업로드 (수동: C:\Users\db019\Desktop\bodeum_playstore\app-release-bundle.aab)
+2. [ ] Play Store 검토 결과 대기
+3. [ ] 검토 통과 후 프로덕션 출시
 
 ========================================
-🚧 현재 디버깅 중인 이슈
+🚧 해결된 이슈
 ========================================
-- ✅ bubblewrap npm 패키지 E404 → gradlew.bat 직접 빌드로 해결
-- ✅ Google OAuth invalid_client → 새 Client Secret 적용으로 해결
-- ✅ 프로덕션 500 에러 → docker-entrypoint + 마이그레이션으로 해결
-- ✅ 시드 AR Encryption 에러 → unless 블록 범위 수정으로 해결
-- ✅ GitHub GH013 시크릿 감지 → DEV_STATUS 마스킹으로 해결
+- ✅ bubblewrap E404 → gradlew.bat 직접 빌드
+- ✅ Google OAuth invalid_client → 새 Client Secret
+- ✅ 프로덕션 500 에러 → docker-entrypoint + 마이그레이션
+- ✅ 시드 AR Encryption → unless 블록 범위 수정
+- ✅ GitHub GH013 → DEV_STATUS 시크릿 마스킹
+- ✅ Play Store 거부 → 태블릿 스크린샷 누락 해결
 
 ========================================
 🏗️ 프로젝트 구조
 ========================================
 c:\development\livelihood\  — Rails 웹앱 (메인)
-  ├── app/controllers/dashboard_controller.rb
-  ├── app/assets/stylesheets/application.css
-  ├── app/views/dashboard/index.html.erb
-  ├── app/models/cashflow_event.rb
-  ├── bin/docker-entrypoint (db:prepare + SEED_ON_DEPLOY)
-  └── db/seeds.rb (55건 혜택 데이터)
+  ├── app/ — MVC (controllers, models, views)
+  ├── bin/docker-entrypoint — db:prepare + SEED_ON_DEPLOY
+  ├── db/seeds.rb — 55건 혜택 데이터 (프로덕션 안전)
+  └── config/ — Devise+OAuth, routes
 
 c:\development\bodeum-twa\  — TWA Android 래퍼
-  ├── twa-manifest.json
-  ├── app/build.gradle (versionCode → v3 빌드 예정)
-  ├── local.properties (Android SDK 경로)
-  └── android.keystore (비밀번호: bodeum2026!)
+  ├── app/build.gradle (versionCode 3)
+  ├── app-release-bundle.aab (v3, 서명 완료)
+  └── android.keystore (비밀번호: bodeum2026!, alias: android)
 
 ========================================
 🔑 OAuth 설정
 ========================================
-Google Cloud Project: my-project-28354livelihood
 Client ID: 741471711558-jv4q97s9h9s4egmmgj6c9uv0n2o1krvm.apps.googleusercontent.com
-Client Secret: ******* (Railway 환경변수에 설정됨)
-Redirect URIs: https://bodeum.me/users/auth/google_oauth2/callback
+Client Secret: ******* (Railway 환경변수)
+Redirect: https://bodeum.me/users/auth/google_oauth2/callback
 
 ========================================
 🚀 실행 방법
 ========================================
 [로컬] bundle exec rails server -p 3100 -b 127.0.0.1
-[배포] git push origin master → Railway 자동 배포 → bodeum.me
+[배포] git push origin master → Railway → bodeum.me
 [TWA] cd bodeum-twa && .\gradlew.bat bundleRelease
-
-========================================
-🖥️ 현재 실행 중인 터미널
-========================================
-없음
