@@ -1,9 +1,9 @@
 ========================================
   보듬 (Bodeum) — DEV_STATUS
-  마지막 업데이트: 2026-03-05 09:55
+  마지막 업데이트: 2026-03-05 11:49
 ========================================
 
-📌 현재 진행 상태: ✅ 모든 핵심 기능 + Google OAuth + Railway 배포 완료
+📌 현재 진행 상태: ✅ 모든 핵심 기능 + OAuth + 시드 데이터 + Railway 배포 완료
 
 ========================================
 ✅ 완료된 작업
@@ -12,49 +12,50 @@
 2. ✅ Railway 배포 (bodeum.me, master 브랜치) — 최신 push + 마이그레이션 완료
 3. ✅ TWA Android (me.bodeum.app, v2 AAB 빌드+서명 완료)
 4. ✅ Play Store 심사 전송 (테스트 계정 등록, OAuth 수정)
-5. ✅ 복지 혜택 55건 시드 + 공공데이터 자동 수집
+5. ✅ 복지 혜택 55건 시드 데이터 프로덕션 적용 완료 (SEED_ON_DEPLOY)
 6. ✅ 로그인 없이 서비스 이용 가능
 7. ✅ UI v6 미니멀 리디자인 (순백배경, D-Day 틸바, 카테고리 수평스크롤)
 8. ✅ 5대 핵심 기능 업그레이드 (시뮬레이터, 잔액카드, 보호자리포트, 신뢰뱃지, 일정허브)
-9. ✅ TWA v2 AAB 리빌드 (gradlew 직접 빌드, versionCode 2, jarsigner 서명)
-10. ✅ Google OAuth invalid_client 해결 (새 Client Secret 생성 + Railway 환경변수 업데이트)
-11. ✅ docker-entrypoint db:prepare 조건 수정 (${@: -2:1} → ${1} 인자 위치 기반)
-12. ✅ 프로덕션 DB 마이그레이션 적용 (schedule_type, is_critical, memo 컬럼)
-13. ✅ Google OAuth Scopes 추가 (openid, email, profile)
+9. ✅ Google OAuth invalid_client 해결 (새 Client Secret + Railway 환경변수)
+10. ✅ docker-entrypoint db:prepare/db:seed 조건 수정
+11. ✅ 프로덕션 DB 마이그레이션 (schedule_type, is_critical, memo)
+12. ✅ seeds.rb AR Encryption 에러 해결 (unless Rails.env.production? 범위 수정)
 
 ========================================
 ⚠️ 다음에 할 작업
 ========================================
-1. [ ] Play Store v2 AAB 업로드 (app-release-bundle.aab → Play Console)
-2. [ ] Play Store 심사 결과 대기
+1. [/] TWA v3 빌드 + Play Store 업로드
+2. [ ] Play Store 스크린샷 갱신
+3. [ ] Play Store 심사 결과 대기
 
 ========================================
 🚧 현재 디버깅 중인 이슈
 ========================================
 - ✅ bubblewrap npm 패키지 E404 → gradlew.bat 직접 빌드로 해결
 - ✅ Google OAuth invalid_client → 새 Client Secret 적용으로 해결
-- ✅ 프로덕션 500 에러 (schedule_type enum) → docker-entrypoint 수정 + 마이그레이션 적용으로 해결
+- ✅ 프로덕션 500 에러 → docker-entrypoint + 마이그레이션으로 해결
+- ✅ 시드 AR Encryption 에러 → unless 블록 범위 수정으로 해결
+- ✅ GitHub GH013 시크릿 감지 → DEV_STATUS 마스킹으로 해결
 
 ========================================
 🏗️ 프로젝트 구조
 ========================================
 c:\development\livelihood\  — Rails 웹앱 (메인)
-  ├── app/controllers/dashboard_controller.rb  — 잔액/일일예산/중요일정
-  ├── app/assets/stylesheets/application.css   — v6 + 5대 기능 CSS
-  ├── app/views/dashboard/index.html.erb       — 시뮬레이터·잔액·리포트·뱃지·일정허브
-  ├── app/models/cashflow_event.rb             — schedule_type enum + scope
-  ├── bin/docker-entrypoint                    — db:prepare 조건 수정됨
-  └── db/migrate/*schedule*                    — schedule_type/is_critical/memo
+  ├── app/controllers/dashboard_controller.rb
+  ├── app/assets/stylesheets/application.css
+  ├── app/views/dashboard/index.html.erb
+  ├── app/models/cashflow_event.rb
+  ├── bin/docker-entrypoint (db:prepare + SEED_ON_DEPLOY)
+  └── db/seeds.rb (55건 혜택 데이터)
 
 c:\development\bodeum-twa\  — TWA Android 래퍼
-  ├── twa-manifest.json (v2)
-  ├── app/build.gradle (versionCode 2)
+  ├── twa-manifest.json
+  ├── app/build.gradle (versionCode → v3 빌드 예정)
   ├── local.properties (Android SDK 경로)
-  ├── app-release-bundle.aab (v2, 3.09MB, 서명 완료)
   └── android.keystore (비밀번호: bodeum2026!)
 
 ========================================
-🔑 OAuth 설정 (2026-03-05 업데이트)
+🔑 OAuth 설정
 ========================================
 Google Cloud Project: my-project-28354livelihood
 Client ID: 741471711558-jv4q97s9h9s4egmmgj6c9uv0n2o1krvm.apps.googleusercontent.com
