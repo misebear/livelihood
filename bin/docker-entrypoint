@@ -3,6 +3,13 @@
 # If running the rails server then create or migrate existing database
 if [ "${1}" == "./bin/rails" ] && [ "${2}" == "server" ]; then
   ./bin/rails db:prepare
+
+  # 시드 데이터 적용 (SEED_ON_DEPLOY=true일 때만 실행, upsert 방식이라 중복 안전)
+  if [ "${SEED_ON_DEPLOY}" == "true" ]; then
+    echo "🌱 시드 데이터 적용 중..."
+    ./bin/rails db:seed
+    echo "✅ 시드 데이터 적용 완료"
+  fi
 fi
 
 exec "${@}"
