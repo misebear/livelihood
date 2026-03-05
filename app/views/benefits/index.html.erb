@@ -3,16 +3,38 @@
 
 <div class="mb-4 animate-fade-in-up">
   <h2 class="text-xl font-extrabold text-slate-800 mb-1">혜택 안내</h2>
-  <p class="text-sm text-slate-500">받을 수 있는 복지 혜택 <strong><%= @total_count %>건</strong>을 확인하세요.</p>
+  <p class="text-sm text-slate-500">받을 수 있는 복지 혜택 <strong><%= @total_count %>건</strong><%= @search_query.present? ? " (검색 결과)" : "" %>을 확인하세요.</p>
+</div>
+
+<%# ── 검색 바 ── %>
+<div class="benefit-search-bar animate-fade-in-up">
+  <%= form_tag benefits_path, method: :get, class: "benefit-search-form" do %>
+    <% if @current_category.present? %>
+      <input type="hidden" name="category" value="<%= @current_category %>">
+    <% end %>
+    <div class="benefit-search-input-wrap">
+      <svg class="benefit-search-icon" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+      </svg>
+      <input type="text" name="q" value="<%= @search_query %>" placeholder="혜택 이름, 대상, 지원금액 검색..." class="benefit-search-input" autocomplete="off">
+      <% if @search_query.present? %>
+        <%= link_to benefits_path(category: @current_category), class: "benefit-search-clear" do %>
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+          </svg>
+        <% end %>
+      <% end %>
+    </div>
+  <% end %>
 </div>
 
 <%# ── 카테고리 탭 ── %>
 <nav class="benefit-category-tabs animate-fade-in-up" aria-label="카테고리 필터">
-  <%= link_to benefits_path, class: "category-tab #{@current_category.blank? ? 'active' : ''}" do %>
+  <%= link_to benefits_path(q: @search_query), class: "category-tab #{@current_category.blank? ? 'active' : ''}" do %>
     📋 전체
   <% end %>
   <% @categories.each do |name, meta| %>
-    <%= link_to benefits_path(category: name), class: "category-tab #{@current_category == name ? 'active' : ''}" do %>
+    <%= link_to benefits_path(category: name, q: @search_query), class: "category-tab #{@current_category == name ? 'active' : ''}" do %>
       <%= meta[:icon] %> <%= name %>
     <% end %>
   <% end %>

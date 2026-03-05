@@ -2656,6 +2656,73 @@ select:focus-visible {
   border-radius: 4px;
 }
 
+/* ── 혜택 검색 바 ─────────────────────────────────────────── */
+.benefit-search-bar {
+  margin-bottom: 0.75rem;
+}
+
+.benefit-search-form {
+  display: flex;
+  width: 100%;
+}
+
+.benefit-search-input-wrap {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 0 0.75rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.benefit-search-input-wrap:focus-within {
+  border-color: var(--color-primary-light);
+  box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.1);
+}
+
+.benefit-search-icon {
+  width: 18px;
+  height: 18px;
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+}
+
+.benefit-search-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 0.875rem;
+  font-family: var(--font-family);
+  color: var(--color-text);
+  padding: 0.625rem 0.5rem;
+}
+
+.benefit-search-input::placeholder {
+  color: var(--color-text-muted);
+}
+
+.benefit-search-clear {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  color: var(--color-text-muted);
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+  text-decoration: none;
+}
+
+.benefit-search-clear:hover {
+  background: var(--color-bg);
+  color: var(--color-text);
+  text-decoration: none;
+}
+
 /* ── 혜택 카테고리 탭 (수평 스크롤) ────────────────────────── */
 .benefit-category-tabs {
   display: flex;

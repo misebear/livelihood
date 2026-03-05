@@ -32,6 +32,11 @@ class Benefit < ApplicationRecord
   scope :deadline_soon, -> { where("deadline IS NOT NULL AND deadline >= ?", Date.current).order(:deadline) }
   scope :prioritized, -> { order(Arel.sql("COALESCE(last_synced_at, updated_at) DESC"), priority: :desc, deadline: :asc) }
   scope :from_source, ->(src) { where(source: src) if src.present? }
+  scope :search, ->(query) {
+    return all if query.blank?
+    q = "%#{query}%"
+    where("title LIKE :q OR summary LIKE :q OR target_group LIKE :q OR support_amount LIKE :q", q: q)
+  }
 
   # ── 카테고리 메타 ───────────────────────────────────────────
   def category_icon

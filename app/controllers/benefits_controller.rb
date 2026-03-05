@@ -6,10 +6,11 @@ class BenefitsController < ApplicationController
 
   def index
     @current_category = params[:category]
+    @search_query = params[:q]
     @categories = Benefit::CATEGORIES
     @safe_savings = Benefit.safe_savings_products
 
-    base = Benefit.prioritized
+    base = Benefit.prioritized.search(@search_query)
     if @current_category.present?
       @benefits = base.by_category(@current_category)
     else
@@ -26,7 +27,7 @@ class BenefitsController < ApplicationController
     # CATEGORIES에 없는 카테고리 마지막에 추가
     raw_groups.each { |cat, items| @grouped_benefits[cat] ||= items }
 
-    @total_count = Benefit.count
+    @total_count = @search_query.present? ? @benefits.count : Benefit.count
   end
 
   def show
