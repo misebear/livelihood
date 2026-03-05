@@ -10,6 +10,13 @@ if [ "${1}" == "./bin/rails" ] && [ "${2}" == "server" ]; then
     ./bin/rails db:seed
     echo "✅ 시드 데이터 적용 완료"
   fi
+
+  # 복지로 API 동기화 (BOKJIRO_API_KEY가 설정된 경우 자동 실행)
+  if [ -n "${BOKJIRO_API_KEY}" ]; then
+    echo "🔄 복지로 API 동기화 시작..."
+    ./bin/rails benefits:sync || echo "⚠️ 복지로 동기화 실패 (서비스 계속 실행)"
+    echo "✅ 복지로 API 동기화 완료"
+  fi
 fi
 
 exec "${@}"
