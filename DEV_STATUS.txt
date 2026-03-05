@@ -1,9 +1,9 @@
 ========================================
   보듬 (Bodeum) — DEV_STATUS
-  마지막 업데이트: 2026-03-04 16:56
+  마지막 업데이트: 2026-03-05 08:55
 ========================================
 
-📌 현재 진행 상태: ✅ 로그인 없이 서비스 이용 가능 배포 완료 + Play Store 심사 대기 중
+📌 현재 진행 상태: ✅ UI v6 미니멀 리디자인 완료 + Play Store 심사 대기 중
 
 ========================================
 ✅ 완료된 작업
@@ -54,20 +54,31 @@
    - 게스트 사용자에게 "로그인하고 시작하기" CTA 표시
    - Google OAuth invalid_client 에러 원인 분석 완료 (Railway 환경변수 불일치)
 
+8. ✅ UI v6 미니멀 리디자인 (2026-03-05)
+   - 배경색: #F8FAFB → #FFFFFF (순백)
+   - D-Day 카드: 좌측 4px 틸 액센트 바 추가
+   - 게이지 바: 높이 10px → 28px, 퍼센트 라벨 표시
+   - 카테고리 탭: flex-wrap → 수평 스크롤, hover 시 반투명 틸
+   - 혜택 카드: 좌측 3px 카테고리 컬러바 추가 (--cat-color)
+   - 보호자 페이지: 인라인 Tailwind → 시맨틱 CSS (care-section, care-person-row 등)
+   - theme-color: #1e3a8a → #0D9488
+   - 대시보드 인라인 스타일 → CSS 클래스 전환
+
 ========================================
 ⚠️ 다음에 할 작업
 ========================================
-1. [ ] Google Play 심사 결과 대기 (1~7일)
-2. [ ] 심사 통과 후 스토어 출시 확인
-3. [ ] Google OAuth invalid_client 에러 수정 (GOOGLE_CLIENT_SECRET Railway 환경변수 동기화)
-4. [ ] data.go.kr API 키 발급 → .env에 설정
-5. [ ] 실제 공공데이터 연동 테스트
+1. [ ] git push origin master → Railway 자동 배포
+2. [ ] Google Play 심사 결과 대기 (1~7일)
+3. [ ] 심사 통과 후 스토어 출시 확인
+4. [ ] Google OAuth invalid_client 에러 수정 (GOOGLE_CLIENT_SECRET Railway 환경변수 동기화)
+5. [ ] data.go.kr API 키 발급 → .env에 설정
+6. [ ] 실제 공공데이터 연동 테스트
 
 ========================================
 ⚠️ 주의사항
 ========================================
 - 키스토어 절대 분실 금지: c:\development\bodeum-twa\android.keystore
-- Railway Trial: 27 days or $4.64 남음
+- Railway Trial: 약 26일 남음
 - Google Play Developer 계정: JejuBucketList
 - Railway 배포 브랜치: master (production 아님!)
 - Google OAuth: invalid_client 에러 미해결 (로그인 없이 이용 가능으로 우회)
@@ -83,6 +94,13 @@ c:\development\livelihood\          — Rails 웹앱 (메인)
   │   ├── cashflow_events_controller.rb — 전체 로그인 필수
   │   ├── user_benefits_controller.rb  — 전체 로그인 필수
   │   └── user_profiles_controller.rb  — show 게스트 리디렉트, edit/update 로그인
+  ├── app/assets/stylesheets/
+  │   └── application.css              — v6 미니멀 디자인 (순백+틸) ~3030줄
+  ├── app/views/
+  │   ├── layouts/application.html.erb — 상단·하단 네비, theme-color 틸
+  │   ├── dashboard/index.html.erb     — D-Day 좌측 틸바, 게이지 28px
+  │   ├── benefits/index.html.erb      — 카테고리 수평스크롤, 좌측 컬러바
+  │   └── care_relations/index.html.erb — 시맨틱 CSS (care-section 등)
   ├── app/services/
   │   ├── public_data_sync_service.rb
   │   ├── welfare_portal_scraper_service.rb
@@ -107,4 +125,4 @@ c:\development\bodeum-twa\          — TWA Android 래퍼
 ========================================
 🖥️ 현재 실행 중인 터미널
 ========================================
-없음 (새 세션)
+Rails 서버: http://127.0.0.1:3100 (PID: 9760)

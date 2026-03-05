@@ -16,6 +16,46 @@
   </div>
 <% end %>
 
+<%# ── 보호자 요약 리포트 (보호자 모드일 때만 표시) ── %>
+<% if @viewing_as_caregiver && @user %>
+  <div class="care-report animate-fade-in">
+    <p class="care-report-title">📋 <%= @user.name || @user.email %>님 요약 리포트</p>
+    <div class="care-report-grid">
+      <div class="care-report-item">
+        <span class="care-report-label">수급 안전선</span>
+        <span class="care-report-value">
+          <% if @safe_asset_result %>
+            <% risk = @safe_asset_result[:risk_level] %>
+            <% if risk == :safe %>
+              ✅ 안전
+            <% elsif risk == :warning %>
+              ⚠️ 주의 (<%= @safe_asset_result[:risk_percentage] %>%)
+            <% else %>
+              🚨 위험 (<%= @safe_asset_result[:risk_percentage] %>%)
+            <% end %>
+          <% else %>
+            ⏳ 미설정
+          <% end %>
+        </span>
+      </div>
+      <div class="care-report-item">
+        <span class="care-report-label">이번 달 잔액</span>
+        <span class="care-report-value" style="color: <%= @monthly_balance >= 0 ? '#047857' : '#dc2626' %>">
+          <%= @monthly_balance >= 0 ? '+' : '' %><%= number_to_currency(@monthly_balance, unit: '₩', precision: 0, delimiter: ',') %>
+        </span>
+      </div>
+      <div class="care-report-item">
+        <span class="care-report-label">다가오는 일정</span>
+        <span class="care-report-value"><%= @critical_events.count %>건</span>
+      </div>
+      <div class="care-report-item">
+        <span class="care-report-label">다음 입금일</span>
+        <span class="care-report-value"><%= @next_payment ? @next_payment[:label] : '—' %></span>
+      </div>
+    </div>
+  </div>
+<% end %>
+
 <%# ══════════════════════════════════════════════════════════
      SECTION 1: D-Day 카운트다운
      ══════════════════════════════════════════════════════════ %>
@@ -216,7 +256,109 @@
       <% end %>
 
       <%# 면책 조항 %>
-      <%= render_disclaimer(type: :calculator) %>
+      <%# ── 🎛️ 안전선 시뮬레이터 ── %>
+      <div class="simulator-toggle" onclick="document.getElementById('sim-panel').classList.toggle('hidden')">
+        🎛️ "알바하면 탈락할까?" 시뮬레이션 해보기
+      </div>
+
+      <div id="sim-panel" class="simulator-section hidden"
+           data-cutoff="<%= bd[:cutoff_line] %>"
+           data-income-eval="<%= bd[:income_evaluation] %>"
+           data-asset-eval="<%= bd[:asset_income_conversion] %>"
+           data-financial-rate="0.0626"
+           data-work-deduction="0.30">
+        <p class="simulator-title">🎛️ 수급 안전선 시뮬레이터</p>
+        <div class="sim-slider-group">
+          <div class="sim-slider-row">
+            <div class="sim-slider-label">
+              <span>💼 추가 근로소득 (알바)</span>
+              <span class="sim-slider-value" id="sim-val-work">0만원</span>
+            </div>
+            <input type="range" class="sim-slider" id="sim-work" min="0" max="300" value="0" step="10">
+          </div>
+          <div class="sim-slider-row">
+            <div class="sim-slider-label">
+              <span>🏦 추가 저축/금융재산</span>
+              <span class="sim-slider-value" id="sim-val-save">0만원</span>
+            </div>
+            <input type="range" class="sim-slider" id="sim-save" min="0" max="3000" value="0" step="50">
+          </div>
+          <div class="sim-slider-row">
+            <div class="sim-slider-label">
+              <span>🎁 기타 소득 (선물/용돈)</span>
+              <span class="sim-slider-value" id="sim-val-other">0만원</span>
+            </div>
+            <input type="range" class="sim-slider" id="sim-other" min="0" max="200" value="0" step="10">
+          </div>
+        </div>
+        <div class="sim-result safe" id="sim-result">
+          슬라이더를 움직여 보세요
+        </div>
+      </div>
+
+      <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const panel = document.getElementById('sim-panel');
+        if (!panel) return;
+        const cutoff = parseFloat(panel.dataset.cutoff);
+        const baseIncomeEval = parseFloat(panel.dataset.incomeEval);
+        const baseAssetEval = parseFloat(panel.dataset.assetEval);
+        const fRate = parseFloat(panel.dataset.financialRate);
+        const wDeduct = parseFloat(panel.dataset.workDeduction);
+
+        ['sim-work', 'sim-save', 'sim-other'].forEach(id => {
+          document.getElementById(id).addEventListener('input', recalc);
+        });
+
+        function recalc() {
+          const work  = parseInt(document.getElementById('sim-work').value) * 10000;
+          const save  = parseInt(document.getElementById('sim-save').value) * 10000;
+          const other = parseInt(document.getElementById('sim-other').value) * 10000;
+
+          document.getElementById('sim-val-work').textContent  = (work / 10000)  + '만원';
+          document.getElementById('sim-val-save').textContent  = (save / 10000)  + '만원';
+          document.getElementById('sim-val-other').textContent = (other / 10000) + '만원';
+
+          // 추가 근로소득: 30% 공제 후 소득평가액에 합산
+          const addIncome = (work * (1 - wDeduct)) + other;
+          // 추가 저축: 금융재산 환산율 적용
+          const addAsset = save * fRate;
+
+          const newTotal = Math.max(baseIncomeEval + addIncome + baseAssetEval + addAsset, 0);
+          const newPct = Math.min((newTotal / cutoff) * 100, 100).toFixed(1);
+
+          const resultEl = document.getElementById('sim-result');
+          let level, msg;
+
+          if (newPct < 60) {
+            level = 'safe';
+            msg = '✅ 안전합니다! 수급 자격에 영향 없습니다.';
+          } else if (newPct < 85) {
+            level = 'warning';
+            msg = '⚠️ 주의! 기준선의 ' + newPct + '%까지 올라갑니다.';
+          } else {
+            level = 'danger';
+            msg = '🚨 위험! 수급 탈락 가능성이 있습니다 (' + newPct + '%)';
+          }
+
+          resultEl.className = 'sim-result ' + level;
+          resultEl.textContent = msg;
+        }
+      });
+      </script>
+
+      <%# ── 🏛️ 신뢰 뱃지 + 면책 고지 강화 ── %>
+      <div style="display:flex;align-items:center;gap:0.5rem;margin-top:0.75rem;flex-wrap:wrap;">
+        <span class="trust-badge"><span class="trust-badge-icon">🏛️</span> 2024 보건복지부 기준</span>
+        <span class="trust-badge"><span class="trust-badge-icon">📊</span> 중위소득 <%= number_to_currency(bd[:median_income], unit: '₩', precision: 0, delimiter: ',') %></span>
+      </div>
+      <div class="disclaimer-enhanced">
+        <span class="disclaimer-enhanced-icon">⚖️</span>
+        <div>
+          <strong>모의 계산 안내:</strong> 본 결과는 참고용이며, 정확한 수급 자격 확인은 반드시 <strong>관할 행정복지센터</strong>에 문의하세요.
+          기준: 2024년 중위소득 <%= bd[:household_size] %>인 가구 기준, 근로소득공제 30% 적용.
+        </div>
+      </div>
     <% else %>
       <%# 프로필 미설정 시 CTA %>
       <div class="empty-state">
@@ -280,6 +422,30 @@
       <p class="summary-value expense">-<%= number_to_currency(@monthly_expense, unit: "", precision: 0, delimiter: ",") %></p>
     </div>
   </div>
+
+  <%# ── 💰 잔액 카드 + 일일 예산 ── %>
+  <div class="balance-card <%= @monthly_balance >= 0 ? 'positive' : 'negative' %>">
+    <div>
+      <p class="balance-label">이번 달 잔액</p>
+      <p class="balance-amount"><%= @monthly_balance >= 0 ? '+' : '' %><%= number_to_currency(@monthly_balance, unit: '₩', precision: 0, delimiter: ',') %></p>
+      <span class="balance-status <%= @monthly_balance >= 0 ? 'ok' : 'warn' %>">
+        <%= @monthly_balance >= 0 ? '✅ 이번 달 여유 있어요' : '🚨 이번 달 부족해요' %>
+      </span>
+    </div>
+    <div class="balance-daily">
+      <p class="balance-daily-label">남은 <%= @remaining_days %>일</p>
+      <p class="balance-daily-amount">일 <%= number_to_currency(@daily_budget.abs, unit: '₩', precision: 0, delimiter: ',') %></p>
+    </div>
+  </div>
+
+  <%# 수입/지출 비율 바 %>
+  <% total = @monthly_income + @monthly_expense %>
+  <% income_pct = total > 0 ? (@monthly_income.to_f / total * 100).round(1) : 50 %>
+  <div class="cashflow-bar-wrapper">
+    <div class="cashflow-bar-income" style="width:<%= income_pct %>%"></div>
+    <div class="cashflow-bar-expense" style="width:<%= 100 - income_pct %>%"></div>
+  </div>
+
 
   <%# 다가오는 일정 %>
   <% if @upcoming_events.any? %>

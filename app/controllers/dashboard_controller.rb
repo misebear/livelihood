@@ -48,6 +48,15 @@ class DashboardController < ApplicationController
                            .includes(:benefit)
                            .in_progress
                            .limit(3)
+
+      # ── 현금흐름 강화: 잔액 + 일일 예산 ──
+      @monthly_balance = @monthly_income - @monthly_expense
+      remaining = (Date.current.end_of_month - Date.current).to_i
+      @remaining_days = [remaining, 1].max
+      @daily_budget = (@monthly_balance / @remaining_days).round(0)
+
+      # ── 다가오는 중요 일정 (5건) ──
+      @critical_events = @user.cashflow_events.upcoming.limit(5)
     else
       # 게스트 사용자: 기본 데모 데이터
       @profile = nil
@@ -55,6 +64,10 @@ class DashboardController < ApplicationController
       @upcoming_events = CashflowEvent.none
       @monthly_income  = 0
       @monthly_expense = 0
+      @monthly_balance = 0
+      @remaining_days = 1
+      @daily_budget = 0
+      @critical_events = CashflowEvent.none
       @safe_asset_result = nil
       @user_benefits = UserBenefit.none
     end
