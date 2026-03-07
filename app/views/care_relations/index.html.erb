@@ -54,16 +54,18 @@
     </div>
   <% end %>
 
-  <%# 새 수급자 초대 %>
-  <div class="care-invite-section">
-    <p class="care-invite-label">수급자 추가하기</p>
-    <%= form_with url: care_relations_path, method: :post, class: "care-invite-form" do |f| %>
-      <%= f.email_field :recipient_email, placeholder: "수급자 이메일 입력",
-          class: "care-invite-input",
-          required: true %>
-      <%= f.submit "초대", class: "care-invite-submit" %>
-    <% end %>
-  </div>
+  <%# 새 수급자 초대 (로그인 시에만) %>
+  <% if user_signed_in? %>
+    <div class="care-invite-section">
+      <p class="care-invite-label">수급자 추가하기</p>
+      <%= form_with url: care_relations_path, method: :post, class: "care-invite-form" do |f| %>
+        <%= f.email_field :recipient_email, placeholder: "수급자 이메일 입력",
+            class: "care-invite-input",
+            required: true %>
+        <%= f.submit "초대", class: "care-invite-submit" %>
+      <% end %>
+    </div>
+  <% end %>
 </section>
 
 <%# ── 나의 보호자 목록 ── %>
