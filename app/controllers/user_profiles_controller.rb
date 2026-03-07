@@ -6,11 +6,8 @@ class UserProfilesController < ApplicationController
   before_action :set_profile
 
   def show
-    if @profile.nil?
-      # 게스트 사용자는 프로필 없음 — 로그인 유도
-      redirect_to new_user_session_path, alert: "프로필을 보려면 로그인이 필요합니다."
-      return
-    end
+    # 게스트 사용자는 프로필 안내 페이지 표시 (로그인 유도)
+    return if @profile.nil?
     redirect_to edit_user_profile_path unless @profile.persisted?
   end
 

@@ -1,84 +1,145 @@
 <%# ── 내 프로필 보기 ── %>
 <% content_for(:title) { "내 정보 — 보듬" } %>
 
-<div class="flex items-center justify-between mb-6 animate-fade-in-up">
-  <h2 class="text-xl font-extrabold text-slate-800">내 정보</h2>
-  <%= link_to edit_user_profile_path,
-      class: "text-sm bg-indigo-100 text-indigo-700 font-bold px-4 py-2.5 rounded-xl hover:bg-indigo-200 transition inline-flex items-center gap-1.5" do %>
-    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-      <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
-    </svg>
-    수정
-  <% end %>
-</div>
+<% if @profile.nil? %>
+  <%# ── 게스트 안내 화면 ── %>
+  <div class="card animate-fade-in" style="text-align:center;padding:2.5rem 1.5rem;">
+    <div style="margin-bottom:1.5rem;">
+      <div class="icon-box icon-box-green" style="width:56px;height:56px;margin:0 auto 1rem;">
+        <svg width="28" height="28" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="color:#059669;">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+        </svg>
+      </div>
+      <h2 style="font-size:1.25rem;font-weight:800;color:#1e293b;margin-bottom:0.5rem;">내 정보</h2>
+      <p style="font-size:0.875rem;color:#64748b;line-height:1.6;">
+        로그인하면 <strong>나만의 복지 정보</strong>를 관리할 수 있어요
+      </p>
+    </div>
 
-<section class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 mb-4 animate-fade-in-up stagger-1">
-  <div class="flex items-center gap-2.5 mb-4">
-    <div class="w-9 h-9 bg-blue-100 rounded-xl flex items-center justify-center">
-      <svg class="w-5 h-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
-      </svg>
+    <div style="text-align:left;margin-bottom:1.5rem;">
+      <div style="display:flex;align-items:flex-start;gap:0.75rem;padding:0.75rem 0;border-bottom:1px solid #f1f5f9;">
+        <span style="font-size:1.25rem;">🛡️</span>
+        <div>
+          <p style="font-size:0.8125rem;font-weight:700;color:#334155;">수급 안전선 맞춤 계산</p>
+          <p style="font-size:0.75rem;color:#94a3b8;">내 소득·재산 기반으로 탈락 위험을 자동 분석</p>
+        </div>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:0.75rem;padding:0.75rem 0;border-bottom:1px solid #f1f5f9;">
+        <span style="font-size:1.25rem;">💰</span>
+        <div>
+          <p style="font-size:0.8125rem;font-weight:700;color:#334155;">현금흐름 일정 관리</p>
+          <p style="font-size:0.75rem;color:#94a3b8;">수입·지출을 등록하고 월간 잔액을 한눈에</p>
+        </div>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:0.75rem;padding:0.75rem 0;border-bottom:1px solid #f1f5f9;">
+        <span style="font-size:1.25rem;">📋</span>
+        <div>
+          <p style="font-size:0.8125rem;font-weight:700;color:#334155;">관심 혜택 추적</p>
+          <p style="font-size:0.75rem;color:#94a3b8;">신청 진행 상태를 관리하고 놓치지 않기</p>
+        </div>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:0.75rem;padding:0.75rem 0;">
+        <span style="font-size:1.25rem;">👨‍👩‍👧</span>
+        <div>
+          <p style="font-size:0.8125rem;font-weight:700;color:#334155;">보호자 연결</p>
+          <p style="font-size:0.75rem;color:#94a3b8;">가족·보호자가 대리로 상황을 확인</p>
+        </div>
+      </div>
     </div>
-    <h3 class="text-sm font-bold text-slate-700">가구 정보</h3>
-  </div>
-  <div class="space-y-0">
-    <div class="flex justify-between items-center py-3 border-b border-slate-100">
-      <span class="text-sm text-slate-500">가구원 수</span>
-      <span class="text-sm font-bold text-slate-800"><%= @profile.household_size || "미입력" %>인</span>
-    </div>
-    <div class="flex justify-between items-center py-3 border-b border-slate-100">
-      <span class="text-sm text-slate-500">거주 지역</span>
-      <span class="text-sm font-bold text-slate-800">
-        <%= case @profile.region_type
-            when "metropolitan" then "서울/대도시"
-            when "city" then "중소도시"
-            when "rural" then "농어촌"
-            else "미입력"
-            end %>
-      </span>
-    </div>
-    <div class="flex justify-between items-center py-3">
-      <span class="text-sm text-slate-500">주거 형태</span>
-      <span class="text-sm font-bold text-slate-800">
-        <%= case @profile.housing_type
-            when "owned" then "자가"
-            when "jeonse" then "전세"
-            when "monthly_rent" then "월세"
-            when "public_rental" then "공공임대"
-            else "미입력"
-            end %>
-      </span>
-    </div>
-  </div>
-</section>
 
-<section class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 mb-4 animate-fade-in-up stagger-2">
-  <div class="flex items-center gap-2.5 mb-4">
-    <div class="w-9 h-9 bg-emerald-100 rounded-xl flex items-center justify-center">
-      <svg class="w-5 h-5 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+    <%= link_to new_user_session_path, class: "btn btn-primary", style: "width:100%;font-size:0.9375rem;padding:0.875rem;" do %>
+      <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="margin-right:6px;">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
       </svg>
-    </div>
-    <h3 class="text-sm font-bold text-slate-700">소득 · 재산</h3>
+      Google로 로그인
+    <% end %>
+
+    <p style="font-size:0.6875rem;color:#94a3b8;margin-top:0.75rem;">
+      로그인 없이도 혜택 검색, 복지 정보 확인은 자유롭게 이용 가능합니다
+    </p>
   </div>
-  <div class="space-y-0">
-    <div class="flex justify-between items-center py-3 border-b border-slate-100">
-      <span class="text-sm text-slate-500">월 소득</span>
-      <span class="text-sm font-bold text-slate-800">
-        <%= @profile.declared_monthly_income.present? ? number_to_currency(@profile.monthly_income_amount, unit: "₩", precision: 0, delimiter: ",") : "미입력" %>
-      </span>
-    </div>
-    <div class="flex justify-between items-center py-3 border-b border-slate-100">
-      <span class="text-sm text-slate-500">총 재산</span>
-      <span class="text-sm font-bold text-slate-800">
-        <%= @profile.declared_assets.present? ? number_to_currency(@profile.assets_amount, unit: "₩", precision: 0, delimiter: ",") : "미입력" %>
-      </span>
-    </div>
-    <div class="flex justify-between items-center py-3">
-      <span class="text-sm text-slate-500">차량 가액</span>
-      <span class="text-sm font-bold text-slate-800">
-        <%= @profile.vehicle_value.present? ? number_to_currency(@profile.vehicle_amount, unit: "₩", precision: 0, delimiter: ",") : "미입력" %>
-      </span>
-    </div>
+
+<% else %>
+  <%# ── 로그인 사용자 — 기존 프로필 보기 ── %>
+  <div class="flex items-center justify-between mb-6 animate-fade-in-up">
+    <h2 class="text-xl font-extrabold text-slate-800">내 정보</h2>
+    <%= link_to edit_user_profile_path,
+        class: "text-sm bg-indigo-100 text-indigo-700 font-bold px-4 py-2.5 rounded-xl hover:bg-indigo-200 transition inline-flex items-center gap-1.5" do %>
+      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+      </svg>
+      수정
+    <% end %>
   </div>
-</section>
+
+  <section class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 mb-4 animate-fade-in-up stagger-1">
+    <div class="flex items-center gap-2.5 mb-4">
+      <div class="w-9 h-9 bg-blue-100 rounded-xl flex items-center justify-center">
+        <svg class="w-5 h-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
+        </svg>
+      </div>
+      <h3 class="text-sm font-bold text-slate-700">가구 정보</h3>
+    </div>
+    <div class="space-y-0">
+      <div class="flex justify-between items-center py-3 border-b border-slate-100">
+        <span class="text-sm text-slate-500">가구원 수</span>
+        <span class="text-sm font-bold text-slate-800"><%= @profile.household_size || "미입력" %>인</span>
+      </div>
+      <div class="flex justify-between items-center py-3 border-b border-slate-100">
+        <span class="text-sm text-slate-500">거주 지역</span>
+        <span class="text-sm font-bold text-slate-800">
+          <%= case @profile.region_type
+              when "metropolitan" then "서울/대도시"
+              when "city" then "중소도시"
+              when "rural" then "농어촌"
+              else "미입력"
+              end %>
+        </span>
+      </div>
+      <div class="flex justify-between items-center py-3">
+        <span class="text-sm text-slate-500">주거 형태</span>
+        <span class="text-sm font-bold text-slate-800">
+          <%= case @profile.housing_type
+              when "owned" then "자가"
+              when "jeonse" then "전세"
+              when "monthly_rent" then "월세"
+              when "public_rental" then "공공임대"
+              else "미입력"
+              end %>
+        </span>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 mb-4 animate-fade-in-up stagger-2">
+    <div class="flex items-center gap-2.5 mb-4">
+      <div class="w-9 h-9 bg-emerald-100 rounded-xl flex items-center justify-center">
+        <svg class="w-5 h-5 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+        </svg>
+      </div>
+      <h3 class="text-sm font-bold text-slate-700">소득 · 재산</h3>
+    </div>
+    <div class="space-y-0">
+      <div class="flex justify-between items-center py-3 border-b border-slate-100">
+        <span class="text-sm text-slate-500">월 소득</span>
+        <span class="text-sm font-bold text-slate-800">
+          <%= @profile.declared_monthly_income.present? ? number_to_currency(@profile.monthly_income_amount, unit: "₩", precision: 0, delimiter: ",") : "미입력" %>
+        </span>
+      </div>
+      <div class="flex justify-between items-center py-3 border-b border-slate-100">
+        <span class="text-sm text-slate-500">총 재산</span>
+        <span class="text-sm font-bold text-slate-800">
+          <%= @profile.declared_assets.present? ? number_to_currency(@profile.assets_amount, unit: "₩", precision: 0, delimiter: ",") : "미입력" %>
+        </span>
+      </div>
+      <div class="flex justify-between items-center py-3">
+        <span class="text-sm text-slate-500">차량 가액</span>
+        <span class="text-sm font-bold text-slate-800">
+          <%= @profile.vehicle_value.present? ? number_to_currency(@profile.vehicle_amount, unit: "₩", precision: 0, delimiter: ",") : "미입력" %>
+        </span>
+      </div>
+    </div>
+  </section>
+<% end %>

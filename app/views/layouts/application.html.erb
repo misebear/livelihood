@@ -110,20 +110,11 @@
           <span>보호자</span>
         <% end %>
 
-        <% if user_signed_in? %>
-          <%= link_to user_profile_path, class: "bottom-nav-item #{controller_name == 'user_profiles' ? 'active' : ''}", aria: { label: "내정보" } do %>
+        <%= link_to user_profile_path, class: "bottom-nav-item #{controller_name == 'user_profiles' ? 'active' : ''}", aria: { label: "내정보" } do %>
             <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
             </svg>
             <span>내정보</span>
-          <% end %>
-        <% else %>
-          <%= link_to new_user_session_path, class: "bottom-nav-item #{controller_name == 'sessions' ? 'active' : ''}", aria: { label: "로그인" } do %>
-            <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
-            </svg>
-            <span>로그인</span>
-          <% end %>
         <% end %>
       </div>
     </nav>
