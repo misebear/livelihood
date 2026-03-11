@@ -26,6 +26,9 @@ Rails.application.routes.draw do
   # ── 현금흐름 이벤트 ──────────────────────────────────────────
   resources :cashflow_events, only: [:new, :create, :edit, :update, :destroy]
 
+  # ── Sitemap ────────────────────────────────────────────────
+  get "/sitemap.xml", to: "sitemaps#show", format: "xml", as: :sitemap
+
   # Reveal health status on /up
   get "up" => "rails/health#show", as: :rails_health_check
 end
