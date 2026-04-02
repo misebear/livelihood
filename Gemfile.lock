@@ -125,7 +125,7 @@ GEM
       activesupport (>= 6.1)
     hashie (5.1.0)
       logger
-    holidays (8.8.0)
+    holidays (9.1.1)
     httparty (0.24.2)
       csv
       mini_mime (>= 1.0.0)
@@ -480,7 +480,7 @@ CHECKSUMS
   ffi (1.17.3-x86_64-linux-gnu) sha256=3746b01f677aae7b16dc1acb7cb3cc17b3e35bdae7676a3f568153fb0e2c887f
   globalid (1.3.0) sha256=05c639ad6eb4594522a0b07983022f04aa7254626ab69445a0e493aa3786ff11
   hashie (5.1.0) sha256=c266471896f323c446ea8207f8ffac985d2718df0a0ba98651a3057096ca3870
-  holidays (8.8.0) sha256=17b66199b9316214bda53d9db3fc61b1eb585efbbf3deae72b30caf9a87b1859
+  holidays (9.1.1) sha256=8775c114ef0a262549534b0793322f6e238aa0817a56881d0a581ec5525c7972
   httparty (0.24.2) sha256=8fca6a54aa0c4aa4303a0fd33e5e2156175d6a5334f714263b458abd7fda9c38
   i18n (1.14.8) sha256=285778639134865c5e0f6269e0b818256017e8cde89993fdfcbfb64d088824a5
   image_processing (1.14.0) sha256=754cc169c9c262980889bec6bfd325ed1dafad34f85242b5a07b60af004742fb
