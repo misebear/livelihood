@@ -49,7 +49,7 @@ gem "omniauth-rails_csrf_protection"
 gem "dotenv-rails", groups: [:development, :test]
 
 # Background Jobs
-gem "sidekiq", "~> 7.0"
+gem "sidekiq", "~> 8.1"
 # 자동 갱신은 Rake 태스크 + OS 스케줄러(Windows 작업 스케줄러/cron)로 실행
 
 # Redis (Sidekiq broker & cache)
