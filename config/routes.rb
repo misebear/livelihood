@@ -6,6 +6,9 @@ Rails.application.routes.draw do
   # ── Dashboard (홈) — 로그인 없이도 접근 가능 ────────────────
   root "dashboard#index"
 
+  # ── Public app support page for Play Console and AdMob verification ──
+  get "app-support", to: "app_support#index", as: :app_support
+
   # ── 보호자 대리 조회 ─────────────────────────────────────
   get "dashboard/care/:id", to: "dashboard#care_view", as: :care_dashboard
 

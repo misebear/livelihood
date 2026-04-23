@@ -1,0 +1,161 @@
+<% content_for(:title) { "앱 지원 센터 — 보듬" } %>
+<% content_for :head do %>
+  <meta name="description" content="보듬에서 운영하는 Android 앱의 지원, 개인정보처리방침, 데이터 삭제 요청, AdMob app-ads.txt 인증 정보를 안내합니다.">
+  <link rel="canonical" href="https://bodeum.me/app-support">
+<% end %>
+
+<% apps = [
+  ["dyscatch", "DysCatch", "난독 경향 체크와 읽기 보조 기록", "com.dyscatch.app"],
+  ["telegraph", "텔레그래프", "영상 대본 프롬프터", "com.bodeum.telegraph"],
+  ["oil-widget", "기름주의보", "전국 유가 위젯", "me.bodeum.oilwidget"],
+  ["recipe", "영상 레시피 추출기", "요리 영상 재료 자동정리", "com.yeobo.recipe"],
+  ["dialfocus", "뽀모도로 타이머", "집중 세션과 휴식 루틴 관리", "com.dialfocus.app"],
+  ["misebear", "미세베어 WHO", "미세먼지와 생활 정보 확인", "kr.co.jejuzone.misebear"],
+  ["batang-issue", "바탕이슈", "이슈 확인과 콘텐츠 탐색", "me.bodeum.app"],
+  ["poopbuddy", "PoopBuddy", "반려동물 배변 기록", "com.poopbuddy.app"],
+  ["pitchflow", "PitchFlow", "AI 보컬 코치", "com.pitchflow.vocal"],
+  ["zenbowl", "ZenBowl", "싱잉볼 명상", "com.zenbowl.app"],
+  ["stab", "해적룰렛 STAB!", "오프라인 파티 벌칙 게임", "com.stab.pirate"],
+  ["healthstack", "헬스스택", "보충제 루틴 기록", "com.cleanstack.cleanstack"],
+  ["annyang", "안냥", "고양이 반응 기록", "com.jejubucketlist.annyang"],
+  ["saju", "1분 사주", "AI 운세, 궁합, 타로", "app.railway.up.app_1min_saju_production.twa"]
+] %>
+
+<section class="support-hero">
+  <p class="support-eyebrow">Bodeum App Support</p>
+  <h2>앱 지원 센터</h2>
+  <p>
+    보듬에서 운영하는 Android 앱의 문의, 개인정보 처리방침, 데이터 삭제 요청, 광고 판매자 인증 정보를 안내합니다.
+    AdMob 인증용 파일은 <a href="/app-ads.txt">/app-ads.txt</a>에서 확인할 수 있습니다.
+  </p>
+  <div class="support-actions">
+    <a href="mailto:db0192a@gmail.com">이메일 문의</a>
+    <a href="/privacy.html">개인정보 처리방침</a>
+    <a href="/delete-account.html">데이터 삭제 요청</a>
+  </div>
+</section>
+
+<section class="support-section">
+  <div class="support-section-heading">
+    <p class="support-eyebrow">Apps</p>
+    <h3>지원 앱 목록</h3>
+  </div>
+  <div class="support-grid">
+    <% apps.each do |slug, name, summary, package_name| %>
+      <article id="<%= slug %>" class="support-card">
+        <span class="support-chip"><%= package_name %></span>
+        <h4><%= name %></h4>
+        <p><%= summary %></p>
+        <a href="mailto:db0192a@gmail.com?subject=<%= ERB::Util.url_encode("[#{name}] 문의") %>">문의하기</a>
+      </article>
+    <% end %>
+  </div>
+</section>
+
+<section class="support-section support-note">
+  <div>
+    <p class="support-eyebrow">AdMob Verification</p>
+    <h3>광고 판매자 인증 정보</h3>
+  </div>
+  <p>
+    이 도메인의 루트에는 AdMob/AdSense 판매자 인증 파일이 게시되어 있습니다.
+    Play Console의 개발자 웹사이트 또는 연락처 웹사이트를 이 페이지로 연결하면 AdMob이 같은 도메인의
+    <code>https://bodeum.me/app-ads.txt</code>를 크롤링할 수 있습니다.
+  </p>
+  <pre>google.com, pub-9072876824288260, DIRECT, f08c47fec0942fa0</pre>
+</section>
+
+<style>
+  .support-hero,
+  .support-section {
+    max-width: 1120px;
+    margin: 28px auto;
+    padding: 28px;
+    border-radius: 28px;
+    background: linear-gradient(135deg, rgba(13, 148, 136, 0.12), rgba(15, 23, 42, 0.04));
+    border: 1px solid rgba(15, 23, 42, 0.08);
+  }
+
+  .support-hero h2,
+  .support-section h3 {
+    margin: 8px 0 12px;
+    color: #0f172a;
+    font-size: clamp(28px, 4vw, 48px);
+    letter-spacing: -0.04em;
+  }
+
+  .support-hero p,
+  .support-section p {
+    color: #475569;
+    line-height: 1.75;
+  }
+
+  .support-eyebrow {
+    margin: 0;
+    color: #0d9488;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .support-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 22px;
+  }
+
+  .support-actions a,
+  .support-card a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 14px;
+    border-radius: 999px;
+    background: #0f766e;
+    color: white;
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  .support-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 14px;
+  }
+
+  .support-card {
+    min-height: 178px;
+    padding: 20px;
+    border-radius: 22px;
+    background: white;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    box-shadow: 0 16px 40px rgba(15, 23, 42, 0.06);
+  }
+
+  .support-card h4 {
+    margin: 14px 0 8px;
+    color: #111827;
+    font-size: 22px;
+  }
+
+  .support-chip {
+    display: inline-flex;
+    max-width: 100%;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: #ecfeff;
+    color: #0f766e;
+    font-size: 12px;
+    font-weight: 800;
+    overflow-wrap: anywhere;
+  }
+
+  .support-note pre {
+    overflow-x: auto;
+    padding: 16px;
+    border-radius: 16px;
+    background: #0f172a;
+    color: #ccfbf1;
+  }
+</style>
