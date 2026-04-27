@@ -1,9 +1,22 @@
 <!DOCTYPE html>
 <html lang="ko">
   <head>
-    <title><%= content_for(:title) || "보듬 — 현금흐름 & 안전 자산 관리" %></title>
+    <title><%= meta_title %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5,user-scalable=yes">
-    <meta name="description" content="기초생활수급자 및 차상위계층을 위한 현금흐름 관리, 수급 탈락 방지 안전선 관리, 혜택 안내 서비스">
+    <meta name="description" content="<%= meta_description %>">
+    <meta name="robots" content="<%= meta_robots %>">
+    <link rel="canonical" href="<%= canonical_url %>">
+    <meta property="og:site_name" content="보듬">
+    <meta property="og:locale" content="ko_KR">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="<%= meta_title %>">
+    <meta property="og:description" content="<%= meta_description %>">
+    <meta property="og:url" content="<%= canonical_url %>">
+    <meta property="og:image" content="<%= meta_image_url %>">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="<%= meta_title %>">
+    <meta name="twitter:description" content="<%= meta_description %>">
+    <meta name="twitter:image" content="<%= meta_image_url %>">
     <meta name="google-adsense-account" content="ca-pub-9072876824288260">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="application-name" content="보듬">
@@ -13,11 +26,39 @@
     <%= csp_meta_tag %>
     <link rel="manifest" href="/manifest.json">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9072876824288260" crossorigin="anonymous"></script>
+    <% if analytics_measurement_id.present? %>
+      <script async src="https://www.googletagmanager.com/gtag/js?id=<%= analytics_measurement_id %>"></script>
+      <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', '<%= analytics_measurement_id %>', { send_page_view: false });
+
+        document.addEventListener('turbo:load', function() {
+          gtag('event', 'page_view', {
+            page_title: document.title,
+            page_location: window.location.href,
+            page_path: window.location.pathname + window.location.search
+          });
+        });
+
+        document.addEventListener('click', function(event) {
+          const target = event.target.closest('[data-analytics-event]');
+          if (!target) return;
+
+          gtag('event', target.dataset.analyticsEvent, {
+            event_category: target.dataset.analyticsCategory || 'engagement',
+            event_label: target.dataset.analyticsLabel || target.textContent.trim()
+          });
+        });
+      </script>
+    <% end %>
     <script>
       if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('/service-worker.js');
       }
     </script>
+    <script type="application/ld+json"><%= json_escape(site_json_ld.to_json).html_safe %></script>
 
     <%= yield :head %>
 
@@ -57,7 +98,9 @@
           </div>
         <% else %>
           <div class="top-nav-user">
-            <%= link_to new_user_session_path, class: "top-nav-login" do %>
+            <%= link_to new_user_session_path,
+                class: "top-nav-login",
+                data: { analytics_event: "login_cta", analytics_category: "navigation", analytics_label: "top_nav" } do %>
               로그인
             <% end %>
           </div>
@@ -103,6 +146,13 @@
             <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 0 0 2.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 0 0-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75 2.25 2.25 0 0 0-.1-.664m-5.8 0A2.251 2.251 0 0 1 13.5 2.25H15a2.25 2.25 0 0 1 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25ZM6.75 12h.008v.008H6.75V12Zm0 3h.008v.008H6.75V15Zm0 3h.008v.008H6.75V18Z" />
           </svg>
           <span>혜택</span>
+        <% end %>
+
+        <%= link_to guides_path, class: "bottom-nav-item #{controller_name == 'guides' ? 'active' : ''}", aria: { label: "가이드" } do %>
+          <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25A8.966 8.966 0 0 1 18 3.75c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" />
+          </svg>
+          <span>가이드</span>
         <% end %>
 
         <%= link_to care_relations_path, class: "bottom-nav-item #{controller_name == 'care_relations' ? 'active' : ''}", aria: { label: "보호자" } do %>

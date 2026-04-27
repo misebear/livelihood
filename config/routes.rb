@@ -9,6 +9,9 @@ Rails.application.routes.draw do
   # ── Public app support page for Play Console and AdMob verification ──
   get "app-support", to: "app_support#index", as: :app_support
 
+  # ── 검색 유입용 복지 가이드 ──────────────────────────────
+  resources :guides, only: [:index, :show], param: :slug
+
   # ── 보호자 대리 조회 ─────────────────────────────────────
   get "dashboard/care/:id", to: "dashboard#care_view", as: :care_dashboard
 

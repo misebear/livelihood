@@ -1,0 +1,159 @@
+<% content_for(:title) { "#{@guide.title} — 보듬" } %>
+<% content_for(:description) { @guide.meta_description } %>
+<% content_for(:canonical_url) { guide_url(@guide) } %>
+<% content_for(:head) do %>
+  <% [
+    @guide.article_json_ld(url: guide_url(@guide)),
+    @guide.faq_json_ld,
+    @guide.breadcrumb_json_ld(root_url: root_url, guides_url: guides_url, guide_url: guide_url(@guide))
+  ].each do |payload| %>
+    <script type="application/ld+json"><%= json_escape(payload.to_json).html_safe %></script>
+  <% end %>
+<% end %>
+
+<article class="guide-article animate-fade-in-up">
+  <nav class="guide-breadcrumb" aria-label="현재 위치">
+    <%= link_to "복지 가이드", guides_path %>
+    <span>/</span>
+    <span><%= @guide.short_title %></span>
+  </nav>
+
+  <header class="guide-article-header">
+    <div class="guide-eyebrow"><%= @guide.keyword %></div>
+    <h2><%= @guide.title %></h2>
+    <p><%= @guide.meta_description %></p>
+    <time datetime="<%= @guide.updated_on.iso8601 %>">
+      기준 업데이트: <%= @guide.updated_on.strftime("%Y.%m.%d") %>
+    </time>
+  </header>
+
+  <section class="guide-quick-grid" aria-label="핵심 요약">
+    <% @guide.quick_answers.each do |label, value| %>
+      <div class="guide-quick-item">
+        <span><%= label %></span>
+        <strong><%= value %></strong>
+      </div>
+    <% end %>
+  </section>
+
+  <div class="guide-cta-row">
+    <%= link_to benefits_path(@guide.benefits_query_params), class: "btn btn-primary",
+        data: { analytics_event: "benefits_cta", analytics_category: "guide", analytics_label: @guide.slug } do %>
+      관련 혜택 검색하기
+    <% end %>
+    <%= link_to root_path, class: "btn btn-secondary",
+        data: { analytics_event: "dashboard_cta", analytics_category: "guide", analytics_label: @guide.slug } do %>
+      입금일·안전선 확인
+    <% end %>
+  </div>
+
+  <% if @guide.threshold_rows.any? %>
+    <section class="guide-section">
+      <div class="guide-section-heading">
+        <h3>2026년 기준 금액</h3>
+      </div>
+      <div class="guide-table-wrap">
+        <table class="guide-threshold-table">
+          <thead>
+            <tr>
+              <th>구분</th>
+              <% SeoGuide::THRESHOLD_COLUMNS.each do |column| %>
+                <th><%= column %></th>
+              <% end %>
+            </tr>
+          </thead>
+          <tbody>
+            <% @guide.threshold_rows.each do |row| %>
+              <tr>
+                <th>
+                  <span><%= row[:label] %></span>
+                  <small><%= row[:ratio] %></small>
+                </th>
+                <% row[:values].each do |value| %>
+                  <td><%= value %>원</td>
+                <% end %>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  <% end %>
+
+  <% @guide.sections.each do |section| %>
+    <section class="guide-section">
+      <div class="guide-section-heading">
+        <h3><%= section[:heading] %></h3>
+      </div>
+      <% section[:paragraphs].each do |paragraph| %>
+        <p><%= paragraph %></p>
+      <% end %>
+      <% if section[:bullets].present? %>
+        <ul class="guide-check-list">
+          <% section[:bullets].each do |item| %>
+            <li><%= item %></li>
+          <% end %>
+        </ul>
+      <% end %>
+    </section>
+  <% end %>
+
+  <section class="guide-section">
+    <div class="guide-section-heading">
+      <h3>자주 묻는 질문</h3>
+    </div>
+    <div class="guide-faq-list">
+      <% @guide.faqs.each do |question, answer| %>
+        <details class="guide-faq-item">
+          <summary><%= question %></summary>
+          <p><%= answer %></p>
+        </details>
+      <% end %>
+    </div>
+  </section>
+
+  <section class="guide-section">
+    <div class="guide-section-heading">
+      <h3>공식 확인처</h3>
+    </div>
+    <div class="guide-source-list">
+      <% @guide.sources.each do |source| %>
+        <%= link_to source[:label], source[:url], target: "_blank", rel: "noopener",
+            data: { analytics_event: "official_source_click", analytics_category: "guide", analytics_label: source[:label] } %>
+      <% end %>
+    </div>
+  </section>
+
+  <% if @related_benefits.any? %>
+    <section class="guide-section">
+      <div class="guide-section-heading">
+        <h3>관련 혜택</h3>
+        <%= link_to "더 보기", benefits_path(@guide.benefits_query_params) %>
+      </div>
+      <div class="guide-related-list">
+        <% @related_benefits.each do |benefit| %>
+          <%= link_to benefit_path(benefit), class: "guide-benefit-link" do %>
+            <span><%= benefit.category_icon %></span>
+            <strong><%= benefit.title %></strong>
+          <% end %>
+        <% end %>
+      </div>
+    </section>
+  <% end %>
+
+  <section class="guide-section">
+    <div class="guide-section-heading">
+      <h3>함께 보면 좋은 가이드</h3>
+    </div>
+    <div class="guide-related-guides">
+      <% @related_guides.each do |guide| %>
+        <%= link_to guide_path(guide), class: "guide-related-guide" do %>
+          <strong><%= guide.short_title %></strong>
+          <span><%= guide.keyword %></span>
+        <% end %>
+      <% end %>
+    </div>
+  </section>
+</article>
+
+<%= render_disclaimer(type: :benefit) %>

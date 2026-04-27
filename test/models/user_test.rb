@@ -42,9 +42,9 @@ class UserTest < ActiveSupport::TestCase
   end
 
   # ── Validation 테스트 ──
-  test "역할은 필수다" do
+  test "역할이 비어 있으면 수급자로 기본 설정된다" do
     user = User.new(email: "test@example.com", password: "password123", role: nil)
-    assert_not user.valid?
-    assert user.errors[:role].any?
+    assert user.valid?
+    assert user.recipient?
   end
 end

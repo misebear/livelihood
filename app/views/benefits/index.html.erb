@@ -1,9 +1,14 @@
 <%# ── 혜택 목록 (카테고리 탭 기반) ── %>
-<% content_for(:title) { "혜택 안내 — 보듬" } %>
+<% content_for(:title) { "기초생활수급자 복지 혜택 검색 — 보듬" } %>
+<% content_for(:description) { "생계급여, 주거급여, 자산형성, 감면·할인 등 기초생활수급자와 차상위계층이 확인할 수 있는 복지 혜택을 검색하세요." } %>
+<% content_for(:canonical_url) { @search_query.present? ? benefits_url(category: @current_category.presence) : benefits_url(category: @current_category.presence, page: (@page if @paged && @page > 1)) } %>
+<% content_for(:robots) { @search_query.present? ? "noindex,follow" : "index,follow,max-image-preview:large" } %>
 
 <div class="mb-4 animate-fade-in-up">
-  <h2 class="text-xl font-extrabold text-slate-800 mb-1">혜택 안내</h2>
-  <p class="text-sm text-slate-500">받을 수 있는 복지 혜택 <strong><%= @total_count %>건</strong><%= @search_query.present? ? " (검색 결과)" : "" %>을 확인하세요.</p>
+  <h2 class="text-xl font-extrabold text-slate-800 mb-1">복지 혜택 검색</h2>
+  <p class="text-sm text-slate-500">
+    받을 수 있는 복지 혜택 <strong><%= @total_count %>건</strong><%= @search_query.present? ? " 중 검색 결과를" : "을" %> 확인하세요.
+  </p>
 </div>
 
 <%# ── 검색 바 ── %>
@@ -44,10 +49,11 @@
 <% if @grouped_benefits.any? %>
   <% @grouped_benefits.each do |category, benefits| %>
     <% meta = Benefit::CATEGORIES[category] || { icon: "📋", color: "#64748b" } %>
+    <% total_in_category = category == "기타" ? (@uncategorized_count || benefits.size) : (@category_counts&.fetch(category, benefits.size) || benefits.size) %>
     <section class="mb-5 animate-fade-in-up">
       <h3 class="benefit-category-header" style="--cat-color: <%= meta[:color] %>">
         <span class="benefit-category-icon"><%= meta[:icon] %></span>
-        <%= category %> <span class="benefit-count">(<%= benefits.size %>)</span>
+        <%= category %> <span class="benefit-count">(<%= @paged ? benefits.size : total_in_category %>)</span>
       </h3>
 
       <div class="space-y-2">
@@ -79,7 +85,31 @@
           <% end %>
         <% end %>
       </div>
+
+      <% if !@paged && category != "기타" && total_in_category > benefits.size %>
+        <%= link_to benefits_path(category: category), class: "benefit-more-link" do %>
+          <%= category %> 혜택 <%= total_in_category - benefits.size %>건 더 보기
+        <% end %>
+      <% end %>
     </section>
+  <% end %>
+
+  <% if @paged && @total_pages > 1 %>
+    <nav class="pagination-nav" aria-label="혜택 페이지">
+      <% if @page > 1 %>
+        <%= link_to "이전", benefits_path(category: @current_category, q: @search_query, page: @page - 1), class: "pagination-link" %>
+      <% else %>
+        <span class="pagination-link disabled">이전</span>
+      <% end %>
+
+      <span class="pagination-status"><%= @page %> / <%= @total_pages %></span>
+
+      <% if @page < @total_pages %>
+        <%= link_to "다음", benefits_path(category: @current_category, q: @search_query, page: @page + 1), class: "pagination-link" %>
+      <% else %>
+        <span class="pagination-link disabled">다음</span>
+      <% end %>
+    </nav>
   <% end %>
 <% else %>
   <div class="empty-state bg-white rounded-2xl border border-slate-100 py-10">
@@ -88,7 +118,10 @@
         <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
       </svg>
     </div>
-    <p class="text-sm text-slate-500 font-medium">이 카테고리에 등록된 혜택이 없습니다</p>
+    <p class="text-sm text-slate-500 font-medium"><%= @search_query.present? ? "검색 결과가 없습니다" : "이 카테고리에 등록된 혜택이 없습니다" %></p>
+    <% if @search_query.present? || @current_category.present? %>
+      <%= link_to "전체 혜택 보기", benefits_path, class: "btn btn-primary btn-sm mt-1.5" %>
+    <% end %>
   </div>
 <% end %>
 

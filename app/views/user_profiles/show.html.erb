@@ -1,5 +1,7 @@
 <%# ── 내 프로필 보기 ── %>
 <% content_for(:title) { "내 정보 — 보듬" } %>
+<% content_for(:description) { "가구원 수, 소득, 재산 정보를 입력해 생계급여 수급 안전선과 현금흐름을 맞춤 관리하세요." } %>
+<% content_for(:canonical_url) { user_profile_url } %>
 
 <% if @profile.nil? %>
   <%# ── 게스트 안내 화면 ── %>
@@ -47,11 +49,14 @@
       </div>
     </div>
 
-    <%= link_to new_user_session_path, class: "btn btn-primary", style: "width:100%;font-size:0.9375rem;padding:0.875rem;" do %>
+    <%= link_to new_user_session_path,
+        class: "btn btn-primary",
+        style: "width:100%;font-size:0.9375rem;padding:0.875rem;",
+        data: { analytics_event: "login_cta", analytics_category: "profile", analytics_label: "guest_profile" } do %>
       <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="margin-right:6px;">
         <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
       </svg>
-      Google로 로그인
+      로그인하고 내 정보 관리하기
     <% end %>
 
     <p style="font-size:0.6875rem;color:#94a3b8;margin-top:0.75rem;">

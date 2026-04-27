@@ -1,5 +1,7 @@
 <%# ── 대시보드 홈 (현금흐름 & D-Day) ── %>
-<% content_for(:title) { @viewing_as_caregiver && @user ? "#{@user.name || @user.email}님의 대시보드 — 보듬" : "홈 — 보듬" } %>
+<% content_for(:title) { @viewing_as_caregiver && @user ? "#{@user.name || @user.email}님의 대시보드 — 보듬" : "기초생활수급자 생계급여 입금일·수급 안전선 관리 — 보듬" } %>
+<% content_for(:description) { "생계급여 입금일, 월별 현금흐름, 소득·재산 기준 수급 안전선, 복지 혜택을 한 화면에서 관리하세요." } %>
+<% content_for(:canonical_url) { root_url } %>
 
 <% if @viewing_as_caregiver %>
   <div class="care-view-banner">
@@ -99,6 +101,25 @@
         입금 일정 정보가 없습니다.
       </div>
     <% end %>
+  </section>
+<% end %>
+
+<% unless @viewing_as_caregiver %>
+  <section class="home-guide-strip animate-fade-in" aria-label="복지 가이드">
+    <div class="guide-section-heading">
+      <h2>많이 찾는 복지 기준</h2>
+      <%= link_to "전체", guides_path,
+          data: { analytics_event: "guides_cta", analytics_category: "dashboard", analytics_label: "home_strip" } %>
+    </div>
+    <div class="home-guide-list">
+      <% @featured_guides.each do |guide| %>
+        <%= link_to guide_path(guide), class: "home-guide-link",
+            data: { analytics_event: "guide_click", analytics_category: "dashboard", analytics_label: guide.slug } do %>
+          <strong><%= guide.short_title %></strong>
+          <span><%= guide.keyword %></span>
+        <% end %>
+      <% end %>
+    </div>
   </section>
 <% end %>
 
@@ -409,11 +430,11 @@
         <p class="empty-state-title">내 정보를 입력하면</p>
         <p class="empty-state-desc">안전 저축 한도를 계산해 드려요!</p>
         <% if user_signed_in? %>
-          <%= link_to edit_user_profile_path, class: "btn btn-primary" do %>
+          <%= link_to edit_user_profile_path, class: "btn btn-primary", data: { analytics_event: "profile_start_click", analytics_category: "dashboard", analytics_label: "safe_gauge" } do %>
             내 상황 입력하기
           <% end %>
         <% else %>
-          <%= link_to new_user_session_path, class: "btn btn-primary" do %>
+          <%= link_to new_user_session_path, class: "btn btn-primary", data: { analytics_event: "login_cta", analytics_category: "dashboard", analytics_label: "safe_gauge" } do %>
             로그인하고 시작하기
           <% end %>
         <% end %>
@@ -535,7 +556,7 @@
           이벤트 추가하기
         <% end %>
       <% else %>
-        <%= link_to new_user_session_path, class: "btn btn-primary btn-sm" do %>
+        <%= link_to new_user_session_path, class: "btn btn-primary btn-sm", data: { analytics_event: "login_cta", analytics_category: "dashboard", analytics_label: "cashflow_empty" } do %>
           로그인하고 추가하기
         <% end %>
       <% end %>

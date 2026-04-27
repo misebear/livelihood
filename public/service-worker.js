@@ -1,10 +1,18 @@
 // 보듬(Bodeum) Service Worker — 오프라인 캐싱 + PWA 지원
-const CACHE_NAME = 'bodeum-v1';
+const CACHE_NAME = 'bodeum-v3';
+const CORE_ASSETS = [
+    '/',
+    '/guides',
+    '/benefits',
+    '/manifest.json',
+    '/icon.png',
+    '/icon.svg'
+];
 
 self.addEventListener('install', (event) => {
     event.waitUntil(
         caches.open(CACHE_NAME).then((cache) => {
-            return cache.addAll(['/', '/icon.png']);
+            return cache.addAll(CORE_ASSETS);
         })
     );
     self.skipWaiting();
@@ -22,7 +30,28 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-    if (event.request.mode === 'navigate') {
-        event.respondWith(fetch(event.request).catch(() => caches.match('/')));
+    const request = event.request;
+
+    if (request.mode === 'navigate') {
+        event.respondWith(
+            fetch(request)
+                .then((response) => {
+                    const copy = response.clone();
+                    caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
+                    return response;
+                })
+                .catch(() => caches.match(request).then((cached) => cached || caches.match('/')))
+        );
+        return;
+    }
+
+    if (request.destination === 'style' || request.destination === 'script' || request.destination === 'image') {
+        event.respondWith(
+            caches.match(request).then((cached) => cached || fetch(request).then((response) => {
+                const copy = response.clone();
+                caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
+                return response;
+            }))
+        );
     }
 });

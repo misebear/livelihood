@@ -1,0 +1,67 @@
+<% content_for(:title) { "기초생활수급자 복지 가이드 — 보듬" } %>
+<% content_for(:description) { "생계급여 입금일, 기초생활수급자 혜택, 주거급여 조건, 의료급여 대상자, 차상위계층 혜택을 쉽게 확인하세요." } %>
+<% content_for(:canonical_url) { guides_url } %>
+<% content_for(:head) do %>
+  <% item_list = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    itemListElement: @guides.each_with_index.map do |guide, index|
+      {
+        "@type": "ListItem",
+        position: index + 1,
+        name: guide.title,
+        url: guide_url(guide)
+      }
+    end
+  } %>
+  <script type="application/ld+json"><%= json_escape(item_list.to_json).html_safe %></script>
+<% end %>
+
+<section class="guide-index-hero animate-fade-in-up">
+  <div class="guide-eyebrow">복지 검색 가이드</div>
+  <h2>자주 찾는 복지 기준을 먼저 확인하세요</h2>
+  <p>
+    2026년 기준 중위소득, 생계급여 입금일, 주거급여 조건처럼 검색이 많은 주제를
+    공식 기준 중심으로 정리했습니다.
+  </p>
+  <div class="guide-hero-actions">
+    <%= link_to benefits_path, class: "btn btn-primary",
+        data: { analytics_event: "benefits_cta", analytics_category: "guides", analytics_label: "index_hero" } do %>
+      혜택 검색하기
+    <% end %>
+    <%= link_to root_path, class: "btn btn-secondary",
+        data: { analytics_event: "dashboard_cta", analytics_category: "guides", analytics_label: "index_hero" } do %>
+      입금일 보기
+    <% end %>
+  </div>
+</section>
+
+<section class="guide-card-grid" aria-label="복지 가이드 목록">
+  <% @guides.each do |guide| %>
+    <%= link_to guide_path(guide), class: "guide-card",
+        data: { analytics_event: "guide_click", analytics_category: "guides", analytics_label: guide.slug } do %>
+      <span class="guide-card-kicker"><%= guide.keyword %></span>
+      <strong><%= guide.short_title %></strong>
+      <span><%= guide.meta_description %></span>
+    <% end %>
+  <% end %>
+</section>
+
+<% if @popular_benefits.any? %>
+  <section class="guide-related-section animate-fade-in-up">
+    <div class="guide-section-heading">
+      <h3>최근 확인할 혜택</h3>
+      <%= link_to "전체 보기", benefits_path %>
+    </div>
+    <div class="guide-related-list">
+      <% @popular_benefits.each do |benefit| %>
+        <%= link_to benefit_path(benefit), class: "guide-benefit-link" do %>
+          <span><%= benefit.category_icon %></span>
+          <strong><%= benefit.title %></strong>
+        <% end %>
+      <% end %>
+    </div>
+  </section>
+<% end %>
+
+<%= render_disclaimer(type: :benefit) %>

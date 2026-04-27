@@ -1,6 +1,25 @@
 <%# ── 혜택 상세 ── %>
 <% content_for(:title) { "#{@benefit.title} 수급 혜택 및 신청 방법 — 보듬(livelihood)" } %>
 <% content_for(:description) { "#{@benefit.title}의 지원 대상, 혜택, 신청 방법을 알아보세요. 기초수급자, 차상위계층을 위한 맞춤형 복지 정보 제공." } %>
+<% content_for(:canonical_url) { benefit_url(@benefit) } %>
+<% content_for(:head) do %>
+  <script type="application/ld+json">
+    <%= json_escape({
+      "@context": "https://schema.org",
+      "@type": "Article",
+      headline: "#{@benefit.title} 수급 혜택 및 신청 방법",
+      description: @benefit.summary.presence || meta_description,
+      url: benefit_url(@benefit),
+      inLanguage: "ko-KR",
+      dateModified: @benefit.updated_at.iso8601,
+      publisher: {
+        "@type": "Organization",
+        name: "보듬",
+        url: root_url
+      }
+    }.to_json).html_safe %>
+  </script>
+<% end %>
 
 <div class="mb-4">
   <%= link_to benefits_path, class: "inline-flex items-center gap-1 text-sm text-slate-500 hover:text-indigo-600 transition" do %>
@@ -36,7 +55,8 @@
   <%# 신청 바로가기 %>
   <% if @benefit.apply_url.present? %>
     <%= link_to @benefit.apply_url, target: "_blank", rel: "noopener",
-        class: "block w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-center font-bold py-3 rounded-xl shadow-sm hover:opacity-90 transition text-sm mb-4" do %>
+        class: "block w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-center font-bold py-3 rounded-xl shadow-sm hover:opacity-90 transition text-sm mb-4",
+        data: { analytics_event: "official_apply_click", analytics_category: "benefit", analytics_label: @benefit.title } do %>
       🔗 공식 신청 페이지 바로가기
     <% end %>
   <% end %>
@@ -79,11 +99,17 @@
           class: "text-xs bg-red-50 text-red-600 font-bold px-3 py-2 rounded-xl hover:bg-red-100 transition",
           data: { turbo_confirm: "정말 관심 목록에서 제거할까요?" } %>
     </div>
-  <% else %>
+  <% elsif user_signed_in? %>
     <p class="text-sm text-slate-500 mb-3">이 혜택을 관심 목록에 추가하세요.</p>
     <%= button_to "⭐ 관심 등록", user_benefits_path(benefit_id: @benefit.id),
         method: :post,
-        class: "bg-indigo-600 text-white text-sm font-bold px-5 py-2.5 rounded-xl hover:bg-indigo-700 transition shadow-sm" %>
+        class: "bg-indigo-600 text-white text-sm font-bold px-5 py-2.5 rounded-xl hover:bg-indigo-700 transition shadow-sm",
+        data: { analytics_event: "benefit_interest_click", analytics_category: "benefit", analytics_label: @benefit.title } %>
+  <% else %>
+    <p class="text-sm text-slate-500 mb-3">로그인하면 관심 혜택으로 저장하고 신청 진행 상태를 관리할 수 있어요.</p>
+    <%= link_to new_user_session_path, class: "btn btn-primary btn-sm", data: { analytics_event: "login_cta", analytics_category: "benefit", analytics_label: "interest_#{@benefit.id}" } do %>
+      로그인하고 관심 등록하기
+    <% end %>
   <% end %>
 </section>
 

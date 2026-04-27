@@ -1,10 +1,27 @@
 <%# ── 보호자 모드 ── %>
 <% content_for(:title) { "보호자 관리 — 보듬" } %>
+<% content_for(:description) { "가족이나 사회복지사와 보호 관계를 연결해 복지 일정과 현금흐름을 함께 확인하세요." } %>
+<% content_for(:canonical_url) { care_relations_url } %>
 
 <div class="mb-4 animate-fade-in-up">
   <h2 class="text-xl font-extrabold text-slate-800 mb-1">보호자 관리</h2>
   <p class="text-sm text-slate-500">가족이나 사회복지사 연결을 관리하세요.</p>
 </div>
+
+<% unless user_signed_in? %>
+  <section class="auth-gate-card animate-fade-in-up">
+    <div class="auth-gate-icon">
+      <svg width="28" height="28" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+      </svg>
+    </div>
+    <h3 class="auth-gate-title">로그인하면 보호자 연결을 관리할 수 있어요</h3>
+    <p class="auth-gate-desc">보호자 초대, 수락 대기 목록, 대리 조회 권한은 계정에 안전하게 연결됩니다.</p>
+    <%= link_to new_user_session_path, class: "btn btn-primary", data: { analytics_event: "login_cta", analytics_category: "care_relations", analytics_label: "guest_gate" } do %>
+      로그인하고 보호자 관리하기
+    <% end %>
+  </section>
+<% else %>
 
 <%# ── 보호자로서 돌보는 수급자 목록 ── %>
 <section class="care-section animate-fade-in-up stagger-1">
@@ -115,3 +132,4 @@
     </div>
   <% end %>
 </section>
+<% end %>

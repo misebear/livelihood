@@ -3,7 +3,7 @@
 # 대시보드 컨트롤러 — 로그인 없이도 접근 가능
 class DashboardController < ApplicationController
   # 로그인 필수 제거 — 게스트도 대시보드 조회 가능
-  before_action :authenticate_user!, only: [:care_view]
+  before_action :authenticate_user!, only: [ :care_view ]
 
   def index
     @user = current_user
@@ -52,7 +52,7 @@ class DashboardController < ApplicationController
       # ── 현금흐름 강화: 잔액 + 일일 예산 ──
       @monthly_balance = @monthly_income - @monthly_expense
       remaining = (Date.current.end_of_month - Date.current).to_i
-      @remaining_days = [remaining, 1].max
+      @remaining_days = [ remaining, 1 ].max
       @daily_budget = (@monthly_balance / @remaining_days).round(0)
 
       # ── 다가오는 중요 일정 (5건) ──
@@ -74,5 +74,6 @@ class DashboardController < ApplicationController
 
     # 정부매칭 저축 상품 (로그인 없이도 표시)
     @safe_savings = Benefit.safe_savings_products.limit(3)
+    @featured_guides = SeoGuide.featured
   end
 end
