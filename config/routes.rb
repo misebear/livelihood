@@ -8,6 +8,7 @@ Rails.application.routes.draw do
 
   # ── Public app support page for Play Console and AdMob verification ──
   get "app-support", to: "app_support#index", as: :app_support
+  get "terms", to: redirect("/terms.html")
 
   # ── 검색 유입용 복지 가이드 ──────────────────────────────
   resources :guides, only: [:index, :show], param: :slug
