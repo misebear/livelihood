@@ -8,6 +8,8 @@ Rails.application.routes.draw do
 
   # ── Public app support page for Play Console and AdMob verification ──
   get "app-support", to: "app_support#index", as: :app_support
+  get "about", to: "static_pages#about", as: :about
+  get "contact", to: "static_pages#contact", as: :contact
   get "terms", to: redirect("/terms.html")
 
   # ── 검색 유입용 복지 가이드 ──────────────────────────────

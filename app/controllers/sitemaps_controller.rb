@@ -4,6 +4,11 @@ class SitemapsController < ApplicationController
 
     @pages = [
       { url: root_url, lastmod: Date.today, changefreq: "daily", priority: 1.0 },
+      { url: about_url, lastmod: Date.today, changefreq: "yearly", priority: 0.4 },
+      { url: contact_url, lastmod: Date.today, changefreq: "yearly", priority: 0.4 },
+      { url: terms_url, lastmod: Date.today, changefreq: "yearly", priority: 0.4 },
+      { url: "#{root_url.chomp('/')}/privacy.html", lastmod: Date.today, changefreq: "yearly", priority: 0.4 },
+      { url: app_support_url, lastmod: Date.today, changefreq: "yearly", priority: 0.4 },
       { url: benefits_url, lastmod: latest_benefit_at, changefreq: "daily", priority: 0.9 }
     ]
 

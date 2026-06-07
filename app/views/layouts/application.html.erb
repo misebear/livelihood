@@ -131,6 +131,18 @@
       <%= yield %>
     </main>
 
+    <footer class="site-footer" style="max-width: 960px; margin: 1.5rem auto 5.5rem; padding: 1rem 1.25rem; color: #64748b; font-size: 0.8rem; line-height: 1.7; text-align: center;">
+      <strong style="color:#0f172a;">보듬</strong>
+      <span>생계급여 일정과 복지 혜택을 정리하는 생활 관리 도구입니다. 실제 자격 확인은 공식 기관 안내를 따르세요.</span>
+      <nav aria-label="운영 정보" style="display:flex; flex-wrap:wrap; gap:.75rem; justify-content:center; margin-top:.5rem;">
+        <%= link_to "소개", about_path, style: "color:#0d9488;text-decoration:underline;" %>
+        <%= link_to "문의", contact_path, style: "color:#0d9488;text-decoration:underline;" %>
+        <%= link_to "이용약관", terms_path, style: "color:#0d9488;text-decoration:underline;" %>
+        <%= link_to "개인정보처리방침", "/privacy.html", style: "color:#0d9488;text-decoration:underline;" %>
+        <%= link_to "앱 지원", app_support_path, style: "color:#0d9488;text-decoration:underline;" %>
+      </nav>
+    </footer>
+
     <%# ── 하단 탭 네비게이션 ── %>
     <nav class="bottom-nav" aria-label="주요 메뉴">
       <div class="bottom-nav-inner">
