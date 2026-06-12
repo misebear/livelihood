@@ -7,6 +7,7 @@ class SitemapsController < ApplicationController
       { url: about_url, lastmod: Date.today, changefreq: "yearly", priority: 0.4 },
       { url: contact_url, lastmod: Date.today, changefreq: "yearly", priority: 0.4 },
       { url: terms_url, lastmod: Date.today, changefreq: "yearly", priority: 0.4 },
+      { url: editorial_policy_url, lastmod: Date.today, changefreq: "monthly", priority: 0.55 },
       { url: "#{root_url.chomp('/')}/privacy.html", lastmod: Date.today, changefreq: "yearly", priority: 0.4 },
       { url: app_support_url, lastmod: Date.today, changefreq: "yearly", priority: 0.4 },
       { url: benefits_url, lastmod: latest_benefit_at, changefreq: "daily", priority: 0.9 }

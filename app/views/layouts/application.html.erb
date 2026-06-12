@@ -88,6 +88,17 @@
           <h1 class="top-nav-title">보듬</h1>
         </div>
 
+        <nav class="top-nav-links" aria-label="상단 주요 메뉴">
+          <%= link_to "입금일", root_path,
+              data: { analytics_event: "top_nav_click", analytics_category: "navigation", analytics_label: "home" } %>
+          <%= link_to "복지 혜택", benefits_path,
+              data: { analytics_event: "top_nav_click", analytics_category: "navigation", analytics_label: "benefits" } %>
+          <%= link_to "가이드", guides_path,
+              data: { analytics_event: "top_nav_click", analytics_category: "navigation", analytics_label: "guides" } %>
+          <%= link_to "편집 기준", editorial_policy_path,
+              data: { analytics_event: "top_nav_click", analytics_category: "navigation", analytics_label: "editorial_policy" } %>
+        </nav>
+
         <% if user_signed_in? %>
           <div class="top-nav-user">
             <span class="top-nav-username"><%= current_user.name || current_user.email.split('@').first %>님</span>
@@ -135,8 +146,10 @@
       <strong style="color:#0f172a;">보듬</strong>
       <span>생계급여 일정과 복지 혜택을 정리하는 생활 관리 도구입니다. 실제 자격 확인은 공식 기관 안내를 따르세요.</span>
       <nav aria-label="운영 정보" style="display:flex; flex-wrap:wrap; gap:.75rem; justify-content:center; margin-top:.5rem;">
+        <%= link_to "복지 가이드", guides_path, style: "color:#0d9488;text-decoration:underline;" %>
         <%= link_to "소개", about_path, style: "color:#0d9488;text-decoration:underline;" %>
         <%= link_to "문의", contact_path, style: "color:#0d9488;text-decoration:underline;" %>
+        <%= link_to "편집 기준", editorial_policy_path, style: "color:#0d9488;text-decoration:underline;" %>
         <%= link_to "이용약관", terms_path, style: "color:#0d9488;text-decoration:underline;" %>
         <%= link_to "개인정보처리방침", "/privacy.html", style: "color:#0d9488;text-decoration:underline;" %>
         <%= link_to "앱 지원", app_support_path, style: "color:#0d9488;text-decoration:underline;" %>

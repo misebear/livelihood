@@ -10,7 +10,8 @@ Rails.application.routes.draw do
   get "app-support", to: "app_support#index", as: :app_support
   get "about", to: "static_pages#about", as: :about
   get "contact", to: "static_pages#contact", as: :contact
-  get "terms", to: redirect("/terms.html")
+  get "terms", to: "static_pages#terms", as: :terms
+  get "editorial-policy", to: "static_pages#editorial_policy", as: :editorial_policy
 
   # ── 검색 유입용 복지 가이드 ──────────────────────────────
   resources :guides, only: [:index, :show], param: :slug

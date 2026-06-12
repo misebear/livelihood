@@ -1107,6 +1107,27 @@ svg:not(.google-icon) {
   gap: 0.625rem;
 }
 
+.top-nav-links {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin: 0 1rem;
+}
+
+.top-nav-links a {
+  color: var(--color-text-secondary);
+  font-size: 0.8125rem;
+  font-weight: 750;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.top-nav-links a:hover {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
 .top-nav-logo {
   width: 32px;
   height: 32px;
@@ -3890,6 +3911,10 @@ select:focus-visible {
 }
 
 @media (max-width: 520px) {
+  .top-nav-links {
+    display: none;
+  }
+
   .guide-card-grid,
   .guide-quick-grid,
   .home-guide-list,

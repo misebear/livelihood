@@ -9,7 +9,7 @@ class GuidesControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select "title", "기초생활수급자 복지 가이드 — 보듬"
     assert_select "link[rel='canonical'][href=?]", guides_url
-    assert_select "a.guide-card", minimum: 6
+    assert_select "a.guide-card", minimum: 11
   end
 
   test "show renders guide content with structured data and official sources" do
@@ -23,6 +23,17 @@ class GuidesControllerTest < ActionDispatch::IntegrationTest
     assert_select "script[type='application/ld+json']", minimum: 4
     assert_select ".guide-threshold-table", text: /820,556원/
     assert_select ".guide-source-list a", text: /국가법령정보센터/
+  end
+
+  test "new practical guide renders original checklist content" do
+    guide = SeoGuide.find!("income-recognition-checklist")
+
+    get guide_path(guide)
+
+    assert_response :success
+    assert_select "h2", text: /소득인정액/
+    assert_select ".guide-check-list li", text: /자동차/
+    assert_select ".guide-faq-item summary", text: /모의계산/
   end
 
   test "unknown guide returns not found" do

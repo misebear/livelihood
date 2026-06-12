@@ -10,5 +10,6 @@ class SitemapsControllerTest < ActionDispatch::IntegrationTest
     assert_includes response.body, benefits_url(category: "기초급여").gsub("&", "&amp;")
     assert_includes response.body, benefit_url(benefits(:housing_benefit))
     assert_includes response.body, guide_url(SeoGuide.find!("livelihood-benefit-payment-date"))
+    assert_includes response.body, editorial_policy_url
   end
 end
