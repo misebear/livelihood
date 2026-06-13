@@ -57,7 +57,7 @@ class BenefitDeduplicationService
 
   # 오래된 크롤링 데이터 정리 (30일 이상 미갱신)
   def clean_stale_data
-    stale = Benefit.where(source: ["data.go.kr"])
+    stale = Benefit.where(source: [ "data.go.kr" ])
                    .where.not(source: "seed")
                    .where("last_synced_at < ?", 30.days.ago)
 

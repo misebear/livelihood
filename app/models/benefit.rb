@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "uri"
+
 class Benefit < ApplicationRecord
   # ── Associations ────────────────────────────────────────────
   has_many :user_benefits, dependent: :destroy
@@ -45,6 +47,17 @@ class Benefit < ApplicationRecord
 
   def category_color
     CATEGORIES.dig(category, :color) || "#64748b"
+  end
+
+  def safe_apply_url
+    return nil if apply_url.blank?
+
+    uri = URI.parse(apply_url)
+    return nil unless uri.is_a?(URI::HTTP) && uri.host.present?
+
+    uri.to_s
+  rescue URI::InvalidURIError
+    nil
   end
 
   def deadline_label

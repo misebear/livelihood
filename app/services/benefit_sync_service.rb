@@ -88,7 +88,7 @@ class BenefitSyncService
     return [] if list.nil?
 
     # 단일 항목이면 배열로 감싸기
-    list.is_a?(Array) ? list : [list]
+    list.is_a?(Array) ? list : [ list ]
   rescue StandardError => e
     Rails.logger.error "[BenefitSync] API 호출 실패 (페이지 #{page_no}): #{e.message}"
     []
@@ -151,7 +151,7 @@ class BenefitSyncService
     cycle = item["sprtCycNm"].to_s.strip
     return nil if pvsn.blank?
 
-    parts = [pvsn]
+    parts = [ pvsn ]
     parts << "(#{cycle})" if cycle.present? && cycle != "수시"
     parts.join(" ")
   end

@@ -2,7 +2,7 @@
 
 # 보호자 관계 — 목록 조회는 로그인 없이, 생성/수락/삭제는 로그인 필요
 class CareRelationsController < ApplicationController
-  before_action :authenticate_user!, only: [:create, :accept, :destroy]
+  before_action :authenticate_user!, only: [ :create, :accept, :destroy ]
 
   def index
     if current_user
@@ -50,7 +50,7 @@ class CareRelationsController < ApplicationController
   def destroy
     relation = CareRelation.find(params[:id])
 
-    unless [relation.caregiver_id, relation.recipient_id].include?(current_user.id)
+    unless [ relation.caregiver_id, relation.recipient_id ].include?(current_user.id)
       redirect_to care_relations_path, alert: "권한이 없습니다."
       return
     end

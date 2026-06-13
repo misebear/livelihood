@@ -4,7 +4,7 @@ class User < ApplicationRecord
   # ── Devise ──────────────────────────────────────────────────
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable,
-         :omniauthable, omniauth_providers: [:google_oauth2]
+         :omniauthable, omniauth_providers: [ :google_oauth2 ]
 
   # ── Enums ───────────────────────────────────────────────────
   enum :role, { recipient: 0, caregiver: 1, admin: 2 }

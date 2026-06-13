@@ -29,6 +29,8 @@ gem "solid_cable"
 
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", require: false
+# Keep local Windows builds on the installed libyaml-compatible Psych release.
+gem "psych", "5.3.1"
 
 # Deploy this application anywhere as a Docker container [https://kamal-deploy.org]
 gem "kamal", require: false
@@ -46,7 +48,7 @@ gem "omniauth-google-oauth2"
 gem "omniauth-rails_csrf_protection"
 
 # 환경변수 (.env 자동 로드)
-gem "dotenv-rails", groups: [:development, :test]
+gem "dotenv-rails", groups: [ :development, :test ]
 
 # Background Jobs
 gem "sidekiq", "~> 7.0"

@@ -1,0 +1,10 @@
+{
+  "ignored_warnings": [
+    {
+      "fingerprint": "c165d1a05f240411d12e39a3ab0ec15e90f12e06e9df5f7ce06e133ee1921235",
+      "note": "Benefit#safe_apply_url rejects blank, invalid, non-http, and hostless official application URLs before rendering the external link."
+    }
+  ],
+  "updated": "2026-06-13 09:09:00 +0900",
+  "brakeman_version": "8.0.4"
+}

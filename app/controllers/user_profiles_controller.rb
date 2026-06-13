@@ -2,7 +2,7 @@
 
 # 사용자 프로필 — 조회는 로그인 없이, 수정은 로그인 필요
 class UserProfilesController < ApplicationController
-  before_action :authenticate_user!, only: [:edit, :update]
+  before_action :authenticate_user!, only: [ :edit, :update ]
   before_action :set_profile
 
   def show

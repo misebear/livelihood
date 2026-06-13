@@ -14,27 +14,27 @@ Rails.application.routes.draw do
   get "editorial-policy", to: "static_pages#editorial_policy", as: :editorial_policy
 
   # ── 검색 유입용 복지 가이드 ──────────────────────────────
-  resources :guides, only: [:index, :show], param: :slug
+  resources :guides, only: [ :index, :show ], param: :slug
 
   # ── 보호자 대리 조회 ─────────────────────────────────────
   get "dashboard/care/:id", to: "dashboard#care_view", as: :care_dashboard
 
   # ── 프로필 ─────────────────────────────────────────────────
-  resource :user_profile, only: [:show, :edit, :update]
+  resource :user_profile, only: [ :show, :edit, :update ]
 
   # ── 혜택 ───────────────────────────────────────────────────
-  resources :benefits, only: [:index, :show]
-  resources :user_benefits, only: [:create, :update, :destroy]
+  resources :benefits, only: [ :index, :show ]
+  resources :user_benefits, only: [ :create, :update, :destroy ]
 
   # ── 보호자 관계 ────────────────────────────────────────────
-  resources :care_relations, only: [:index, :create, :destroy] do
+  resources :care_relations, only: [ :index, :create, :destroy ] do
     member do
       patch :accept
     end
   end
 
   # ── 현금흐름 이벤트 ──────────────────────────────────────────
-  resources :cashflow_events, only: [:new, :create, :edit, :update, :destroy]
+  resources :cashflow_events, only: [ :new, :create, :edit, :update, :destroy ]
 
   # ── Sitemap ────────────────────────────────────────────────
   get "/sitemap.xml", to: "sitemaps#show", format: "xml", as: :sitemap

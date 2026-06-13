@@ -53,8 +53,8 @@
   <% end %>
 
   <%# 신청 바로가기 %>
-  <% if @benefit.apply_url.present? %>
-    <%= link_to @benefit.apply_url, target: "_blank", rel: "noopener",
+  <% if (safe_apply_url = @benefit.safe_apply_url).present? %>
+    <%= link_to safe_apply_url, target: "_blank", rel: "noopener",
         class: "block w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-center font-bold py-3 rounded-xl shadow-sm hover:opacity-90 transition text-sm mb-4",
         data: { analytics_event: "official_apply_click", analytics_category: "benefit", analytics_label: @benefit.title } do %>
       🔗 공식 신청 페이지 바로가기

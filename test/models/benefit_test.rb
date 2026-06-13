@@ -36,4 +36,17 @@ class BenefitTest < ActiveSupport::TestCase
     assert_not dup.valid?
     assert dup.errors[:external_id].any?
   end
+
+  test "safe_apply_url returns only http and https urls with host" do
+    benefit = benefits(:housing_benefit)
+
+    benefit.apply_url = "https://www.bokjiro.go.kr/apply"
+    assert_equal "https://www.bokjiro.go.kr/apply", benefit.safe_apply_url
+
+    benefit.apply_url = "javascript:alert(1)"
+    assert_nil benefit.safe_apply_url
+
+    benefit.apply_url = "https://"
+    assert_nil benefit.safe_apply_url
+  end
 end

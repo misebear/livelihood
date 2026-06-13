@@ -35,7 +35,7 @@ class SafeAssetCalculatorServiceTest < ActiveSupport::TestCase
   # ── 위험도 판정 테스트 ──
   test "risk_level은 :safe, :warning, :danger 중 하나다" do
     result = SafeAssetCalculatorService.call(@profile)
-    assert_includes [:safe, :warning, :danger], result[:risk_level]
+    assert_includes [ :safe, :warning, :danger ], result[:risk_level]
   end
 
   # ── 소득평가액 계산 (30% 공제) 테스트 ──

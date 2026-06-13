@@ -307,8 +307,8 @@
           <% @safe_savings.each do |product| %>
             <div class="recommend-item">
               <span><%= product.title %></span>
-              <% if product.apply_url.present? %>
-                <%= link_to "바로가기 →", product.apply_url, target: "_blank", rel: "noopener", style: "font-size:0.8125rem;font-weight:700;" %>
+              <% if (safe_apply_url = product.safe_apply_url).present? %>
+                <%= link_to "바로가기 →", safe_apply_url, target: "_blank", rel: "noopener", style: "font-size:0.8125rem;font-weight:700;" %>
               <% end %>
             </div>
           <% end %>
@@ -597,8 +597,8 @@
                   end %>
             </span>
           </div>
-          <% if ub.benefit.apply_url.present? %>
-            <%= link_to ub.benefit.apply_url, target: "_blank", rel: "noopener", class: "benefit-link" do %>
+          <% if (safe_apply_url = ub.benefit.safe_apply_url).present? %>
+            <%= link_to safe_apply_url, target: "_blank", rel: "noopener", class: "benefit-link" do %>
               <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
               </svg>

@@ -3,7 +3,7 @@
 # 현금흐름 이벤트 CRUD 컨트롤러 — 데이터 변경만 로그인 필요
 class CashflowEventsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_event, only: [:edit, :update, :destroy]
+  before_action :set_event, only: [ :edit, :update, :destroy ]
 
   def new
     @event = current_user.cashflow_events.new(event_date: Date.current)

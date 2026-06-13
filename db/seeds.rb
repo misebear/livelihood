@@ -564,7 +564,7 @@ events_data = [
   { title: "전기요금", event_date: this_month + 27, expected_amount: 32_000, event_type: :deduction },
   { title: "생계급여 입금", event_date: (this_month >> 1) + 19, expected_amount: 713_102, event_type: :payment },
   { title: "주거급여 입금", event_date: (this_month >> 1) + 19, expected_amount: 310_000, event_type: :payment },
-  { title: "건강보험료", event_date: (this_month >> 1) + 24, expected_amount: 15_200, event_type: :deduction },
+  { title: "건강보험료", event_date: (this_month >> 1) + 24, expected_amount: 15_200, event_type: :deduction }
 ]
 
 events_data.each do |data|
