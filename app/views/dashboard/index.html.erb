@@ -121,6 +121,85 @@
       <% end %>
     </div>
   </section>
+
+  <section class="home-content-block animate-fade-in" aria-label="기초생활보장 제도 안내">
+    <div class="guide-section-heading">
+      <h2>2026년 기초생활보장 기준을 먼저 확인하세요</h2>
+      <%= link_to "가이드 보기", guides_path,
+          data: { analytics_event: "guides_cta", analytics_category: "dashboard", analytics_label: "home_content_intro" } %>
+    </div>
+    <p>
+      보듬은 생계급여 입금일만 보여주는 달력이 아니라, 기초생활수급자와 차상위계층이
+      매달 확인해야 하는 기준을 한곳에서 정리하는 생활 관리 도구입니다. 2026년 급여별
+      선정기준은 생계급여 기준 중위소득 32%, 의료급여 40%, 주거급여 48%,
+      교육급여와 차상위 확인 기준 50%를 중심으로 봅니다.
+    </p>
+    <div class="home-content-grid">
+      <article>
+        <strong>생계급여</strong>
+        <span>
+          생활비 성격의 현금 급여입니다. 보듬에서는 다음 입금일까지 남은 날짜와
+          이번 달 고정지출을 함께 보며 월 생활비를 나눠볼 수 있습니다.
+        </span>
+      </article>
+      <article>
+        <strong>주거·의료·교육급여</strong>
+        <span>
+          급여마다 선정기준과 확인할 서류가 다릅니다. 한 급여에서 탈락해도 다른
+          급여나 감면 제도는 가능할 수 있어 항목별로 따로 확인해야 합니다.
+        </span>
+      </article>
+      <article>
+        <strong>차상위·감면 혜택</strong>
+        <span>
+          통신, 전기, 도시가스, 문화, 의료비처럼 생활비를 낮추는 제도는 별도
+          신청이 필요한 경우가 많습니다. 혜택 검색에서 분야별로 다시 확인하세요.
+        </span>
+      </article>
+    </div>
+  </section>
+
+  <section class="home-content-block animate-fade-in" aria-label="신청 전 체크리스트">
+    <div class="guide-section-heading">
+      <h2>주민센터 상담 전 10분 체크리스트</h2>
+    </div>
+    <p>
+      실제 자격 판정은 관할 행정복지센터와 공식 시스템에서 결정됩니다. 다만 상담 전
+      아래 항목을 정리해두면 어떤 급여와 감면을 먼저 물어봐야 하는지 훨씬 분명해집니다.
+    </p>
+    <ul class="home-check-list">
+      <li>현재 함께 사는 가구원 수와 주민등록상 가구 구성이 같은지 확인</li>
+      <li>최근 3개월 소득, 근로 형태, 실업·휴직·질병 등 소득 변동 사유 정리</li>
+      <li>전월세 계약서, 월세, 관리비, 공과금처럼 매달 나가는 고정지출 확인</li>
+      <li>예금, 보험, 자동차, 부채, 의료비 지출처럼 소득인정액에 영향을 줄 수 있는 항목 메모</li>
+      <li>이미 받고 있는 급여, 감면, 바우처와 새로 신청하려는 제도 구분</li>
+    </ul>
+  </section>
+
+  <section class="home-content-block animate-fade-in" aria-label="공식 확인처">
+    <div class="guide-section-heading">
+      <h2>보듬을 쓰는 순서</h2>
+    </div>
+    <div class="home-steps">
+      <div>
+        <span>1</span>
+        <p>보듬에서 입금일, 현금흐름, 수급 안전선을 먼저 정리합니다.</p>
+      </div>
+      <div>
+        <span>2</span>
+        <p>복지 가이드와 혜택 검색에서 내 상황에 맞는 제도를 추립니다.</p>
+      </div>
+      <div>
+        <span>3</span>
+        <p>복지로, 마이홈, 보건복지부, 관할 행정복지센터에서 최종 자격을 확인합니다.</p>
+      </div>
+    </div>
+    <div class="home-source-list">
+      <%= link_to "복지로 모의계산", "https://www.bokjiro.go.kr/ssis-tbu/twatbz/mkclAsis/mkclPage.do", target: "_blank", rel: "noopener" %>
+      <%= link_to "보건복지부 수급자 선정기준", "https://www.mohw.go.kr/menu.es?mid=a10708010300", target: "_blank", rel: "noopener" %>
+      <%= link_to "마이홈 주거급여 안내", "https://www.myhome.go.kr/hws/portal/cont/selectHousingBenefitView.do", target: "_blank", rel: "noopener" %>
+    </div>
+  </section>
 <% end %>
 
 <%# ══════════════════════════════════════════════════════════

@@ -2,7 +2,7 @@
 
 # Search landing pages for public welfare queries.
 class SeoGuide
-  UPDATED_ON = Date.new(2026, 6, 13)
+  UPDATED_ON = Date.new(2026, 6, 15)
 
   THRESHOLD_COLUMNS = %w[1인가구 2인가구 3인가구 4인가구 5인가구 6인가구].freeze
 
