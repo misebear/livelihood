@@ -11,5 +11,7 @@ class SitemapsControllerTest < ActionDispatch::IntegrationTest
     assert_includes response.body, benefit_url(benefits(:housing_benefit))
     assert_includes response.body, guide_url(SeoGuide.find!("livelihood-benefit-payment-date"))
     assert_includes response.body, editorial_policy_url
+    assert_includes response.body, haruscene_privacy_url
+    assert_includes response.body, haruscene_support_url
   end
 end

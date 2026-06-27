@@ -10,6 +10,8 @@ class SitemapsController < ApplicationController
       { url: editorial_policy_url, lastmod: Date.today, changefreq: "monthly", priority: 0.55 },
       { url: "#{root_url.chomp('/')}/privacy.html", lastmod: Date.today, changefreq: "yearly", priority: 0.4 },
       { url: app_support_url, lastmod: Date.today, changefreq: "yearly", priority: 0.4 },
+      { url: haruscene_privacy_url, lastmod: Date.today, changefreq: "yearly", priority: 0.35 },
+      { url: haruscene_support_url, lastmod: Date.today, changefreq: "yearly", priority: 0.35 },
       { url: benefits_url, lastmod: latest_benefit_at, changefreq: "daily", priority: 0.9 }
     ]
 

@@ -8,6 +8,8 @@ Rails.application.routes.draw do
 
   # ── Public app support page for Play Console and AdMob verification ──
   get "app-support", to: "app_support#index", as: :app_support
+  get "haruscene/privacy", to: "app_support#haruscene_privacy", as: :haruscene_privacy
+  get "haruscene/support", to: "app_support#haruscene_support", as: :haruscene_support
   get "about", to: "static_pages#about", as: :about
   get "contact", to: "static_pages#contact", as: :contact
   get "terms", to: "static_pages#terms", as: :terms

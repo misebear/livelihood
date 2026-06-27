@@ -1,0 +1,79 @@
+<% content_for(:title) { "하루장면 개인정보처리방침" } %>
+<% content_for :head do %>
+  <meta name="description" content="하루장면 AI 캐릭터 대화 앱의 개인정보 처리 항목, 이용 목적, 광고 SDK, 로컬 저장, 문의 방법을 안내합니다.">
+  <link rel="canonical" href="<%= haruscene_privacy_url %>">
+<% end %>
+
+<section class="haruscene-policy">
+  <p class="haruscene-eyebrow">HaruScene Privacy</p>
+  <h1>하루장면 개인정보처리방침</h1>
+  <p class="haruscene-lead">
+    시행일: 2026년 6월 27일. 하루장면은 캐릭터와의 대화, 기억 원장, 장면 상태를 제공하는
+    AI 캐릭터 대화 앱입니다. 이 문서는 하루장면이 어떤 정보를 처리하고 어떤 목적으로
+    사용하는지 설명합니다.
+  </p>
+
+  <div class="haruscene-policy-grid">
+    <article>
+      <h2>처리하는 정보</h2>
+      <ul>
+        <li>대화 내용과 캐릭터 설정: 대화 생성, 기억 원장, 장면 유지 기능에 사용됩니다.</li>
+        <li>앱 사용 정보: 화면 이동, 오류 상태, 광고 보상 처리, 대화 에너지 잔액 같은 앱 동작 상태를 저장할 수 있습니다.</li>
+        <li>광고 관련 정보: Google Mobile Ads SDK가 광고 식별자, 광고 노출 정보, 기기/앱 진단 정보를 처리할 수 있습니다.</li>
+        <li>문의 정보: 사용자가 이메일로 문의할 경우 이메일 주소와 문의 내용을 처리합니다.</li>
+      </ul>
+    </article>
+
+    <article>
+      <h2>저장 위치와 보관</h2>
+      <p>
+        대화 기록, 기억 원장, 대화 에너지 원장은 기본적으로 사용자 기기 안의 로컬 저장소에 보관됩니다.
+        로컬 Gemma 또는 사용자가 지정한 AI 서버를 사용하는 테스트 빌드는 대화 생성 요청을 해당 서버로 전송할 수 있습니다.
+        지원 문의는 문의 해결과 기록 보관에 필요한 기간 동안 보관합니다.
+      </p>
+    </article>
+
+    <article>
+      <h2>이용 목적</h2>
+      <ul>
+        <li>캐릭터 대화 생성 및 이어하기</li>
+        <li>기억 원장, 장면 상태, 선택권 보호 기능 제공</li>
+        <li>보상형 광고 시청 완료에 따른 대화 에너지 지급</li>
+        <li>오류 분석, 악용 방지, 품질 개선</li>
+        <li>사용자 문의 응대</li>
+      </ul>
+    </article>
+
+    <article>
+      <h2>제3자 SDK</h2>
+      <p>
+        하루장면은 광고 제공을 위해 Google AdMob SDK를 사용합니다. Google의 데이터 처리 방식은
+        Google 정책과 사용자의 광고 설정을 따릅니다.
+      </p>
+    </article>
+
+    <article>
+      <h2>사용자의 선택</h2>
+      <ul>
+        <li>사용자는 앱 설정에서 광고 개인정보 옵션을 열 수 있습니다.</li>
+        <li>사용자는 앱 데이터 삭제 또는 앱 삭제를 통해 로컬 대화 데이터를 제거할 수 있습니다.</li>
+        <li>개인정보 관련 문의는 <a href="mailto:db0192a@gmail.com">db0192a@gmail.com</a>으로 보낼 수 있습니다.</li>
+      </ul>
+    </article>
+
+    <article>
+      <h2>아동 및 민감 정보</h2>
+      <p>
+        하루장면은 아동을 대상으로 하지 않습니다. 사용자는 민감한 개인정보, 금융 정보, 의료 정보,
+        인증 정보, 타인의 개인정보를 대화에 입력하지 않아야 합니다.
+      </p>
+    </article>
+  </div>
+
+  <p class="haruscene-note">
+    정책이 변경되면 앱 또는 웹사이트를 통해 개정 내용을 안내합니다.
+    앱 지원은 <a href="<%= haruscene_support_path %>">하루장면 지원 페이지</a>에서 확인할 수 있습니다.
+  </p>
+</section>
+
+<%= render "haruscene_policy_styles" %>

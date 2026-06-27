@@ -5,6 +5,7 @@
 <% end %>
 
 <% apps = [
+  ["haruscene", "하루장면", "기억하는 AI 캐릭터 대화", "com.bodeum.haruscene"],
   ["dyscatch", "DysCatch", "난독 경향 체크와 읽기 보조 기록", "com.dyscatch.app"],
   ["telegraph", "텔레그래프", "영상 대본 프롬프터", "com.bodeum.telegraph"],
   ["oil-widget", "기름주의보", "전국 유가 위젯", "me.bodeum.oilwidget"],
@@ -46,7 +47,14 @@
         <span class="support-chip"><%= package_name %></span>
         <h4><%= name %></h4>
         <p><%= summary %></p>
-        <a href="mailto:db0192a@gmail.com?subject=<%= ERB::Util.url_encode("[#{name}] 문의") %>">문의하기</a>
+        <% if slug == "haruscene" %>
+          <div class="support-card-links">
+            <a href="<%= haruscene_support_path %>">지원 페이지</a>
+            <a href="<%= haruscene_privacy_path %>">개인정보처리방침</a>
+          </div>
+        <% else %>
+          <a href="mailto:db0192a@gmail.com?subject=<%= ERB::Util.url_encode("[#{name}] 문의") %>">문의하기</a>
+        <% end %>
       </article>
     <% end %>
   </div>
@@ -116,6 +124,12 @@
     color: white;
     font-weight: 700;
     text-decoration: none;
+  }
+
+  .support-card-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
   }
 
   .support-grid {
