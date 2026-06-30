@@ -13,5 +13,7 @@ class SitemapsControllerTest < ActionDispatch::IntegrationTest
     assert_includes response.body, editorial_policy_url
     assert_includes response.body, haruscene_privacy_url
     assert_includes response.body, haruscene_support_url
+    assert_includes response.body, batang_issue_privacy_url
+    assert_includes response.body, batang_issue_support_url
   end
 end

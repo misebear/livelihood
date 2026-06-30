@@ -7,4 +7,10 @@ class AppSupportController < ApplicationController
 
   def haruscene_support
   end
+
+  def batang_issue_privacy
+  end
+
+  def batang_issue_support
+  end
 end

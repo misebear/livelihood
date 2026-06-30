@@ -12,7 +12,7 @@
   ["recipe", "영상 레시피 추출기", "요리 영상 재료 자동정리", "com.yeobo.recipe"],
   ["dialfocus", "뽀모도로 타이머", "집중 세션과 휴식 루틴 관리", "com.dialfocus.app"],
   ["misebear", "미세베어 WHO", "미세먼지와 생활 정보 확인", "kr.co.jejuzone.misebear"],
-  ["batang-issue", "바탕이슈", "이슈 확인과 콘텐츠 탐색", "me.bodeum.app"],
+  ["batang-issue", "바탕 이슈", "실시간 이슈 위젯과 뉴스 탐색", "com.issueon.app"],
   ["poopbuddy", "PoopBuddy", "반려동물 배변 기록", "com.poopbuddy.app"],
   ["pitchflow", "PitchFlow", "AI 보컬 코치", "com.pitchflow.vocal"],
   ["zenbowl", "ZenBowl", "싱잉볼 명상", "com.zenbowl.app"],
@@ -51,6 +51,11 @@
           <div class="support-card-links">
             <a href="<%= haruscene_support_path %>">지원 페이지</a>
             <a href="<%= haruscene_privacy_path %>">개인정보처리방침</a>
+          </div>
+        <% elsif slug == "batang-issue" %>
+          <div class="support-card-links">
+            <a href="<%= batang_issue_support_path %>">지원 페이지</a>
+            <a href="<%= batang_issue_privacy_path %>">개인정보처리방침</a>
           </div>
         <% else %>
           <a href="mailto:db0192a@gmail.com?subject=<%= ERB::Util.url_encode("[#{name}] 문의") %>">문의하기</a>

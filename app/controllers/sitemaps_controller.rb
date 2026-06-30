@@ -12,6 +12,8 @@ class SitemapsController < ApplicationController
       { url: app_support_url, lastmod: Date.today, changefreq: "yearly", priority: 0.4 },
       { url: haruscene_privacy_url, lastmod: Date.today, changefreq: "yearly", priority: 0.35 },
       { url: haruscene_support_url, lastmod: Date.today, changefreq: "yearly", priority: 0.35 },
+      { url: batang_issue_privacy_url, lastmod: Date.today, changefreq: "yearly", priority: 0.35 },
+      { url: batang_issue_support_url, lastmod: Date.today, changefreq: "yearly", priority: 0.35 },
       { url: benefits_url, lastmod: latest_benefit_at, changefreq: "daily", priority: 0.9 }
     ]
 
