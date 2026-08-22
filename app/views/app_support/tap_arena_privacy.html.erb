@@ -1,0 +1,19 @@
+<% content_for(:title) { "Tap Arena 4 개인정보처리방침" } %>
+<% content_for :head do %>
+  <meta name="description" content="Tap Arena 4 Android 앱의 멀티터치 게임, 점수, 토너먼트, AdMob 광고, 연령대와 데이터 삭제를 설명합니다.">
+  <link rel="canonical" href="<%= tap_arena_privacy_url %>">
+<% end %>
+<section class="party-policy party-policy--arena">
+  <p class="party-policy-eyebrow">Tap Arena 4 Privacy</p><h1>Tap Arena 4 개인정보처리방침</h1>
+  <p class="party-policy-lead">시행일: 2026년 8월 22일. Tap Arena 4는 한 화면에서 2–4명이 동시에 터치해 반응속도를 겨루는 로컬 아케이드 게임입니다. 계정이나 자체 서버 없이 작동합니다.</p>
+  <div class="party-policy-grid">
+    <article><h2>로컬 게임 정보</h2><ul><li>연령대와 로컬 플레이어 라벨</li><li>microgame 결과, 점수, best-of-5 토너먼트 상태와 우승 기록</li><li>세션 복원과 광고 빈도 제한에 필요한 상태</li></ul><p>멀티터치 입력과 점수는 광고 또는 분석 payload로 전송하지 않습니다.</p></article>
+    <article><h2>연령 보호</h2><ul><li>13세 미만: 앱 사용, 광고, 외부 분석을 차단합니다.</li><li>13–17세: 외부 분석을 사용하지 않고 제한된 비개인화 광고만 요청합니다.</li><li>18세 이상: UMP에서 광고 요청을 허용한 경우에만 AdMob을 사용합니다.</li></ul></article>
+    <article><h2>Google Mobile Ads</h2><p>광고와 동의 처리를 위해 Google Mobile Ads SDK와 User Messaging Platform을 사용합니다. Google과 광고 파트너가 IP 기반 대략적 위치, 기기 또는 광고 식별자, 앱 상호작용, 광고 노출 및 진단 정보를 처리할 수 있습니다. 위치 runtime permission은 없습니다.</p></article>
+    <article><h2>분석·공유</h2><p>v1.0.0에는 Firebase Analytics가 활성화되어 있지 않습니다. 우승 결과를 공유하면 Android 공유 시트에서 사용자가 선택한 대상에만 카드가 전달되며 앱 자체 서버로 업로드되지 않습니다.</p></article>
+    <article><h2>보관과 삭제</h2><p>토너먼트와 점수 상태는 앱 전용 저장소에 남을 수 있습니다. 새 토너먼트를 시작하거나 Android 설정에서 앱 데이터를 삭제하거나 앱을 제거해 삭제할 수 있습니다. 계정이 없으므로 계정 삭제 요청은 필요하지 않습니다.</p></article>
+    <article><h2>권한과 안전</h2><p>카메라, 마이크, 위치, 연락처, 저장소 runtime permission을 요청하지 않습니다. 손가락 충돌과 기기 낙하를 피하기 위해 평평한 곳에서 플레이하고 화면을 세게 두드리지 마세요.</p></article>
+  </div>
+  <p class="party-policy-note">문의: <a href="mailto:db0192a@gmail.com?subject=%5BTap%20Arena%204%5D%20Privacy">db0192a@gmail.com</a> · <a href="<%= tap_arena_support_path %>">지원 페이지</a> · 패키지 <code>com.bodeum.party.taparena4</code></p>
+</section>
+<%= render "party_policy_styles" %>

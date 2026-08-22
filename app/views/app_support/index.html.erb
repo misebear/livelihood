@@ -13,6 +13,9 @@
   ["dialfocus", "뽀모도로 타이머", "집중 세션과 휴식 루틴 관리", "com.dialfocus.app"],
   ["misebear", "미세베어 WHO", "미세먼지와 생활 정보 확인", "kr.co.jejuzone.misebear"],
   ["batang-issue", "바탕 이슈", "실시간 이슈 위젯과 뉴스 탐색", "com.issueon.app"],
+  ["rush-pass", "Rush Pass Party", "숨겨진 타이머와 휴대폰 전달 파티게임", "com.bodeum.party.rushpass"],
+  ["secret-signal", "Secret Signal Party", "비밀 역할과 단서·투표 추리게임", "com.bodeum.party.secretsignal"],
+  ["tap-arena-4", "Tap Arena 4", "2–4인 동시 터치 로컬 아케이드", "com.bodeum.party.taparena4"],
   ["poopbuddy", "PoopBuddy", "반려동물 배변 기록", "com.poopbuddy.app"],
   ["pitchflow", "PitchFlow", "AI 보컬 코치", "com.pitchflow.vocal"],
   ["zenbowl", "ZenBowl", "싱잉볼 명상", "com.zenbowl.app"],
@@ -56,6 +59,21 @@
           <div class="support-card-links">
             <a href="<%= batang_issue_support_path %>">지원 페이지</a>
             <a href="<%= batang_issue_privacy_path %>">개인정보처리방침</a>
+          </div>
+        <% elsif slug == "rush-pass" %>
+          <div class="support-card-links">
+            <a href="<%= rush_pass_support_path %>">지원 페이지</a>
+            <a href="<%= rush_pass_privacy_path %>">개인정보처리방침</a>
+          </div>
+        <% elsif slug == "secret-signal" %>
+          <div class="support-card-links">
+            <a href="<%= secret_signal_support_path %>">지원 페이지</a>
+            <a href="<%= secret_signal_privacy_path %>">개인정보처리방침</a>
+          </div>
+        <% elsif slug == "tap-arena-4" %>
+          <div class="support-card-links">
+            <a href="<%= tap_arena_support_path %>">지원 페이지</a>
+            <a href="<%= tap_arena_privacy_path %>">개인정보처리방침</a>
           </div>
         <% else %>
           <a href="mailto:db0192a@gmail.com?subject=<%= ERB::Util.url_encode("[#{name}] 문의") %>">문의하기</a>

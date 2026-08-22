@@ -1,0 +1,18 @@
+<% content_for(:title) { "Rush Pass Party 지원" } %>
+<% content_for :head do %>
+  <meta name="description" content="Rush Pass Party의 타이머, 전달 탭, 세션 복원, 광고, 오프라인 사용과 데이터 삭제 지원 안내입니다.">
+  <link rel="canonical" href="<%= rush_pass_support_url %>">
+<% end %>
+<section class="party-policy">
+  <p class="party-policy-eyebrow">Rush Pass Party Support</p><h1>Rush Pass Party 지원</h1>
+  <p class="party-policy-lead">숨겨진 타이머, 전달 탭, 미션 팩, 세션 이어하기 또는 광고 표시 문제가 있으면 아래 내용을 확인해 주세요.</p>
+  <div class="party-support-card"><h2>문의 이메일</h2><p><a href="mailto:db0192a@gmail.com?subject=%5BRush%20Pass%20Party%5D%20Support">db0192a@gmail.com</a></p></div>
+  <div class="party-policy-grid">
+    <article><h2>빠른 점검</h2><ul><li>소리를 켜고 방해 금지 모드와 미디어 음량을 확인합니다.</li><li>화면이 꺼지거나 앱이 백그라운드로 간 뒤에는 이어하기 카드를 사용합니다.</li><li>광고는 첫 4라운드에는 나오지 않으며 준비되지 않으면 게임을 즉시 계속합니다.</li></ul></article>
+    <article><h2>오프라인 사용</h2><p>게임과 미션은 오프라인에서 작동합니다. 광고와 개인정보 동의 메시지는 네트워크가 필요하며, 연결 실패가 게임 진행을 막지 않습니다.</p></article>
+    <article><h2>데이터 삭제</h2><p>새 파티를 시작해 현재 세션을 바꾸거나 Android 설정에서 Rush Pass Party의 저장공간/데이터를 삭제하세요. 계정이 없어 별도의 계정 삭제 절차는 없습니다.</p></article>
+    <article><h2>문의에 포함할 정보</h2><ul><li>앱 버전 1.0.0, Android 버전과 기기명</li><li>문제가 난 라운드와 직전 동작</li><li>가능한 경우 개인정보를 가린 스크린샷</li></ul></article>
+  </div>
+  <p class="party-policy-note"><a href="<%= rush_pass_privacy_path %>">개인정보처리방침 보기</a></p>
+</section>
+<%= render "party_policy_styles" %>

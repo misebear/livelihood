@@ -14,6 +14,12 @@ class SitemapsController < ApplicationController
       { url: haruscene_support_url, lastmod: Date.today, changefreq: "yearly", priority: 0.35 },
       { url: batang_issue_privacy_url, lastmod: Date.today, changefreq: "yearly", priority: 0.35 },
       { url: batang_issue_support_url, lastmod: Date.today, changefreq: "yearly", priority: 0.35 },
+      { url: rush_pass_privacy_url, lastmod: Date.today, changefreq: "yearly", priority: 0.35 },
+      { url: rush_pass_support_url, lastmod: Date.today, changefreq: "yearly", priority: 0.35 },
+      { url: secret_signal_privacy_url, lastmod: Date.today, changefreq: "yearly", priority: 0.35 },
+      { url: secret_signal_support_url, lastmod: Date.today, changefreq: "yearly", priority: 0.35 },
+      { url: tap_arena_privacy_url, lastmod: Date.today, changefreq: "yearly", priority: 0.35 },
+      { url: tap_arena_support_url, lastmod: Date.today, changefreq: "yearly", priority: 0.35 },
       { url: benefits_url, lastmod: latest_benefit_at, changefreq: "daily", priority: 0.9 }
     ]
 

@@ -15,5 +15,11 @@ class SitemapsControllerTest < ActionDispatch::IntegrationTest
     assert_includes response.body, haruscene_support_url
     assert_includes response.body, batang_issue_privacy_url
     assert_includes response.body, batang_issue_support_url
+    assert_includes response.body, rush_pass_privacy_url
+    assert_includes response.body, rush_pass_support_url
+    assert_includes response.body, secret_signal_privacy_url
+    assert_includes response.body, secret_signal_support_url
+    assert_includes response.body, tap_arena_privacy_url
+    assert_includes response.body, tap_arena_support_url
   end
 end

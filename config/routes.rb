@@ -12,6 +12,12 @@ Rails.application.routes.draw do
   get "haruscene/support", to: "app_support#haruscene_support", as: :haruscene_support
   get "batang-issue/privacy", to: "app_support#batang_issue_privacy", as: :batang_issue_privacy
   get "batang-issue/support", to: "app_support#batang_issue_support", as: :batang_issue_support
+  get "rush-pass/privacy", to: "app_support#rush_pass_privacy", as: :rush_pass_privacy
+  get "rush-pass/support", to: "app_support#rush_pass_support", as: :rush_pass_support
+  get "secret-signal/privacy", to: "app_support#secret_signal_privacy", as: :secret_signal_privacy
+  get "secret-signal/support", to: "app_support#secret_signal_support", as: :secret_signal_support
+  get "tap-arena-4/privacy", to: "app_support#tap_arena_privacy", as: :tap_arena_privacy
+  get "tap-arena-4/support", to: "app_support#tap_arena_support", as: :tap_arena_support
   get "about", to: "static_pages#about", as: :about
   get "contact", to: "static_pages#contact", as: :contact
   get "terms", to: "static_pages#terms", as: :terms
