@@ -69,19 +69,21 @@ class AppSupportControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select "title", "Rush Pass Party 개인정보처리방침"
     assert_select "code", "com.bodeum.party.rushpass"
-    assert_select "p", text: /Firebase Analytics가 활성화되어 있지 않습니다/
+    assert_select "p", text: /“익명 분석 허용”을 별도로 선택한 경우에만 Firebase Analytics/
 
     get secret_signal_privacy_path
     assert_response :success
     assert_select "title", "Secret Signal Party 개인정보처리방침"
     assert_select "code", "com.bodeum.party.secretsignal"
     assert_select "li", text: /커스텀 카드 팩/
+    assert_select "p", text: /비밀 역할, 단서와 투표 내용은 보내지 않습니다/
 
     get tap_arena_privacy_path
     assert_response :success
     assert_select "title", "Tap Arena 4 개인정보처리방침"
     assert_select "code", "com.bodeum.party.taparena4"
     assert_select "li", text: /best-of-5/
+    assert_select "p", text: /멀티터치 원시 입력과 상세 점수는 보내지 않습니다/
   end
 
   test "party app support pages render troubleshooting and privacy links" do
