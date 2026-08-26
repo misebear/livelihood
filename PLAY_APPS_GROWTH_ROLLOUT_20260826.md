@@ -91,7 +91,7 @@ Play Console 계정: `5047399025850753041`
 - GitHub Pages 배포: commit `982d703`, build `1175524778`, status `built`
 - 공개 URL 전수 검사: sitemap URL 37개, HTTP 200/H1/canonical/schema/Play CTA 실패 0
 - 공개 브라우저 검사: H1 1개, Play 링크 36개, console error 0, horizontal overflow 0
-- IndexNow: 37개 URL, 응답 `202 Accepted`
+- IndexNow: 최초 `202 Accepted` 후 key 검증 완료 재제출 `200 OK`, 37개 URL 접수
 - Play contactWebsite: 불완전한 기존 링크 21개만 commit, API readback `21/21 match`
 - 기존 전용 HTTPS 사이트·지원 이메일: 변경하지 않음
 - Play 보류: PitchFlow(검토 전 변경), HealthDay(기존 업데이트 거부), 유튜브 레시피(동시 작업 충돌), Mulmi(전용 SEO 사이트 유지)
