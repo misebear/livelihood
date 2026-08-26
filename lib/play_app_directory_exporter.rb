@@ -14,6 +14,7 @@ class PlayAppDirectoryExporter
     FileUtils.mkdir_p(@output_root.join("apps"))
     write("index.html", index_html)
     write("app-directory.css", styles)
+    write("favicon.svg", favicon_svg)
     write("apps/rss.xml", rss_xml)
     write("sitemap.xml", sitemap_xml)
     write("robots.txt", robots_txt)
@@ -63,8 +64,9 @@ class PlayAppDirectoryExporter
           <meta property="og:description" content="#{escape(description)}">
           <meta property="og:url" content="#{escape(canonical)}">
           <meta name="twitter:card" content="summary">
+          <link rel="icon" href="#{base_url}/favicon.svg" type="image/svg+xml">
           <style>#{styles}</style>
-          #{schema_markup}
+      #{schema_markup}
         </head>
         <body>
           <header class="site-header"><a href="#{base_url}/">JejuBucketList Apps</a><nav><a href="#{base_url}/privacy.html">개인정보</a><a href="#{base_url}/data-deletion.html">데이터 삭제</a><a href="#{base_url}/app-ads.txt">app-ads.txt</a></nav></header>
@@ -154,5 +156,14 @@ class PlayAppDirectoryExporter
     <<~CSS
       *{box-sizing:border-box}body{margin:0;background:#f5fbfa;color:#0f172a;font-family:Arial,"Noto Sans KR",sans-serif;line-height:1.65}.site-header{position:sticky;top:0;z-index:5;display:flex;justify-content:space-between;gap:16px;padding:16px max(20px,calc((100% - 1120px)/2));background:rgba(255,255,255,.95);border-bottom:1px solid #dbe7e5}.site-header a{color:#0f766e;font-weight:800;text-decoration:none}.site-header nav{display:flex;flex-wrap:wrap;gap:12px}main{width:min(1120px,calc(100% - 24px));margin:28px auto}section,.detail{margin:22px 0;padding:clamp(22px,5vw,42px);border:1px solid #d9e5e3;border-radius:28px;background:linear-gradient(135deg,#e8f7f4,#f8fafc)}h1{margin:8px 0 16px;font-size:clamp(34px,6vw,58px);line-height:1.12;letter-spacing:-.04em}h2{line-height:1.25}.eyebrow{color:#0f766e;font-weight:900;letter-spacing:.08em}.hero-links,.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}.hero-links a,.actions a{display:inline-flex;min-height:44px;align-items:center;padding:0 16px;border-radius:999px;background:#0f766e;color:#fff;font-weight:800;text-decoration:none}.actions a.secondary{background:#fff;color:#0f766e;border:1px solid #0f766e}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}.app-card{padding:20px;border:1px solid #d9e5e3;border-radius:22px;background:#fff;box-shadow:0 14px 32px rgba(15,23,42,.06)}.app-card h2{font-size:22px}.package,.status{display:inline-flex;max-width:100%;padding:6px 10px;border-radius:999px;background:#ecfeff;color:#0f766e;font-size:12px;font-weight:800;overflow-wrap:anywhere}.held .status{background:#fff7ed;color:#9a3412}.breadcrumb{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px}.breadcrumb a{color:#0f766e;font-weight:800}.lead{font-size:20px;color:#475569}dl{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}dl div,.features li,aside{padding:18px;border:1px solid #d9e5e3;border-radius:18px;background:#fff}dt{color:#64748b;font-size:13px;font-weight:800}dd{margin:8px 0 0;overflow-wrap:anywhere}.features{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;padding:0;list-style:none}.features li{font-weight:700}aside{margin-top:24px;border-left:6px solid #f59e0b}footer{max-width:1120px;margin:30px auto;padding:24px;text-align:center;color:#64748b}@media(max-width:720px){.site-header{align-items:flex-start;flex-direction:column}.grid,.features,dl{grid-template-columns:1fr}main{width:min(100% - 16px,1120px)}section,.detail{border-radius:20px;padding:22px}}
     CSS
+  end
+
+  def favicon_svg
+    <<~SVG
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+        <rect width="64" height="64" rx="16" fill="#0f766e"/>
+        <path d="M18 18h18c8 0 13 4 13 10 0 4-2 7-6 9 5 2 7 5 7 10 0 8-6 12-15 12H18V18zm12 9v7h6c3 0 4-1 4-4s-2-3-5-3h-5zm0 15v8h7c3 0 5-1 5-4 0-3-2-4-5-4h-7z" fill="#fff"/>
+      </svg>
+    SVG
   end
 end

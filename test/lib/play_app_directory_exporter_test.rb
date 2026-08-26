@@ -11,6 +11,7 @@ class PlayAppDirectoryExporterTest < ActiveSupport::TestCase
       PlayAppDirectoryExporter.new(output_root: directory, base_url: base_url).export
 
       assert File.exist?(File.join(directory, "index.html"))
+      assert File.exist?(File.join(directory, "favicon.svg"))
       assert_equal 36, Dir.glob(File.join(directory, "apps/*/index.html")).length
       assert_equal 36, File.read(File.join(directory, "apps/rss.xml")).scan("<item>").length
       assert_equal 37, File.read(File.join(directory, "sitemap.xml")).scan("<url>").length
