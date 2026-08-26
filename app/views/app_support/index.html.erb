@@ -1,198 +1,100 @@
-<% content_for(:title) { "앱 지원 센터 — 보듬" } %>
+<% content_for(:title) { "Android 앱 36개 기능·지원·설치 | 보듬 앱 디렉터리" } %>
+<% content_for(:description) { "JejuBucketList에서 운영하는 프로덕션 Android 앱 36개의 기능, 지원, 개인정보 안내와 Google Play 설치 링크를 확인합니다." } %>
+<% content_for(:canonical_url) { app_support_url } %>
+<% content_for(:page_h1_present) { "true" } %>
 <% content_for :head do %>
-  <meta name="description" content="보듬에서 운영하는 Android 앱의 지원, 개인정보처리방침, 데이터 삭제 요청, AdMob app-ads.txt 인증 정보를 안내합니다.">
-  <link rel="canonical" href="https://bodeum.me/app-support">
+  <link rel="alternate" type="application/rss+xml" title="보듬 Android 앱 업데이트" href="<%= play_apps_feed_url %>">
+  <script type="application/ld+json"><%= json_escape({
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: "보듬 Android 앱 디렉터리",
+    description: "JejuBucketList 프로덕션 Android 앱의 기능, 지원과 설치 안내",
+    url: app_support_url,
+    inLanguage: "ko-KR",
+    hasPart: @apps.map { |app| { "@type": "SoftwareApplication", name: app[:name], url: play_app_url(app[:slug]), operatingSystem: "Android" } }
+  }.to_json).html_safe %></script>
 <% end %>
 
-<% apps = [
-  ["haruscene", "하루장면", "기억하는 AI 캐릭터 대화", "com.bodeum.haruscene"],
-  ["dyscatch", "DysCatch", "난독 경향 체크와 읽기 보조 기록", "com.dyscatch.app"],
-  ["telegraph", "텔레그래프", "영상 대본 프롬프터", "com.bodeum.telegraph"],
-  ["oil-widget", "기름주의보", "전국 유가 위젯", "me.bodeum.oilwidget"],
-  ["recipe", "영상 레시피 추출기", "요리 영상 재료 자동정리", "com.yeobo.recipe"],
-  ["dialfocus", "뽀모도로 타이머", "집중 세션과 휴식 루틴 관리", "com.dialfocus.app"],
-  ["misebear", "미세베어 WHO", "미세먼지와 생활 정보 확인", "kr.co.jejuzone.misebear"],
-  ["batang-issue", "바탕 이슈", "실시간 이슈 위젯과 뉴스 탐색", "com.issueon.app"],
-  ["rush-pass", "Rush Pass Party", "숨겨진 타이머와 휴대폰 전달 파티게임", "com.bodeum.party.rushpass"],
-  ["secret-signal", "Secret Signal Party", "비밀 역할과 단서·투표 추리게임", "com.bodeum.party.secretsignal"],
-  ["tap-arena-4", "Tap Arena 4", "2–4인 동시 터치 로컬 아케이드", "com.bodeum.party.taparena4"],
-  ["poopbuddy", "PoopBuddy", "반려동물 배변 기록", "com.poopbuddy.app"],
-  ["pitchflow", "PitchFlow", "AI 보컬 코치", "com.pitchflow.vocal"],
-  ["zenbowl", "ZenBowl", "싱잉볼 명상", "com.zenbowl.app"],
-  ["stab", "해적룰렛 STAB!", "오프라인 파티 벌칙 게임", "com.stab.pirate"],
-  ["healthstack", "헬스스택", "보충제 루틴 기록", "com.cleanstack.cleanstack"],
-  ["annyang", "안냥", "고양이 반응 기록", "com.jejubucketlist.annyang"],
-  ["saju", "1분 사주", "AI 운세, 궁합, 타로", "app.railway.up.app_1min_saju_production.twa"]
-] %>
-
 <section class="support-hero">
-  <p class="support-eyebrow">Bodeum App Support</p>
-  <h2>앱 지원 센터</h2>
+  <p class="support-eyebrow">JejuBucketList Android Apps</p>
+  <h1>앱 기능·지원·설치 디렉터리</h1>
   <p>
-    보듬에서 운영하는 Android 앱의 문의, 개인정보 처리방침, 데이터 삭제 요청, 광고 판매자 인증 정보를 안내합니다.
-    AdMob 인증용 파일은 <a href="/app-ads.txt">/app-ads.txt</a>에서 확인할 수 있습니다.
+    Play Console에서 프로덕션 상태를 확인한 Android 앱 36개의 기능, 대상 사용자, 지원 안내와 설치 링크를 모았습니다.
+    임시·거부·삭제 앱은 설치 SEO에서 제외하고 아래 상태 목록으로 분리합니다.
   </p>
   <div class="support-actions">
     <a href="mailto:db0192a@gmail.com">이메일 문의</a>
     <a href="/privacy.html">개인정보 처리방침</a>
     <a href="/delete-account.html">데이터 삭제 요청</a>
+    <a href="<%= play_apps_feed_path %>">최신 앱 RSS</a>
+    <a href="/app-ads.txt">app-ads.txt</a>
   </div>
 </section>
 
-<section class="support-section">
-  <div class="support-section-heading">
-    <p class="support-eyebrow">Apps</p>
-    <h3>지원 앱 목록</h3>
-  </div>
+<section class="support-section" id="apps">
+  <p class="support-eyebrow">Production Apps</p>
+  <h3>프로덕션 앱 <%= @apps.length %>개</h3>
   <div class="support-grid">
-    <% apps.each do |slug, name, summary, package_name| %>
-      <article id="<%= slug %>" class="support-card">
-        <span class="support-chip"><%= package_name %></span>
-        <h4><%= name %></h4>
-        <p><%= summary %></p>
-        <% if slug == "haruscene" %>
-          <div class="support-card-links">
-            <a href="<%= haruscene_support_path %>">지원 페이지</a>
-            <a href="<%= haruscene_privacy_path %>">개인정보처리방침</a>
-          </div>
-        <% elsif slug == "batang-issue" %>
-          <div class="support-card-links">
-            <a href="<%= batang_issue_support_path %>">지원 페이지</a>
-            <a href="<%= batang_issue_privacy_path %>">개인정보처리방침</a>
-          </div>
-        <% elsif slug == "rush-pass" %>
-          <div class="support-card-links">
-            <a href="<%= rush_pass_support_path %>">지원 페이지</a>
-            <a href="<%= rush_pass_privacy_path %>">개인정보처리방침</a>
-          </div>
-        <% elsif slug == "secret-signal" %>
-          <div class="support-card-links">
-            <a href="<%= secret_signal_support_path %>">지원 페이지</a>
-            <a href="<%= secret_signal_privacy_path %>">개인정보처리방침</a>
-          </div>
-        <% elsif slug == "tap-arena-4" %>
-          <div class="support-card-links">
-            <a href="<%= tap_arena_support_path %>">지원 페이지</a>
-            <a href="<%= tap_arena_privacy_path %>">개인정보처리방침</a>
-          </div>
-        <% else %>
-          <a href="mailto:db0192a@gmail.com?subject=<%= ERB::Util.url_encode("[#{name}] 문의") %>">문의하기</a>
-        <% end %>
+    <% @apps.each do |app| %>
+      <article id="<%= app[:slug] %>" class="support-card">
+        <span class="support-chip"><%= app[:package_name] %></span>
+        <h4><%= app[:name] %></h4>
+        <p><%= app[:summary] %></p>
+        <div class="support-card-links">
+          <%= link_to "기능·지원", play_app_path(app[:slug]) %>
+          <a href="<%= PlayAppCatalog.play_url(app, campaign: "directory-#{app[:slug]}") %>"
+             data-analytics-event="download_click"
+             data-analytics-category="play_store"
+             data-analytics-label="directory-<%= app[:slug] %>"
+             rel="noopener">Play 설치</a>
+          <% if app[:support_path].present? %>
+            <a href="<%= app[:support_path] %>">지원 페이지</a>
+          <% end %>
+          <% if app[:privacy_path].present? %>
+            <a href="<%= app[:privacy_path] %>">개인정보처리방침</a>
+          <% end %>
+        </div>
       </article>
     <% end %>
   </div>
 </section>
 
-<section class="support-section support-note">
-  <div>
-    <p class="support-eyebrow">AdMob Verification</p>
-    <h3>광고 판매자 인증 정보</h3>
+<section class="support-section" id="held-apps">
+  <p class="support-eyebrow">Hold / Recovery</p>
+  <h3>임시·거부·삭제 앱 <%= @held_apps.length %>개</h3>
+  <p>아래 앱은 공개 설치 페이지를 만들지 않습니다. Play 상태가 프로덕션으로 복구된 뒤 디렉터리에 추가합니다.</p>
+  <div class="support-grid">
+    <% @held_apps.each do |app| %>
+      <% held_slug = {
+        "com.issueon.app" => "batang-issue",
+        "com.bodeum.party.secretsignal" => "secret-signal",
+        "com.bodeum.party.taparena4" => "tap-arena-4"
+      }.fetch(app[:package_name], app[:package_name].tr(".", "-")) %>
+      <article id="<%= held_slug %>" class="support-card">
+        <span class="support-status"><%= app[:status] %></span>
+        <h4><%= app[:name] %></h4>
+        <p class="support-chip"><%= app[:package_name] %></p>
+        <div class="support-card-links">
+          <% if app[:package_name] == "com.issueon.app" %>
+            <%= link_to "지원 페이지", batang_issue_support_path %>
+            <%= link_to "개인정보처리방침", batang_issue_privacy_path %>
+          <% elsif app[:package_name] == "com.bodeum.party.secretsignal" %>
+            <%= link_to "지원 페이지", secret_signal_support_path %>
+            <%= link_to "개인정보처리방침", secret_signal_privacy_path %>
+          <% elsif app[:package_name] == "com.bodeum.party.taparena4" %>
+            <%= link_to "지원 페이지", tap_arena_support_path %>
+            <%= link_to "개인정보처리방침", tap_arena_privacy_path %>
+          <% end %>
+        </div>
+      </article>
+    <% end %>
   </div>
-  <p>
-    이 도메인의 루트에는 AdMob/AdSense 판매자 인증 파일이 게시되어 있습니다.
-    Play Console의 개발자 웹사이트 또는 연락처 웹사이트를 이 페이지로 연결하면 AdMob이 같은 도메인의
-    <code>https://bodeum.me/app-ads.txt</code>를 크롤링할 수 있습니다.
-  </p>
-  <pre>google.com, pub-9072876824288260, DIRECT, f08c47fec0942fa0</pre>
 </section>
 
-<style>
-  .support-hero,
-  .support-section {
-    max-width: 1120px;
-    margin: 28px auto;
-    padding: 28px;
-    border-radius: 28px;
-    background: linear-gradient(135deg, rgba(13, 148, 136, 0.12), rgba(15, 23, 42, 0.04));
-    border: 1px solid rgba(15, 23, 42, 0.08);
-  }
+<section class="support-section">
+  <p class="support-eyebrow">Support Contract</p>
+  <h3>문의할 때 같이 보내주세요</h3>
+  <p>앱 이름, 패키지명, 기기 모델, Android 버전, 앱 버전과 문제 화면을 함께 보내면 더 빠르게 확인할 수 있습니다.</p>
+</section>
 
-  .support-hero h2,
-  .support-section h3 {
-    margin: 8px 0 12px;
-    color: #0f172a;
-    font-size: clamp(28px, 4vw, 48px);
-    letter-spacing: -0.04em;
-  }
-
-  .support-hero p,
-  .support-section p {
-    color: #475569;
-    line-height: 1.75;
-  }
-
-  .support-eyebrow {
-    margin: 0;
-    color: #0d9488;
-    font-weight: 800;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
-
-  .support-actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 22px;
-  }
-
-  .support-actions a,
-  .support-card a {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 10px 14px;
-    border-radius: 999px;
-    background: #0f766e;
-    color: white;
-    font-weight: 700;
-    text-decoration: none;
-  }
-
-  .support-card-links {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-
-  .support-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 14px;
-  }
-
-  .support-card {
-    min-height: 178px;
-    padding: 20px;
-    border-radius: 22px;
-    background: white;
-    border: 1px solid rgba(15, 23, 42, 0.08);
-    box-shadow: 0 16px 40px rgba(15, 23, 42, 0.06);
-  }
-
-  .support-card h4 {
-    margin: 14px 0 8px;
-    color: #111827;
-    font-size: 22px;
-  }
-
-  .support-chip {
-    display: inline-flex;
-    max-width: 100%;
-    padding: 6px 10px;
-    border-radius: 999px;
-    background: #ecfeff;
-    color: #0f766e;
-    font-size: 12px;
-    font-weight: 800;
-    overflow-wrap: anywhere;
-  }
-
-  .support-note pre {
-    overflow-x: auto;
-    padding: 16px;
-    border-radius: 16px;
-    background: #0f172a;
-    color: #ccfbf1;
-  }
-</style>
+<%= render "directory_styles" %>

@@ -1,0 +1,81 @@
+<% content_for(:title) { "#{@app[:name]} 기능·지원·설치 | 보듬 앱" } %>
+<% content_for(:description) { @app[:summary] } %>
+<% content_for(:canonical_url) { play_app_url(@app[:slug]) } %>
+<% content_for(:page_h1_present) { "true" } %>
+<% content_for :head do %>
+  <link rel="alternate" type="application/rss+xml" title="보듬 Android 앱 업데이트" href="<%= play_apps_feed_url %>">
+  <script type="application/ld+json"><%= json_escape({
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: @app[:name],
+    description: @app[:summary],
+    applicationCategory: @app[:category],
+    operatingSystem: "Android",
+    url: play_app_url(@app[:slug]),
+    downloadUrl: PlayAppCatalog.play_url(@app),
+    featureList: @app[:highlights],
+    inLanguage: "ko-KR",
+    isAccessibleForFree: true,
+    offers: { "@type": "Offer", price: "0", priceCurrency: "KRW" },
+    author: { "@type": "Organization", name: "JejuBucketList", url: root_url }
+  }.to_json).html_safe %></script>
+  <script type="application/ld+json"><%= json_escape({
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "보듬", item: root_url },
+      { "@type": "ListItem", position: 2, name: "앱 지원", item: app_support_url },
+      { "@type": "ListItem", position: 3, name: @app[:name], item: play_app_url(@app[:slug]) }
+    ]
+  }.to_json).html_safe %></script>
+<% end %>
+
+<section class="app-directory-detail">
+  <nav class="app-directory-breadcrumb" aria-label="현재 위치">
+    <%= link_to "앱 지원", app_support_path %><span>›</span><span><%= @app[:name] %></span>
+  </nav>
+
+  <p class="support-eyebrow">Android App Guide</p>
+  <h1><%= @app[:name] %></h1>
+  <p class="app-directory-lead"><%= @app[:summary] %></p>
+
+  <div class="app-directory-actions">
+    <a href="<%= PlayAppCatalog.play_url(@app, campaign: "app-#{@app[:slug]}") %>"
+       data-analytics-event="download_click"
+       data-analytics-category="play_store"
+       data-analytics-label="<%= @app[:slug] %>"
+       rel="noopener">Google Play에서 설치</a>
+    <a class="secondary" href="<%= @app[:support_path] || app_support_path %>">지원 안내</a>
+    <a class="secondary" href="<%= @app[:privacy_path] || "/privacy.html" %>">개인정보 처리 안내</a>
+  </div>
+
+  <dl class="app-directory-meta">
+    <div><dt>패키지</dt><dd><code><%= @app[:package_name] %></code></dd></div>
+    <div><dt>대상</dt><dd><%= @app[:audience] %></dd></div>
+    <div><dt>업데이트</dt><dd><time datetime="<%= PlayAppCatalog::UPDATED_ON.iso8601 %>"><%= PlayAppCatalog::UPDATED_ON %></time></dd></div>
+  </dl>
+
+  <section aria-labelledby="features-title">
+    <h3 id="features-title">주요 기능</h3>
+    <ul class="app-directory-features">
+      <% @app[:highlights].each do |feature| %>
+        <li><%= feature %></li>
+      <% end %>
+    </ul>
+  </section>
+
+  <% if @app[:caution].present? %>
+    <aside class="app-directory-caution" aria-label="사용 안내">
+      <strong>사용 안내</strong>
+      <p><%= @app[:caution] %></p>
+    </aside>
+  <% end %>
+
+  <section class="app-directory-support" aria-labelledby="support-title">
+    <h3 id="support-title">문의할 때 필요한 정보</h3>
+    <p>앱 이름, 기기 모델, Android 버전, 앱 버전과 문제 화면을 함께 보내주세요.</p>
+    <a href="mailto:db0192a@gmail.com?subject=<%= ERB::Util.url_encode("[#{@app[:name]}] 문의") %>">이메일 문의</a>
+  </section>
+</section>
+
+<%= render "directory_styles" %>

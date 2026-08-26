@@ -3,11 +3,61 @@
 require "test_helper"
 
 class AppSupportControllerTest < ActionDispatch::IntegrationTest
+  test "support center separates all Play apps by public status" do
+    get app_support_path
+
+    assert_response :success
+    assert_select "#apps .support-card", 36
+    assert_select "#held-apps .support-card", 10
+    assert_select "a[href=?]", play_app_path("mulmi"), text: "기능·지원"
+    assert_select "a[href*='id=com.mulmi.ridecue'][href*='referrer=']", text: "Play 설치"
+  end
+
+  test "production app page renders schema support and attributed Play CTA" do
+    get play_app_path("mulmi")
+
+    assert_response :success
+    assert_select "title", /Mulmi: Car Sickness Aid/
+    assert_select "h1", "Mulmi: Car Sickness Aid"
+    assert_select "h1", count: 1
+    assert_select "link[rel='canonical'][href=?]", play_app_url("mulmi")
+    assert_select "script[type='application/ld+json']", text: /SoftwareApplication/
+    assert_select "a[href*='id=com.mulmi.ridecue'][href*='referrer=']", text: "Google Play에서 설치"
+  end
+
+  test "every production app has one canonical indexable page" do
+    PlayAppCatalog.active.each do |app|
+      get play_app_path(app[:slug])
+
+      assert_response :success, app[:slug]
+      assert_select "h1", text: app[:name], count: 1
+      assert_select "link[rel='canonical'][href=?]", play_app_url(app[:slug])
+      assert_select "script[type='application/ld+json']", text: /#{Regexp.escape(app[:package_name])}/
+      assert_select "a[href*='id=#{app[:package_name]}'][href*='referrer=']", text: "Google Play에서 설치"
+    end
+  end
+
+  test "held app does not get an indexable installation page" do
+    get play_app_path("secret-signal")
+
+    assert_response :not_found
+  end
+
+  test "app feed contains every production app" do
+    get play_apps_feed_path(format: :rss)
+
+    assert_response :success
+    assert_equal "application/rss+xml", response.media_type
+    assert_equal 36, response.body.scan("<item>").length
+    assert_includes response.body, "com.mulmi.ridecue"
+    assert_not_includes response.body, "com.bodeum.party.secretsignal"
+  end
+
   test "support center lists HaruScene links" do
     get app_support_path
 
     assert_response :success
-    assert_select "#haruscene h4", "하루장면"
+    assert_select "#haruscene h4", "Daily Scene - AI Story Chat"
     assert_select "a[href=?]", haruscene_support_path, text: "지원 페이지"
     assert_select "a[href=?]", haruscene_privacy_path, text: "개인정보처리방침"
     assert_select "#batang-issue h4", "바탕 이슈"

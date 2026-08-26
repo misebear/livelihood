@@ -1,5 +1,17 @@
 class AppSupportController < ApplicationController
   def index
+    @apps = PlayAppCatalog.active
+    @held_apps = PlayAppCatalog.held
+  end
+
+  def show
+    @app = PlayAppCatalog.find(params[:slug])
+    raise ActiveRecord::RecordNotFound unless @app
+  end
+
+  def feed
+    @apps = PlayAppCatalog.active
+    response.headers["Content-Type"] = "application/rss+xml; charset=utf-8"
   end
 
   def haruscene_privacy

@@ -9,7 +9,7 @@ class SitemapsController < ApplicationController
       { url: terms_url, lastmod: Date.today, changefreq: "yearly", priority: 0.4 },
       { url: editorial_policy_url, lastmod: Date.today, changefreq: "monthly", priority: 0.55 },
       { url: "#{root_url.chomp('/')}/privacy.html", lastmod: Date.today, changefreq: "yearly", priority: 0.4 },
-      { url: app_support_url, lastmod: Date.today, changefreq: "yearly", priority: 0.4 },
+      { url: app_support_url, lastmod: PlayAppCatalog::UPDATED_ON, changefreq: "monthly", priority: 0.7 },
       { url: haruscene_privacy_url, lastmod: Date.today, changefreq: "yearly", priority: 0.35 },
       { url: haruscene_support_url, lastmod: Date.today, changefreq: "yearly", priority: 0.35 },
       { url: batang_issue_privacy_url, lastmod: Date.today, changefreq: "yearly", priority: 0.35 },
@@ -22,6 +22,15 @@ class SitemapsController < ApplicationController
       { url: tap_arena_support_url, lastmod: Date.today, changefreq: "yearly", priority: 0.35 },
       { url: benefits_url, lastmod: latest_benefit_at, changefreq: "daily", priority: 0.9 }
     ]
+
+    PlayAppCatalog.active.each do |app|
+      @pages << {
+        url: play_app_url(app[:slug]),
+        lastmod: PlayAppCatalog::UPDATED_ON,
+        changefreq: "monthly",
+        priority: 0.65
+      }
+    end
 
     Benefit::CATEGORIES.each_key do |category|
       @pages << {

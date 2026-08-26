@@ -2,3 +2,4 @@ User-agent: *
 Allow: /
 
 Sitemap: https://bodeum.me/sitemap.xml
+Sitemap: https://bodeum.me/apps/rss.xml

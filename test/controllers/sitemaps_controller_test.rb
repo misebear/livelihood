@@ -21,5 +21,9 @@ class SitemapsControllerTest < ActionDispatch::IntegrationTest
     assert_includes response.body, secret_signal_support_url
     assert_includes response.body, tap_arena_privacy_url
     assert_includes response.body, tap_arena_support_url
+    PlayAppCatalog.active.each do |app|
+      assert_includes response.body, play_app_url(app[:slug])
+    end
+    assert_not_includes response.body, play_app_url("secret-signal")
   end
 end

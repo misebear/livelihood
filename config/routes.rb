@@ -8,6 +8,8 @@ Rails.application.routes.draw do
 
   # ── Public app support page for Play Console and AdMob verification ──
   get "app-support", to: "app_support#index", as: :app_support
+  get "apps/rss.xml", to: "app_support#feed", defaults: { format: :rss }, as: :play_apps_feed
+  get "apps/:slug", to: "app_support#show", as: :play_app, constraints: { slug: /[a-z0-9-]+/ }
   get "haruscene/privacy", to: "app_support#haruscene_privacy", as: :haruscene_privacy
   get "haruscene/support", to: "app_support#haruscene_support", as: :haruscene_support
   get "batang-issue/privacy", to: "app_support#batang_issue_privacy", as: :batang_issue_privacy
