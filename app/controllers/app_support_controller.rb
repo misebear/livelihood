@@ -43,4 +43,10 @@ class AppSupportController < ApplicationController
 
   def tap_arena_support
   end
+
+  def whymetric_privacy
+  end
+
+  def whymetric_support
+  end
 end

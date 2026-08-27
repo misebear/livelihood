@@ -4,9 +4,9 @@ require "test_helper"
 
 class PlayAppCatalogTest < ActiveSupport::TestCase
   test "catalog separates production and held Play apps" do
-    assert_equal 36, PlayAppCatalog.active.length
+    assert_equal 37, PlayAppCatalog.active.length
     assert_equal 10, PlayAppCatalog.held.length
-    assert_equal 46, PlayAppCatalog.active.length + PlayAppCatalog.held.length
+    assert_equal 47, PlayAppCatalog.active.length + PlayAppCatalog.held.length
     assert_equal PlayAppCatalog.active.length, PlayAppCatalog.active.pluck(:slug).uniq.length
     assert_equal PlayAppCatalog.active.length, PlayAppCatalog.active.pluck(:package_name).uniq.length
   end

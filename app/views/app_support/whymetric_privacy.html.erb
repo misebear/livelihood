@@ -1,0 +1,76 @@
+<% content_for(:title) { "WHYMETRIC 개인정보처리방침" } %>
+<% content_for :head do %>
+  <meta name="description" content="WHYMETRIC Android 진단 앱의 로컬 진단 정보, Google AdMob 데이터 처리, 보관과 삭제 방법을 안내합니다.">
+  <link rel="canonical" href="<%= whymetric_privacy_url %>">
+<% end %>
+
+<section class="haruscene-policy">
+  <p class="haruscene-eyebrow">WHYMETRIC Privacy</p>
+  <h1>WHYMETRIC 개인정보처리방침</h1>
+  <p class="haruscene-lead">
+    시행일: 2026년 8월 27일. WHYMETRIC은 배터리 온도, Android 온도 상태, 메모리와 저장공간을
+    사용자가 이해하기 쉽게 설명하는 기기 진단 앱입니다. 앱 패키지는 <code>com.bodeum.whymetric</code>입니다.
+  </p>
+
+  <div class="haruscene-policy-grid">
+    <article>
+      <h2>기기에서 처리하는 정보</h2>
+      <ul>
+        <li>배터리 잔량, 충전 상태, 전류, 전압과 배터리 온도</li>
+        <li>Android가 제공하는 기기 온도 상태와 온도 여유도</li>
+        <li>사용 가능한 메모리와 앱 데이터 저장공간</li>
+        <li>사용자가 실행한 비교 진단의 최신 결과</li>
+      </ul>
+    </article>
+
+    <article>
+      <h2>저장과 전송</h2>
+      <p>
+        진단값은 화면 표시와 진단 계산에 사용되며 최신 완료 기록은 앱의 로컬 저장소에 보관됩니다.
+        WHYMETRIC 운영 서버로 진단 측정값이나 기록을 전송하지 않습니다.
+      </p>
+    </article>
+
+    <article>
+      <h2>광고 서비스</h2>
+      <p>완료된 진단 기록 아래의 배너 광고를 위해 Google AdMob과 User Messaging Platform을 사용합니다.</p>
+      <ul>
+        <li>Google Mobile Ads SDK는 IP 주소, 광고 ID 또는 앱 세트 ID를 처리할 수 있습니다.</li>
+        <li>광고 노출·클릭 같은 상호작용과 SDK 진단 정보가 처리될 수 있습니다.</li>
+        <li>WHYMETRIC은 진단 측정값과 광고 식별자를 결합하지 않습니다.</li>
+      </ul>
+    </article>
+
+    <article>
+      <h2>광고가 표시되지 않는 화면</h2>
+      <p>
+        첫 실행, 실시간 진단, 증상 선택, 진단 진행 중, 온도 경고, 빈 기록과 개인정보 안내 화면에는
+        광고를 표시하지 않습니다.
+      </p>
+    </article>
+
+    <article>
+      <h2>사용자의 선택과 삭제</h2>
+      <ul>
+        <li>지역에 따라 필요한 경우 Google의 광고 개인정보 선택 화면이 표시됩니다.</li>
+        <li>앱 데이터 삭제 또는 앱 제거로 로컬 진단 기록을 삭제할 수 있습니다.</li>
+        <li>Android 설정에서 광고 ID를 재설정하거나 삭제할 수 있습니다.</li>
+      </ul>
+    </article>
+
+    <article>
+      <h2>아동과 문의</h2>
+      <p>
+        WHYMETRIC은 아동을 대상으로 하지 않으며 의료 진단이나 수리 판정을 제공하지 않습니다.
+        개인정보 문의는 <a href="mailto:db0192a@gmail.com">db0192a@gmail.com</a>으로 보내주세요.
+      </p>
+    </article>
+  </div>
+
+  <p class="haruscene-note">
+    정책이 변경되면 이 페이지에서 개정 내용을 안내합니다.
+    앱 지원은 <a href="<%= whymetric_support_path %>">WHYMETRIC 지원 페이지</a>에서 확인할 수 있습니다.
+  </p>
+</section>
+
+<%= render "haruscene_policy_styles" %>

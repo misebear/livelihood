@@ -4,12 +4,13 @@ require "cgi"
 require "uri"
 
 class PlayAppCatalog
-  UPDATED_ON = Date.new(2026, 8, 26)
+  UPDATED_ON = Date.new(2026, 8, 27)
 
   ACTIVE_APPS = [
     { slug: "one-minute-saju", name: "1분 사주", package_name: "app.railway.up.app_1min_saju_production.twa", summary: "사주, 오늘 운세, 궁합과 타로 결과를 짧게 확인하는 엔터테인먼트 앱", category: "LifestyleApplication", audience: "복잡한 용어 없이 가볍게 운세 콘텐츠를 보고 싶은 사용자", highlights: [ "오늘 운세와 사주 흐름", "궁합과 타로 콘텐츠", "짧게 확인하고 공유하는 결과" ], caution: "운세 결과는 오락과 참고용이며 중요한 결정을 대신하지 않습니다." },
     { slug: "bodymagic", name: "BodyMagic", package_name: "com.bodymagic.app", summary: "카메라 기반 자세 관찰과 운동 기록을 한곳에서 관리하는 피트니스 보조 앱", category: "HealthApplication", audience: "자세 변화와 운동 루틴을 꾸준히 기록하고 싶은 사용자", highlights: [ "자세 관찰 기록", "운동 루틴 정리", "변화 흐름 확인" ], caution: "의료 진단이나 치료를 제공하지 않으며 통증이 있으면 전문가의 안내를 우선하세요." },
     { slug: "haruscene", name: "Daily Scene - AI Story Chat", package_name: "com.bodeum.haruscene", summary: "대화와 장면 기록을 이어가는 로컬 중심 AI 스토리 채팅 앱", category: "EntertainmentApplication", audience: "캐릭터와 이야기의 맥락을 이어가며 대화하고 싶은 사용자", highlights: [ "AI 캐릭터 대화", "장면과 기억 기록", "이야기 흐름 관리" ], support_path: "/haruscene/support", privacy_path: "/haruscene/privacy" },
+    { slug: "whymetric", name: "WHYMETRIC", package_name: "com.bodeum.whymetric", summary: "배터리 온도, Android 온도 상태, 메모리와 저장공간을 실제 기기 값으로 확인하고 원인 후보를 설명하는 진단 앱", category: "UtilitiesApplication", audience: "휴대폰 발열, 배터리 소모, 충전 저하와 느려짐의 원인을 안전하게 확인하려는 사용자", highlights: [ "실시간 온도·배터리 상태", "근거와 신뢰도 기반 진단", "10분 비교 진단 기록" ], caution: "기기 상태를 설명하는 보조 도구이며 의료 진단, 수리 판정이나 타 앱 강제 종료를 제공하지 않습니다.", support_path: "/whymetric/support", privacy_path: "/whymetric/privacy" },
     { slug: "daymint", name: "DayMint", package_name: "com.daymint.routine", summary: "오늘의 작은 루틴을 기록하고 다시 이어가기 쉽게 정리하는 생활 앱", category: "LifestyleApplication", audience: "부담 없는 일상 루틴을 만들고 싶은 사용자", highlights: [ "하루 루틴 기록", "완료 흐름 확인", "다시 시작하기 쉬운 구성" ] },
     { slug: "dialfocus", name: "DialFocus", package_name: "com.dialfocus.app", summary: "집중 시간과 휴식 시간을 다이얼로 빠르게 설정하는 포커스 타이머", category: "ProductivityApplication", audience: "공부와 업무 집중 세션을 단순하게 관리하고 싶은 사용자", highlights: [ "다이얼형 집중 타이머", "집중과 휴식 전환", "짧은 세션 기록" ] },
     { slug: "lumaleaf", name: "LumaLeaf 식물 조도계", package_name: "com.lumaleaf.app", summary: "휴대폰 조도 측정과 식물별 빛 관리 기록을 돕는 식물 케어 앱", category: "LifestyleApplication", audience: "실내 식물이 받는 빛을 확인하고 관리 루틴을 만들고 싶은 사용자", highlights: [ "휴대폰 조도 측정", "식물별 빛 기록", "물주기와 관리 알림" ], caution: "측정값은 기기 센서와 환경에 따라 달라질 수 있습니다." },

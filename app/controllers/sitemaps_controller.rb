@@ -20,6 +20,8 @@ class SitemapsController < ApplicationController
       { url: secret_signal_support_url, lastmod: Date.today, changefreq: "yearly", priority: 0.35 },
       { url: tap_arena_privacy_url, lastmod: Date.today, changefreq: "yearly", priority: 0.35 },
       { url: tap_arena_support_url, lastmod: Date.today, changefreq: "yearly", priority: 0.35 },
+      { url: whymetric_privacy_url, lastmod: Date.today, changefreq: "yearly", priority: 0.35 },
+      { url: whymetric_support_url, lastmod: Date.today, changefreq: "yearly", priority: 0.35 },
       { url: benefits_url, lastmod: latest_benefit_at, changefreq: "daily", priority: 0.9 }
     ]
 

@@ -7,7 +7,7 @@ class AppSupportControllerTest < ActionDispatch::IntegrationTest
     get app_support_path
 
     assert_response :success
-    assert_select "#apps .support-card", 36
+    assert_select "#apps .support-card", 37
     assert_select "#held-apps .support-card", 10
     assert_select "a[href=?]", play_app_path("mulmi"), text: "기능·지원"
     assert_select "a[href*='id=com.mulmi.ridecue'][href*='referrer=']", text: "Play 설치"
@@ -48,7 +48,7 @@ class AppSupportControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_equal "application/rss+xml", response.media_type
-    assert_equal 36, response.body.scan("<item>").length
+    assert_equal 37, response.body.scan("<item>").length
     assert_includes response.body, "com.mulmi.ridecue"
     assert_not_includes response.body, "com.bodeum.party.secretsignal"
   end
@@ -70,6 +70,26 @@ class AppSupportControllerTest < ActionDispatch::IntegrationTest
     assert_select "a[href=?]", secret_signal_privacy_path, text: "개인정보처리방침"
     assert_select "#tap-arena-4 .support-chip", "com.bodeum.party.taparena4"
     assert_select "a[href=?]", tap_arena_privacy_path, text: "개인정보처리방침"
+    assert_select "#whymetric .support-chip", "com.bodeum.whymetric"
+    assert_select "a[href=?]", whymetric_support_path, text: "지원 페이지"
+    assert_select "a[href=?]", whymetric_privacy_path, text: "개인정보처리방침"
+  end
+
+  test "WHYMETRIC privacy and support pages render diagnostic and AdMob disclosures" do
+    get whymetric_privacy_path
+    assert_response :success
+    assert_select "title", "WHYMETRIC 개인정보처리방침"
+    assert_select "link[rel='canonical'][href=?]", whymetric_privacy_url
+    assert_select "code", "com.bodeum.whymetric"
+    assert_select "li", text: /Google Mobile Ads SDK/
+    assert_select "li", text: /진단 측정값과 광고 식별자를 결합하지 않습니다/
+
+    get whymetric_support_path
+    assert_response :success
+    assert_select "title", "WHYMETRIC 지원"
+    assert_select "link[rel='canonical'][href=?]", whymetric_support_url
+    assert_select "h1", "WHYMETRIC 지원"
+    assert_select "li", text: /온도 여유도/
   end
 
   test "HaruScene privacy page renders Play policy content" do

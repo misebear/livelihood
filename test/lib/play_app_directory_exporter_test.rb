@@ -12,9 +12,9 @@ class PlayAppDirectoryExporterTest < ActiveSupport::TestCase
 
       assert File.exist?(File.join(directory, "index.html"))
       assert File.exist?(File.join(directory, "favicon.svg"))
-      assert_equal 36, Dir.glob(File.join(directory, "apps/*/index.html")).length
-      assert_equal 36, File.read(File.join(directory, "apps/rss.xml")).scan("<item>").length
-      assert_equal 37, File.read(File.join(directory, "sitemap.xml")).scan("<url>").length
+      assert_equal 37, Dir.glob(File.join(directory, "apps/*/index.html")).length
+      assert_equal 37, File.read(File.join(directory, "apps/rss.xml")).scan("<item>").length
+      assert_equal 38, File.read(File.join(directory, "sitemap.xml")).scan("<url>").length
       assert_includes File.read(File.join(directory, "apps/mulmi/index.html")), "com.mulmi.ridecue"
       assert_includes File.read(File.join(directory, "apps/mulmi/index.html")), "SoftwareApplication"
       assert_includes File.read(File.join(directory, "apps/mulmi/index.html")), "utm_campaign%3Dapp-mulmi"

@@ -20,6 +20,8 @@ Rails.application.routes.draw do
   get "secret-signal/support", to: "app_support#secret_signal_support", as: :secret_signal_support
   get "tap-arena-4/privacy", to: "app_support#tap_arena_privacy", as: :tap_arena_privacy
   get "tap-arena-4/support", to: "app_support#tap_arena_support", as: :tap_arena_support
+  get "whymetric/privacy", to: "app_support#whymetric_privacy", as: :whymetric_privacy
+  get "whymetric/support", to: "app_support#whymetric_support", as: :whymetric_support
   get "about", to: "static_pages#about", as: :about
   get "contact", to: "static_pages#contact", as: :contact
   get "terms", to: "static_pages#terms", as: :terms
